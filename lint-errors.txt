@@ -1,0 +1,148 @@
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/app/about/page.tsx
+  100:89  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/app/not-found.tsx
+  59:21  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/app/page.tsx
+  130:70  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/app/privacy/page.tsx
+  57:52  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/app/service-details/page.tsx
+  161:60  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/app/terms/page.tsx
+  117:92   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  117:98   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  117:104  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  117:117  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/aos/aos.cjs.js
+  5:32  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  6:32  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/aos/aos.js
+  1:1075  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:3326  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/bootstrap/js/bootstrap.js
+  7:91  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/bootstrap/js/bootstrap.min.js
+  6:86  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/glightbox/js/glightbox.js
+   546:11  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+   645:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+   700:11  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+   769:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+   931:9   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+   997:9   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1118:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1255:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1392:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1675:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2143:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2231:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2277:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2420:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2628:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2669:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2749:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  2960:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  3046:13  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/glightbox/js/glightbox.min.js
+  1:7413   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:9299   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:10322  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:11774  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:15080  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:16817  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:19112  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:21061  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:23287  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:28619  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:38691  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:40426  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:41439  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:43938  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:48199  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:48757  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:50062  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:54297  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  1:55858  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/php-email-form/validate.js
+  15:11  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+
+/Users/safi0219/PC/projects/Clinic-1.0.0/public/assets/vendor/swiper/swiper-bundle.min.js
+  13:7324   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:7567   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:7858   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:8057   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:8246   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:8540   error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:10547  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:11078  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:15789  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:16439  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:16744  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:17678  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:18576  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:19667  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:21276  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:22205  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:23037  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:24597  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:27105  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:28264  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:28959  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:30065  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:30235  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:30750  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:31405  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:32893  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:36766  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:37345  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:38735  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:39902  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:45545  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:48317  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:49163  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:49360  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:49810  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:49934  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:53655  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:53861  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:54037  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:54217  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:54578  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:54867  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:55160  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:57356  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:57775  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:58988  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:61503  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:61608  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:61723  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:61917  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:62148  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:62315  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:63139  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:64006  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:64453  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:64760  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:65725  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:66591  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:68051  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:68422  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:68853  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:69483  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+  13:69939  error  Unexpected aliasing of 'this' to local variable  @typescript-eslint/no-this-alias
+
+✖ 117 problems (117 errors, 0 warnings)
+
