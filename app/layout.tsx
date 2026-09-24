@@ -48,6 +48,10 @@ export default function RootLayout({
 
         {/* Main JS File */}
         <Script src="/assets/js/main.js" />
+
+        {/* @ts-expect-error Custom element for ElevenLabs */}
+        <elevenlabs-convai agent-id="agent_4701m322x55sfpg9m5ppa83qcss4"></elevenlabs-convai>
+        <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" strategy="lazyOnload" />
       </body>
     </html>
   );

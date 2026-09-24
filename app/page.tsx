@@ -15,21 +15,7 @@ export default function IndexPage() {
               <div className="row align-items-center">
                 <div className="col-lg-6">
                   <div className="hero-content">
-                    <div className="trust-badges mb-4" data-aos="fade-right" data-aos-delay="200">
-                      <div className="badge-item">
-                        <i className="bi bi-shield-check"></i>
-                        <span>Accredited</span>
-                      </div>
-                      <div className="badge-item">
-                        <i className="bi bi-clock"></i>
-                        <span>24/7 Emergency</span>
-                      </div>
-                      <div className="badge-item">
-                        <i className="bi bi-star-fill"></i>
-                        <span>4.9/5 Rating</span>
-                      </div>
-                    </div>
-      
+
                     <h1 data-aos="fade-right" data-aos-delay="300">
                       Excellence in <span className="highlight">Healthcare</span> With Compassionate Care
                     </h1>

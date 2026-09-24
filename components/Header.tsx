@@ -64,6 +64,8 @@ export default function Header() {
                 <li><a href="#">Dropdown 4</a></li>
               </ul>
             </li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Sign Up</a></li>
             <li><a href="/contact">Contact</a></li>
           </ul>
           <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
