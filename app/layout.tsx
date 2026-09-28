@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import ChatbotWidget from "@/components/ChatbotWidget";
+import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -41,7 +43,9 @@ export default function RootLayout({
         <Script src="/assets/vendor/swiper/swiper-bundle.min.js" strategy="beforeInteractive" />
       </head>
       <body className="index-page" suppressHydrationWarning>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
 
         {/* Scroll Top */}
         <a href="#!" id="scroll-top" className="scroll-top d-flex align-items-center justify-content-center"><i className="bi bi-arrow-up-short"></i></a>
@@ -49,8 +53,7 @@ export default function RootLayout({
         {/* Main JS File */}
         <Script src="/assets/js/main.js" />
 
-        {/* @ts-expect-error Custom element for ElevenLabs */}
-        <elevenlabs-convai agent-id="agent_4701m322x55sfpg9m5ppa83qcss4"></elevenlabs-convai>
+        <ChatbotWidget />
         <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" strategy="lazyOnload" />
       </body>
     </html>

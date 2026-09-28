@@ -1,6 +1,12 @@
 import Link from "next/link";
 
-export default function SignupPage() {
+import { signup } from "../auth/actions";
+
+export default async function SignupPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const resolvedSearchParams = await searchParams;
+  const error = resolvedSearchParams?.error as string;
+  const message = resolvedSearchParams?.message as string;
+
   return (
     <div className="signup-page d-flex align-items-center justify-content-center" style={{ minHeight: "100vh", backgroundColor: "#f6f9ff" }}>
       <main className="main w-100">
@@ -19,8 +25,19 @@ export default function SignupPage() {
                     <p className="text-muted small">Enter your details to create your account</p>
                   </div>
 
+                  {error && (
+                    <div style={{ color: "#721c24", backgroundColor: "#f8d7da", padding: "10px", borderRadius: "5px", marginBottom: "20px" }}>
+                      {error}
+                    </div>
+                  )}
+                  {message && (
+                    <div style={{ color: "#155724", backgroundColor: "#d4edda", padding: "10px", borderRadius: "5px", marginBottom: "20px" }}>
+                      {message}
+                    </div>
+                  )}
+
                   <div className="appointment-form">
-                    <form action="#" method="post" className="php-email-form">
+                    <form action={signup}>
                       <div className="row gy-4">
                         <div className="col-12">
                           <label className="form-label" style={{ fontWeight: "600" }}>Full Name</label>

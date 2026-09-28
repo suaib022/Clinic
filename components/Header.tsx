@@ -1,4 +1,9 @@
-export default function Header() {
+import { createClient } from '@/lib/supabase/server'
+import { logout } from '@/app/auth/actions'
+
+export default async function Header() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   return (
 <header id="header" className="header fixed-top">
 
@@ -64,8 +69,18 @@ export default function Header() {
                 <li><a href="#">Dropdown 4</a></li>
               </ul>
             </li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/signup">Sign Up</a></li>
+            {!user ? (
+              <>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+              </>
+            ) : (
+              <li>
+                <form action={logout} className="d-flex align-items-center m-0">
+                  <button type="submit" style={{ background: 'none', border: 'none', padding: '18px 15px', color: 'var(--nav-color, #333)', fontFamily: 'var(--nav-font)', fontSize: '15px', fontWeight: 500 }}>Logout</button>
+                </form>
+              </li>
+            )}
             <li><a href="/contact">Contact</a></li>
           </ul>
           <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
