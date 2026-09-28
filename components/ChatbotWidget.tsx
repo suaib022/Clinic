@@ -7,8 +7,10 @@ import Script from 'next/script'
 export default function ChatbotWidget() {
   const pathname = usePathname()
   const [show, setShow] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     // When the route changes, completely remove the widget from the DOM
     setShow(false)
     
@@ -21,7 +23,7 @@ export default function ChatbotWidget() {
     return () => clearTimeout(timer)
   }, [pathname])
 
-  if (!show) return null
+  if (!mounted || !show) return null
 
   return (
     <>
