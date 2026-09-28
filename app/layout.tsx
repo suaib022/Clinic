@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import ScriptLoader from "@/components/ScriptLoader";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
@@ -34,13 +35,6 @@ export default function RootLayout({
         <link href="/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
         <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
         <link href="/assets/css/main.css" rel="stylesheet" />
-        {/* Vendor JS Files */}
-        <Script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js" strategy="beforeInteractive" />
-        <Script src="/assets/vendor/php-email-form/validate.js" strategy="beforeInteractive" />
-        <Script src="/assets/vendor/aos/aos.js" strategy="beforeInteractive" />
-        <Script src="/assets/vendor/glightbox/js/glightbox.min.js" strategy="beforeInteractive" />
-        <Script src="/assets/vendor/purecounter/purecounter_vanilla.js" strategy="beforeInteractive" />
-        <Script src="/assets/vendor/swiper/swiper-bundle.min.js" strategy="beforeInteractive" />
       </head>
       <body className="index-page" suppressHydrationWarning>
         <AuthProvider>
@@ -50,8 +44,7 @@ export default function RootLayout({
         {/* Scroll Top */}
         <a href="#!" id="scroll-top" className="scroll-top d-flex align-items-center justify-content-center"><i className="bi bi-arrow-up-short"></i></a>
 
-        {/* Main JS File */}
-        <Script src="/assets/js/main.js" />
+        <ScriptLoader />
 
         <ChatbotWidget />
         <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" strategy="lazyOnload" />
@@ -59,3 +52,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+

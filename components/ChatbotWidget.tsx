@@ -25,7 +25,7 @@ export default function ChatbotWidget() {
   return (
     <>
       {/* @ts-expect-error Custom element for ElevenLabs */}
-      <elevenlabs-convai agent-id="agent_4701m322x55sfpg9m5ppa83qcss4" dismissible="true"></elevenlabs-convai>
+      <elevenlabs-convai agent-id="agent_6101m3kzpy94eqn9rx21jrd6sqz8" dismissible="true"></elevenlabs-convai>
     </>
   )
 }
