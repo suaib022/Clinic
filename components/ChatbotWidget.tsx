@@ -2,15 +2,12 @@
 
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Script from 'next/script'
 
 export default function ChatbotWidget() {
   const pathname = usePathname()
   const [show, setShow] = useState(true)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     // When the route changes, completely remove the widget from the DOM
     setShow(false)
     
@@ -23,13 +20,12 @@ export default function ChatbotWidget() {
     return () => clearTimeout(timer)
   }, [pathname])
 
-  if (!mounted || !show) return null
+  if (!show) return null
 
   return (
     <>
       {/* @ts-expect-error Custom element for ElevenLabs */}
       <elevenlabs-convai agent-id="agent_0801m3m5germeb8s6vcsfs3evnfg"></elevenlabs-convai>
-      <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" strategy="lazyOnload" />
     </>
   )
 }
