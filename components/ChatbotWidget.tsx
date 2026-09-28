@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Script from 'next/script'
 
 export default function ChatbotWidget() {
   const pathname = usePathname()
@@ -25,7 +26,8 @@ export default function ChatbotWidget() {
   return (
     <>
       {/* @ts-expect-error Custom element for ElevenLabs */}
-      <elevenlabs-convai agent-id="agent_6101m3kzpy94eqn9rx21jrd6sqz8" dismissible="true"></elevenlabs-convai>
+      <elevenlabs-convai agent-id="agent_0801m3m5germeb8s6vcsfs3evnfg"></elevenlabs-convai>
+      <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" strategy="lazyOnload" />
     </>
   )
 }
