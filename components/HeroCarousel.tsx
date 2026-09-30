@@ -13,7 +13,7 @@ const HeroCarousel = () => {
       <div id="heroBannerCarousel" className="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
         <div className="carousel-inner" style={{ height: '450px' }}>
           {images.map((src, index) => (
-            <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''} h-100`}>
+            <div key={index} className={`carousel-item ${index === 0 ? 'active ' : ''}h-100`}>
               <div 
                 className="w-100 h-100"
                 style={{ 
