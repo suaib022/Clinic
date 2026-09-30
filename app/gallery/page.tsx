@@ -24,14 +24,6 @@ export default function GalleryPage() {
                 </div>
               </div>
             </div>
-            <nav className="breadcrumbs">
-              <div className="container">
-                <ol>
-                  <li><a href="/">Home</a></li>
-                  <li className="current">Gallery</li>
-                </ol>
-              </div>
-            </nav>
           </div>{/* End Page Title */}
       
           {/* Gallery Section */}

@@ -20,14 +20,6 @@ export default function FaqPage() {
                 </div>
               </div>
             </div>
-            <nav className="breadcrumbs">
-              <div className="container">
-                <ol>
-                  <li><a href="/">Home</a></li>
-                  <li className="current">Faq</li>
-                </ol>
-              </div>
-            </nav>
           </div>{/* End Page Title */}
       
           {/* Faq Section */}

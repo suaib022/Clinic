@@ -1,0 +1,2592 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Lutfor Rahman",
+    "designation": "Chief Cardiac Surgeon",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700976017.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-lutfor-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 2,
+    "name": "Dr. A P M Sohrabuzzaman",
+    "designation": "Senior Consultant Cardiologist  Director, Cardiac Cath Lab & Heart Rhythm Services   Professor, School of Health Science",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700978846.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-a-p-m-sohrabuzzaman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 3,
+    "name": "Professor Dr. Baren Chakraborty",
+    "designation": "Senior Fellowship in Cardiology (Singapore), Senior Consultant Cardiologist,  Chief Medical Education and Research",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700980266.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-baren-chakraborty",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 4,
+    "name": "Dr. Mahbubor Rahman",
+    "designation": "Senior Consultant Cardiologist & Medicine Specialist In-Charge: Coronary Care Unit (CCU)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700978701.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mahbubor-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 5,
+    "name": "Professor Dr. M Khademul Islam",
+    "designation": "General & Laparoscopic Surgeon  Ex. Professor and Head, Department of Surgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700978055.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-m-khademul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 6,
+    "name": "Professor Dr. M. Amjad Hossain",
+    "designation": "Ex. Professor & Head, Department of Orthopedic Surgery Chief Consultant & Head, Department of Orthopedic Surgery",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981398.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-m.-amjad-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 7,
+    "name": "Professor. Dr. Md. Jahangir Kabir",
+    "designation": "Urologist, Andrologist & Uro-Oncologist  Chief Consultant & Head of the Dept. of Urology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981329.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-md.-jahangir-kabir",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 8,
+    "name": "Professor (Dr.) Mariam Faruqui (Shati)",
+    "designation": "Gynecologist, Obstetrician & Infertility Specialist  Sr. Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700980489.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-(dr.)-mariam-faruqui-(shati)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 9,
+    "name": "Professor. (Dr.) F. M. Siddiqui",
+    "designation": "Medicine & Chest specialist Professor, Medicine",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700982727.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-(dr.)-f.-m.-siddiqui",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 10,
+    "name": "Professor Dr. Ali Hossain",
+    "designation": "Medicine Specialist & Pulmonologist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981067.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-ali-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 11,
+    "name": "Professor. Dr. Muhammad Rafiqul Alam",
+    "designation": "Specialist in Internal Medicine & Kidney Disease  Professor, Dept. of Nephrology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981609.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-muhammad-rafiqul-alam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 12,
+    "name": "Professor Dr. Salimur Rahman",
+    "designation": "Professor of Hepatology (Former) UGC Professor & Course Director, Medical Faculty (Former)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700984919.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.salimur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 13,
+    "name": "Professor Dr. Md. Abdul Mannan",
+    "designation": "Newborn & Child Specialist Ex. Chairman",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981266.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-abdul-mannan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 14,
+    "name": "Prof. Sehereen F. Siddiqua",
+    "designation": "Senior Consultant, Labaid Specialized Hospital",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781074611.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-sehereen-f.-siddiqua",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 15,
+    "name": "Dr. Mohammad Moniruzzaman",
+    "designation": "Kidney Diseases & Medicine Specialist Associate Professor & Head of the Dept. (Ex.), Nephrology,Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981542.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.mohammad-moniruzzaman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 16,
+    "name": "Professor Dr. Abduz Zaher",
+    "designation": "Professor of Cardiology,  Clinical and Interventional Cardiologist,  Ex. Professor of Cardiology National Institute of Cardiovascular Diseases, Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1583996060.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-abduz-zaher",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 17,
+    "name": "Prof. Dr. Md. Saifullah",
+    "designation": "General, Laparoscopic, Colorectal & Cancer Specialist Surgeon , Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700977878.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-saifullah",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 18,
+    "name": "Professor. Dr. Abu Zaffar Chowdhury (Biru)",
+    "designation": "Arthroscopy & Replacement Surgeon  Ex. Chairman & Head of Department, Orthopaedic Surgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981489.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-abu-zaffar-chowdhury-(biru)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 19,
+    "name": "Professor Dr. Md. Sayedul Islam",
+    "designation": "Medicine, Asthma & Chest Diseases Specialist Ex. Consultant,Assoc. Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981178.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-md.-sayedul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 20,
+    "name": "Professor Dr. Sirajul Haque",
+    "designation": "Specialist in Neurology & Internal Medicine, Chief Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700982897.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-sirajul-haque",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 21,
+    "name": "Dr. Md. Lokman Hossain",
+    "designation": "Cardiac Surgeon, Senior Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611552680.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.md.-lokman-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 22,
+    "name": "Professor (Dr.) Mian Mashhud Ahmad",
+    "designation": "Professor, Gastroenterology Department  Specialist in Gastrointestinal & Liver Diseases",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700983279.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.mian-mashhud-ahmad",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 23,
+    "name": "Professor. Dr. Shahadot Hossain Sheikh",
+    "designation": "Advanced Laparoscopic Colorectal Surgeon Chairman, Department of Colorectal Surgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700978158.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-shahadot-hossain-sheikh",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 24,
+    "name": "Professor Dr. Md. Ashraf Ali",
+    "designation": "Ex. Professor,  Specialist in Medicine & Neurology, Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613037282.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-ashraf-ali",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 25,
+    "name": "Professor. Dr. Samiran Kumar Saha",
+    "designation": "Medicine Specialist, Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700982792.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-samiran-kumar-saha",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 26,
+    "name": "Dr. Nur Mohammad",
+    "designation": "Medicine Specialist & Cardiologist Senior Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1583998095.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-nur-mohammad-2",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 27,
+    "name": "Professor. Dr. Moududul Haque",
+    "designation": "Professor, Department of Neurosurgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700980662.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-moududul-haque",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 28,
+    "name": "Dr. Arun Kumar Sharma",
+    "designation": "Clinical & Interventional Cardiologist Senior Consultant & In charge (CCU-2)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611139138.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-arun-kumar-sharma",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 29,
+    "name": "Dr. A.S.M. Julfekar Helal",
+    "designation": "Kidney Disease & Medicine Specialist, Associate Professor, AMCH Ex. , Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613038693.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-a.s.m.-julfekar-helal",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 30,
+    "name": "Brig. Gen. Professor Nurunnahar Fatema S.B.P",
+    "designation": "Fellow in Diagnostic and Interventional Paediatric Cardiology & Intensive Care, PSCC, KSA Pediatric Interventional Cardiologist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700980981.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/brig.-gen.-professor-nurunnahar-fatema-s.b.p",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 31,
+    "name": "Professor Dr. Kazi Mohibur Rahman",
+    "designation": "Neuro Medicine & Stroke Interventional Neurology Specialist, Professor & Head of Dept. of Interventional Neurology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700983184.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-kazi-mohibur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 32,
+    "name": "Dr. S.I.M. Khairun Nabi Khan",
+    "designation": "Neuro Surgeon & Spine Surgeon, Associate Professor, Department of Neurosurgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700980574.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-s.i.m.-khairun-nabi-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 33,
+    "name": "Professor. Dr. Bimal Chandra Shil",
+    "designation": "Specialist in Medicine, Gastro-intestinal & Liver Diseases Ex. Professor & Head, Dept. of Gastroenterology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610525117.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-bimal-chandra-shil",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 34,
+    "name": "Dr. A.F.M. Kamal Uddin",
+    "designation": "Oncologist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700978514.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-a.f.m.-kamal-uddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 35,
+    "name": "Prof. Dr. Mohammad Abdus Salam",
+    "designation": "Urology Specialist  Professor, Department of Urology  Bangladesh Medical University (BMU) (Ex. PG Hospital), Dhaka.",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781332418.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-mohammad-abdus-salam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 36,
+    "name": "Professor. (Dr.) Md. Abdul Kader Akanda",
+    "designation": "Medicine Specialist & Cardiologist  Clinical & Interventional Cardiologist  Professor & Head of the Department, Cardiology (Ret)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610520951.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-(dr.)-md.-abdul-kader-akanda",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 37,
+    "name": "Professor (Dr.) Md. Shahidullah (Sabuj)",
+    "designation": "Stroke Neurologist  Professor, Dept. of Neuromedicine",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700982852.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-(dr.)-md.-shahidullah-(sabuj)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 38,
+    "name": "Dr. Md. Asifudduza (Asif)",
+    "designation": "Consultant Cardiologist & Medicine Specialist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1782294807.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-asifudduza-(asif)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 39,
+    "name": "Professor Dr. A Z M Zahid Hossain",
+    "designation": "Urology Specialist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610519429.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-a-z-m-zahid-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 40,
+    "name": "Dr. Chanchal Kumar Ghosh",
+    "designation": "Gastroenterology, Liver & Medicine Specialist Professor Dept. of Gastroenterology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700983333.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.chanchal-kumar-ghosh",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 41,
+    "name": "Professor Dr. Swapan Chandra Dhar",
+    "designation": "Member- Indian & British Society of Gastroenterology Member- American Gastroenterological Association Specialist in Medicine, Gastro-intestinal & Liver Diseases Ex. Professor & Head, Dept. of Gastroenterology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579688497.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.swapan-chandra-dhar",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 42,
+    "name": "Dr. S. Mokaddas Hossain (Sadi)",
+    "designation": "Associate Professor (Cardiology)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611555296.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-s.-mokaddas-hossain-(sadi)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 43,
+    "name": "Professor. Dr. Md. Monzur Rahman (Galib)",
+    "designation": "Medicine Specialist, Senior Consultant, Medicine Dept.",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700982664.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-md.-monzur-rahman-(galib)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 44,
+    "name": "Professor Dr. Afzalunnessa Chowdhury",
+    "designation": "Gynecologist, Obstetrician & Laparoscopic Surgeon, Former Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613040676.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-afzalunnessa-chowdhury",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 45,
+    "name": "Dr. M Saifuddin",
+    "designation": "Diabetes, Thyroid, Hormone & Medicine Specialist , Associate Professor (Diabetes & Endocrinology),Dhaka Medical College & Hospital",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1784445706.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.m-saifuddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 46,
+    "name": "Professor. Dr. Md. Azharul Hoque",
+    "designation": "Professor of Neurology Neurologist & Medicine Specialist, Ex- Head of Clinical neurology",
+    "hospital": "LABAID Specialized Hospital Chattogram",
+    "imageURL": "https://labaid.com.bd/files/images/1700983232.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-md.-azharul-hoque",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 47,
+    "name": "Professor Dr. Subash Kanti Dey",
+    "designation": "Stroke & Interventional Neurologist  Professor & Divisional Head",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579681078.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-subash-kanti-dey",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 48,
+    "name": "Dr. M. R. Islam",
+    "designation": "Ear Nose Throat & Head-Neck Surgeon  Ex. Consultant, Dhaka Medical College & Hospital & Cancer Hospital Ex. Associate Prof., Dept. of ENT & Head- Neck Surgery",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579434009.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-m.-r.-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 49,
+    "name": "Professor Dr. Md. Ashraful Islam",
+    "designation": "Professor & Head, Dept. of Gastroenterology (Ex)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700983373.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.md.-ashraful-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 50,
+    "name": "Professor (Retd.) Dr. Nooruddin Ahmad",
+    "designation": "Consultant Physician and Hepatologist FORMER Chairman, Department of Hepatology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579689061.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-(retd.)-dr.-nooruddin-ahmad",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 51,
+    "name": "Professor Dr. Begum Hosne Ara",
+    "designation": "Laparoscopic Surgeon Obstetrician and Gynecologist  Ex. Executive Director & Head of the Dept., Obs. & Gynae",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613040829.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-begum-hosne-ara",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 52,
+    "name": "Professor Dr. S M Mustafa Zaman",
+    "designation": "Cardiology, Chest Diseases & Medicine Specialist Professor",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1584254379.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-sm-mustafa-zaman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 53,
+    "name": "Professor. (Dr.) M M Zahurul Alam Khan",
+    "designation": "Cardiology, Diabetes & Medicine Specialist Ex. Professor",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613629718.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-(dr.)-m-m-zahurul-alam-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 54,
+    "name": "Professor Dr. Indrajit Prasad",
+    "designation": "Medicine, Diabetes, Thyroid & Hormone Disease Specialist (Endocrinologist),  Professor & Head, Dept. of Diabetes & Endocrinology Dhaka Medical College & Hospital",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700985008.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-indrajit-prasad",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 55,
+    "name": "Professor. Dr. Haradhan Deb Nath",
+    "designation": "Neuro & Spinal Surgeon  Professor, Department of Neurosurgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610534934.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-haradhan-deb-nath",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 56,
+    "name": "Professor. DR. SANKAR NARAYAN DAS",
+    "designation": "Head of Medicine Dept. & Principal (Rtd.) Mymensingh Medical College Senior Consultant, Labaid Specialized Hospital",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700981661.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-sankar-narayan-das",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 57,
+    "name": "Dr. Md. Zia Uddin",
+    "designation": "Bone & Joint Specialist & Spine Surgeon Ex. Consultant,  Sr. Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579432305.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-zia-uddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 58,
+    "name": "Professor Dr. Tohid Md. Saiful Hossain (Dipu)",
+    "designation": "Urology Specialist  Professor, Urology & Kidney Transplant Surgery",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579584937.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-tohid-md.-saiful-hossain-(dipu)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 59,
+    "name": "Maj Gen Professor Dr. H R Harun",
+    "designation": "Consultant Urological Surgeon Ex. Consultant Surgeon General & Chief Urologist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579433342.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/maj-gen-prof.-dr.-h-r-harun",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 60,
+    "name": "Prof. Dr. Shah Habibur Rahman",
+    "designation": "Professor, Department of Medicine   Medicine & Rheumatology Specialist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613040306.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-shah-habibur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 61,
+    "name": "Professor Dr. Md. Habibur Rahman",
+    "designation": "Newborn, Adolescent & Child Specialist (0 - 18 Years)  Professor, Chairman & Dean (Rtd.)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579936911.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-habibur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 62,
+    "name": "Dr. Tasnim Akter",
+    "designation": "Laparoscopic Surgeon, Gynae & Obs Specialist, Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579584714.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-tasnim-akter",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 63,
+    "name": "Professor (dr.) M. A. Hannan",
+    "designation": "Internal Medicine Specialist & Neurologist  Chairman (Head of dept.) & Professor (Ex.),",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1675502718.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-(dr.)-m.-a.-hannan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 64,
+    "name": "Dr. Md. Rezaul Amin (Titu)",
+    "designation": "Brain and Spine Surgeon Associate professor, Neuro Surgery Dept.",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1689050922.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-rezaul-amin-(titu)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 65,
+    "name": "Professor. Dr. Asia Khanam",
+    "designation": "Kidney Specialist Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613038918.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-asia-khanam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 66,
+    "name": "Professor Dr. Mir Nazrul Islam",
+    "designation": "Professor, Skin & STD'S",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613039892.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-mir-nazrul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 67,
+    "name": "Dr. Most. Bilkis Fatema",
+    "designation": "Breast, Laparoscopic & Colorectal Surgeon ,Associate Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610524895.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-most.-bilkis-fatema",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 68,
+    "name": "Professor Dr. SK Nurul Fattah Rumi",
+    "designation": "Ear, Nose, Throat, Head-Neck Specialist & Surgeon Professor & Heat of the Dept",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579764042.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-sk-nurul-fattah-rumi",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 69,
+    "name": "Professor. Dr. Zakir Hossain Sarkar",
+    "designation": "Professor (Respiratory Medicine),   (Ex.) National Institute of Diseases of the Chest & Hospital (NIDCH)  Senior Consultant (Pulmonology & Sleep Medicine)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613039348.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-zakir-hossain-sarkar",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 70,
+    "name": "Professor Dr. AKM Mosharraf Hossain",
+    "designation": "Professor, Respiratory Medicine Department Bangladesh Medical University (BMU)  Medicine, Pulmonologist & Sleep Medicine Specialist Labaid Specialized Hospital",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613038899.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-akm-mosharraf-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 71,
+    "name": "Dr. Umme Salma Chowdhury (Shanta)",
+    "designation": "Gynae, Obs. Specialist & Surgeon, Associate Professor",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787281826.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-umme-salma-chowdhury-(shanta)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 72,
+    "name": "Dr. A.K.S Zahid Mahmud Khan",
+    "designation": "Clinical & Interventional Cardiologist & Medicine Specialist, Associate Professor (Cardiology)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579431583.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-a.k.s-zahid-mahmud-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 73,
+    "name": "Prof. Dr. Abu Shahin",
+    "designation": "Medicine & Rheumatology Specialist Associate Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613040206.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-abu-shahin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 74,
+    "name": "Dr. Md. Quamrul Hassan Chowdhury",
+    "designation": "Dermatologist, Laser & Hair Transplant Surgeon",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613045928.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-quamrul-hassan-chowdhury",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 75,
+    "name": "Professor Dr. Khwaja Nazim Uddin",
+    "designation": "Specialist Internal Medicine & Diabetologist  Professor of Medicine",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579689863.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-khwaja-nazim-uddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 76,
+    "name": "Professor Lt. Col. (Retd.) Dr. Md. Abdul Wahab",
+    "designation": "Specialist in VD, Skin, Sex, Allergy & Leprosy Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613039786.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-lt.-col.-(retd.)-dr.-md.-abdul-wahab",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 77,
+    "name": "Professor (Dr.) Mohammed Atiqur Rahman",
+    "designation": "Pulmonologist, Medicine & Allergy Specialist Chairman, Respiratory Medicine Dept.",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613039008.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-(dr.)-mohammed-atiqur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 78,
+    "name": "Professor Dr. M A Khan",
+    "designation": "Haematologist & BMT Physician Head of Haematology & BMT Unit",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700984798.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-m-a-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 79,
+    "name": "Dr. Marufa Mustari",
+    "designation": "Diabetes, Thyroid, Hormone & Medicine Specialist,  Assistant Professor",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611554412.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-marufa-mustari",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 80,
+    "name": "Prof. (Dr.) M G Azam",
+    "designation": "Professor of Cardiology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1704867519.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-(dr.)-m-g-azam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 81,
+    "name": "Professor. Erfanul Huq Siddiqui",
+    "designation": "Professor & Head of the Department Trauma, Orthopedic & Spine Surgeon Dept. Of Orthopedic & Spine Surgeon",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613032822.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-erfanul-huq-siddiqui",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 82,
+    "name": "Professor Dr. Moarraf Hossen",
+    "designation": "Former Director Cum Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610779352.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.dr.-moarraf-hossen",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 83,
+    "name": "Dr. Isabela Kabir",
+    "designation": "Dermatology, Venereology & Skin Laser Specialist Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611551203.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-isabela-kabir",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 84,
+    "name": "Prof. Dr. Mosharraf Hossain (Shamim)",
+    "designation": "Chest & Oesophageal Surgeon",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613052350.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-mosharraf-hossain-(shamim)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 85,
+    "name": "Professor Dr. Syed Mozaffar Ahmed",
+    "designation": "Pain Medicine & Rheumatology   Arthritis & Joint Disease Specialist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613038234.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-syed-mozaffar-ahmed",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 86,
+    "name": "Professor Dr. Syed Khairul Amin",
+    "designation": "Professor of Pediatrics,  Ex. Academic Director",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613038675.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-syed-khairul-amin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 87,
+    "name": "Prof.Dr. M A Mohit Kamal",
+    "designation": "Professor of Psychotherapy, Senior -Chief Consultant (Psychiatry & Psychotherapy)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613039072.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.dr.-m-a-mohit-kamal",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 88,
+    "name": "Professor Dr. Md. Sirajul Islam",
+    "designation": "Blood & Medicine Specialist Professor & Head, Dept. of Hematology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700984700.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-sirajul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 89,
+    "name": "Professor. Dr. Md. Abdul Jalil Chowdhury",
+    "designation": "Ex. Professor, Internal Medicine",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579687812.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-md.-abdul-jalil-chowdhury",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 90,
+    "name": "Dr. Mahmud Chowdhury",
+    "designation": "Specialist Dermatology & Venereology Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611554123.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mahmud-chowdhury",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 91,
+    "name": "Professor Dr. A K M Salek",
+    "designation": "Pain Medicine & Rheumatology Specialist Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1610782301.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-a-k-m-salek",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 92,
+    "name": "Professor. Dr. Feroz Amin",
+    "designation": "Professor & Head of the Dept.",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613036757.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-feroz-amin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 93,
+    "name": "Dr. Kaniz Fatema",
+    "designation": "Obstetrician & Gynecologist  Associate Professor",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611552270.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-kaniz-fatema",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 94,
+    "name": "Dr. Ajmery Sultana Chowdhury",
+    "designation": "Pediatric Specialist Consultant, Dept. of Pediatrics & NICU",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1689245863.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-ajmery-sultana-chowdhury",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 95,
+    "name": "Dr. K. M. Mamun Murshed",
+    "designation": "Ear-Nose-Throat Specialist & Head-Neck Surgeon Associate Professor (ENT) & Deputy Director",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613037680.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-k.-m.-mamun-murshed",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 96,
+    "name": "Professor Dr. Mansur Habib",
+    "designation": "Specialist in Neuromedicine & Medicine Professor of Neurology",
+    "hospital": "LABAID Specialized Hospital Chattogram",
+    "imageURL": "https://labaid.com.bd/files/images/1613037632.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-mansur-habib",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 97,
+    "name": "Prof. Dr. Md. Shaukat Ali Khan",
+    "designation": "Urologist, Andrologist & Uro-oncologist Consultant, Urology & Uro-oncology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613559108.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-shaukat-ali-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 98,
+    "name": "Associate Prof. Dr. Naznin Akter (Ruby)",
+    "designation": "Pediatric Neurologist Associate Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579936745.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/associate-prof.-dr.-naznin-akter-(ruby)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 99,
+    "name": "Dr. Ansarul Huq",
+    "designation": "Chief Consultant    Laser & Vitreo - Retinal Service",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1584003236.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-ansarul-huq",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 100,
+    "name": "Professor (Dr.) Md.  Faruq Alam",
+    "designation": "Ex-Director",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613039480.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-(dr.)-md.-faruq-alam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 101,
+    "name": "DR. SERAJOOM MUNIRA",
+    "designation": "Assistant Professor (Reproductive Endocrinology and Infertility Dept.) DNCC Dedicated Covid-19 Hospital",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781332702.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr-serajoom-munira",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 102,
+    "name": "Professor Dr. Sabah Uddin Ahmed",
+    "designation": "E.N.T Specialist & Head-Neck Surgeon Ex. Professor & Head (E.N.T)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579764215.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-sabah-uddin-ahmed",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 103,
+    "name": "Professor (Dr.) Faroque Ahmed",
+    "designation": "Liver & Gastrointestinal Specialist Professor & Head, Dept. of Hepatology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1584253038.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-(dr.)-faroque-ahmed",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 104,
+    "name": "Dr. Foara Tasmim",
+    "designation": "Professor of Plastic Surgery  Plastic Breast, Cosmetic Birth Defects, Skin, Tumors & Burn Surgeon",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1584266085.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-foara-tasmim",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 105,
+    "name": "Professor Dr. Shikha Ganguly",
+    "designation": "Consultant Surgeon Professor & Head of the dept. Obs. & Gynae Department",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787281833.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-shikha-ganguly",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 106,
+    "name": "Professor Dr. Saifun Nahar",
+    "designation": "Psychiatrist, Counseling Expert & Psychotherapist  Professor, Psychiatry",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613051269.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-saifun-nahar",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 107,
+    "name": "Associate Professor. Dr. Shamsun Nahar",
+    "designation": "Associate Professor, Dept. of Oncology  Bangladesh Medical University (Ex-PG Hospital)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579689371.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/associate-professor.-dr.-shamsun-nahar",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 108,
+    "name": "Dr. Md Ashikuzzaman",
+    "designation": "Hematology, Medicine and Blood Cancer Specialist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781076600.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md-ashikuzzaman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 109,
+    "name": "Professor. (Dr.) G. M. Mostafa",
+    "designation": "Cataract & Eye Specialist,Director & Professor (Ex)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613040814.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-(dr.)-g.-m.-mostafa",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 110,
+    "name": "Dr. Chandra Shekhar Karmakar",
+    "designation": "Assistant Professor, Dept. of Anaesthesia Analgesia & Intensive Care Medicine",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1706501140.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr-chandra-shekhar-karmakar",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 111,
+    "name": "Dr. Tayeba Sultana",
+    "designation": "Gynae, Obs Specialist & Surgeon",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1706160690.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-tayeba-sultana",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 112,
+    "name": "Prof. Dr. Md. Shamsul Alam",
+    "designation": "Professor & Head of the Dept. (Ex), Thoracic Surgery Dept.",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1706160045.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-shamsul-alam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 113,
+    "name": "Dr. Abed Hussain Khan",
+    "designation": "Internal Medicine Specialist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1706160319.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-abed-hussain-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 114,
+    "name": "Dr. Md. Bazlul Ghani Bhuiyan",
+    "designation": "Assistant Professor, Vascular Surgery",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1611485578.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-bazlul-ghani-bhuiyan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 115,
+    "name": "Dr. Maruf Alam Chowdhury",
+    "designation": "Burn & Plastic Surgery Specialist   Professor (Plastic Surgery)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613626713.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-maruf-alam-chowdhury",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 116,
+    "name": "Dr. Khondaker Md. Masud",
+    "designation": "Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613042457.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-khondaker-md.-masud",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 117,
+    "name": "Dr. Md. Nurul Islam",
+    "designation": "Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613042039.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-nurul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 118,
+    "name": "Dr. Nargis Salahuddin",
+    "designation": "BDS (Dhaka)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1579584541.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-nargis-salahuddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 119,
+    "name": "Dr. Chaya Bhattacharjee",
+    "designation": "M.Phil (Psychology), Ph.D (Psychology)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1613041555.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-chaya-bhattacharjee",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 120,
+    "name": "Dr. Md. Tariqul Islam",
+    "designation": "Associate Professor  Physical Medicine & Rehabilitation Department",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1706160494.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-tariqul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 121,
+    "name": "Dr. Sumon Chandra Roy",
+    "designation": "Kidney & Medicine Specialist Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1689048174.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-sumon-chandra-roy",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 122,
+    "name": "Prof. Dr. Md. Sayedur Rahman Miah",
+    "designation": "Nuclear Medicine & Thyroid",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1707626358.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-sayedur-rahman-miah",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 123,
+    "name": "Professor. DR. MD. SANOWAR HOSSAIN",
+    "designation": "Specialist in Nuclear Medicine, Thyroid Specialist   Sr. Consultant, Labaid Ltd. (Diagnostic)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1670908013.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-md.-sanowar-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 124,
+    "name": "Dr. Nur Alam",
+    "designation": "Associate Professor of Cardiology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1706160829.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr-nur-alam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 125,
+    "name": "Dr. Sharmin Ferdous (Koly)",
+    "designation": "Assistant Professor (High Risk Pregnancy) Feto Maternal Medicine Department",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717561783.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-sharmin-ferdous-(koly)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 126,
+    "name": "Prof. Dr. Md. Ruhul Amin",
+    "designation": "Professor & Head (Ex.), Department of Endocrinology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717562159.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-ruhul-amin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 127,
+    "name": "Prof. (Dr.) A.K.M. Musa",
+    "designation": "Medicine, Diabetes, Rheumatology & Chest Diseases Specialist, Professor, Dept. of Medicine, Ibrahim Medical College, Ex-Professor & Head of the Dept. of Medicine BIRDEM & Ibrahim Medical College",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1727243238.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-(dr.)-a.k.m.-musa",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 128,
+    "name": "DR. A. Z. MAHMUDUL HASAN KANAK",
+    "designation": "General & Laparoscopic Surgeon Assistant Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1756352567.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-a.-z.-mahmudul-hasan-kanak",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 129,
+    "name": "Dr. HM Ashfaq Nazmi",
+    "designation": "Vascular & Endovascular Surgeon National Institute of Cardiovascular Disease",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1777791004.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-hm-ashfaq-nazmi",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 130,
+    "name": "Dr. Nagib Mahfuz Khan",
+    "designation": "Vascular & Endovascular Surgeon National Institute of Cardiovascular Disease",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1777791025.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-nagib-mahfuz-khan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 131,
+    "name": "Dr. Md. Nasir Uddin",
+    "designation": "Urology Specialist & Surgeon, Assistant Professor (Urology), National Institute of Kidney Diseases & Urology (NIKDU), Sher-Bangla Nagor, Dhaka",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1727243164.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-nasir-uddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 132,
+    "name": "Professor Dr. Sheikh Forhad",
+    "designation": "Orthopedic & Joint replacement Surgeon. Head of Arthroscopy and Arthroplasty Division. Bangladesh Medical University (Ex-PG Hospital)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781077293.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-dr.-sheikh-forhad",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 133,
+    "name": "Prof. Dr. Md. Mamunur Rahman",
+    "designation": "Advanced Laparoscopic Colorectal Gastrointestinal (Including Hepatobiliary) & General Surgeon Professor & Head, Dept. of Surgical Gastroenterology, National Gastroliver Institute & Hospital, Dhaka",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1714993953.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-md.-mamunur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 134,
+    "name": "Dr. Md. Shafiqul Islam",
+    "designation": "Ear, Nose, Throat & Head-Neck Surgeon Assistant Professor & Head of the Department ,Dhaka Central International Medical College Hospital",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1715152420.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-shafiqul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 135,
+    "name": "Dr. Shahida Bulbul",
+    "designation": "Assistant Professor, Neurology Department",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717563358.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-shahida-bulbul",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 136,
+    "name": "Dr. Syed Saimul Huque",
+    "designation": "Associate Professor, Department of Paediatric Nephrology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717563723.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-syed-saimul-huque",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 137,
+    "name": "Prof. Brig. General Dr. Md. Wali-Ur-Rahman",
+    "designation": "Clinical & Interventional Cardiologist, Head of the Department, Medicine Department, AFMC",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717566628.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-brig.-general-dr.-md.-wali-ur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 138,
+    "name": "Prof. Dr. Mirza Kamrul Zahid",
+    "designation": "Head, Pediatric Surgery Department",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717566913.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-mirza-kamrul-zahid",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 139,
+    "name": "Dr. Md. Kamrul Hasan",
+    "designation": "Medicine, Gastroenterology & Liver Specialist  Consultant, Department of Medicine",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717567071.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-kamrul-hasan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 140,
+    "name": "Dr. Kazi Monisur Rahman",
+    "designation": "Liver, Gastroenterology & Medicine Specialist  Senior Consultant",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717567132.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-kazi-monisur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 141,
+    "name": "Prof. Dr. M. M. Ehsanul Haque",
+    "designation": "Professor & Head (Rtd.), Department of Neurosurgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1717567110.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-m.-m.-ehsanul-haque",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 142,
+    "name": "Dr. Quazi Shahid-Ul-Alam",
+    "designation": "Associate Professor, Pediatric Orthopedics surgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1738235816.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.--quazi-shahid-ul-alam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 143,
+    "name": "Prof. Dr. Rubina Yasmin",
+    "designation": "Professor , Medicine Specialist.",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1727243253.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-rubina-yasmin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 144,
+    "name": "Prof. Dr. B Karim",
+    "designation": "Brain, Spine, Spinal Cord Microsurgery & Endoscopic Surgery Specialist ,Senior Consultant, Labaid Specialized Hospital",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1727243230.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-b-karim",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 145,
+    "name": "Professor Colonel (Dr) Nasir Uddin (Mahmud) BGBMS",
+    "designation": "Surgical Oncologist & Oncoplastic Breast Surgeon, General,Laparoscopic & Colorectal Surgeon, Professor, Surgery and Surgical Oncology, CMH, Dhaka",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1727243224.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor-colonel-(dr)-nasir-uddin-(mahmud)-bgbms",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 146,
+    "name": "Prof. (Dr.) Razia Sultana Mahmud",
+    "designation": "Professor of Cardiology",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787391367.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-(dr.)-razia-sultana-mahmud",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 147,
+    "name": "Prof. Dr. Swapan Kumar Sarkar",
+    "designation": "Professor (Gastro)  Medicine, Liver & Gastrointestinal Disease Specialist",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1729484640.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-swapan-kumar-sarkar",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 148,
+    "name": "DR. LOHANI MD. TAJUL ISLAM",
+    "designation": "Associate Professor (Cardiology)",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781077375.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-lohani-md.-tajul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 149,
+    "name": "DR. AMIRUL ISLAM BHUYAN",
+    "designation": "Sr. Consultant Cardiac Surgery Dept.",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1761121925.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr-amirul-islam-bhuyan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 150,
+    "name": "Dr. Mustafizur Rahman",
+    "designation": "Associate Professor (Cardiology) National Institute of Cardiovascular Diseases & Hospital",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781077515.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mustafizur-rahman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 151,
+    "name": "Dr. Akhter Ahmed (Shuvo)",
+    "designation": "General, Laparoscopic, Hepatobiliary & Pancreatic Surgeon Associate Professor & Head  Dept. of Hepatobiliary & Pancreatic Surgery",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781332561.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-akhter-ahmed-(shuvo)",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 152,
+    "name": "Dr. Abu Zafor Md. Salahuddin",
+    "designation": "Assistant Professor, Department of Nephrology National Institute of Kidney Diseases & Urology, Dhaka",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781077094.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-abu-zafor-md.-salahuddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 153,
+    "name": "Dr. Mohammad Sohel-Uzzaman",
+    "designation": "Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781076062.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mohammad-sohel-uzzaman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 154,
+    "name": "Dr. AKM Mustakim Billah",
+    "designation": "Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781075938.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-akm-mustakim-billah",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 155,
+    "name": "Dr. Md. Khalid Bin Rahman Apourba",
+    "designation": "Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781076030.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-khalid-bin-rahman-apourba",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 156,
+    "name": "Dr. Asif Yazdani",
+    "designation": "Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781075996.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-asif-yazdani",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 157,
+    "name": "Dr. Shafiqul Islam",
+    "designation": "Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781076960.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-shafiqul-islam",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 158,
+    "name": "Dr. Mostak Ahmed",
+    "designation": "Consultant",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781076094.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mostak-ahmed",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 159,
+    "name": "Dr. Shah Newaz Dewan",
+    "designation": "Kidney Diseases Specialist  Associate Professor & Unit Head Department of Nephrology National Institute of Kidney",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1781076229.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-shah-newaz-dewan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 160,
+    "name": "Dr. Akhter Hamid Parvez",
+    "designation": "Consultant, Dept. of Cardiac Surgery",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1785072091.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-akhter-hamid-parvez",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 161,
+    "name": "Dr. Mohammad Abul Khayer",
+    "designation": "Senior Consultant & Deputy Director, Cardiac Cath Lab",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787994643.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mohammad-abul-khayer",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 162,
+    "name": "Dr. Rashiduz Zaman",
+    "designation": "Consultant Cardiology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787994876.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-rashiduz-zaman",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 163,
+    "name": "Dr. Mohammad Ziaul Kabir",
+    "designation": "Consultant, Cardiology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787995104.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mohammad-ziaul-kabir",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 164,
+    "name": "Dr. Shiblee Sadik Pathan",
+    "designation": "Consultant, Clinical & Interventional Cardiologist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787995277.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-shiblee-sadik-pathan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 165,
+    "name": "Dr. Md Jaglul Kabir",
+    "designation": "Consultant Cardiologist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1788253804.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md-jaglul-kabir",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 166,
+    "name": "Dr. Tahmina Akter",
+    "designation": "Gynecology, Obstetrics & Infertility Specialist & Surgeon Assistant Professor (Gynae & Obs)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1788254866.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-tahmina-akter",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 167,
+    "name": "Dr. Md. Arif Hossain",
+    "designation": "General, Laparoscopic & Colorectal Surgeon Casualty, Accident & Trauma Surgeon Associate Professor (Casualty Surgery)",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1788254452.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-arif-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 168,
+    "name": "Dr. Md. Mohasin Uddin",
+    "designation": "Consultant Cardiologist & Medicine Specialist",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1782295653.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-mohasin-uddin",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 169,
+    "name": "Professor. Dr. Md. Mohsin Hossain",
+    "designation": "Interventional Cardiologist & Electrophysiologist, Professor of Cardiology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700979086.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/professor.-dr.-md.-mohsin-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 170,
+    "name": "Prof Dr. Amzad Hossain",
+    "designation": "Senior Consultant",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786541549.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof-dr.-amzad-hossain",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 171,
+    "name": "Prof. Dr. Nasir Uddin",
+    "designation": "Maxillofacial Surgeon",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786537632.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-nasir-uddin.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 172,
+    "name": "Prof. Dr. Zakir Ahmed Shaheen",
+    "designation": "Consultant",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786534081.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-zakir-ahmed-shaheen.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 173,
+    "name": "Dr. Safiqur Rahman Khan",
+    "designation": "Consultant",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786534367.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-safiqur-rahman-khan.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 174,
+    "name": "Dr. Mohammad Shamim al Mamun",
+    "designation": "Consultant",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786541013.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-mohammad-shamim-al-mamun.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 175,
+    "name": "Dr. Juthi Bhowmik",
+    "designation": "Infertility Specialist & Laparoscopic Surgeon",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787048439.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-juthi-bhowmik",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 176,
+    "name": "Dr. Nirmal Sharma",
+    "designation": "Oral & Dental Surgeon",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786533084.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-nirmal-sharma.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 177,
+    "name": "Dr. Sarwar Ahmed Sobhan",
+    "designation": "Liver, Gallbladder, Bile Duct & Pancreatic Surgeon",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787049359.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-sarwar-ahmed-sobhan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 178,
+    "name": "Dr. Fariha Binte Quayum",
+    "designation": "Consultant",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786540862.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-fariha-binte-quayum.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 179,
+    "name": "Dr. Md. Shariful Hasan",
+    "designation": "Pediatric Gastroenterology, Hepatology  Nutrition & Child Specialist, Associate Professor.",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787049571.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-shariful-hasan",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 180,
+    "name": "Dr. Md. Mazibur Rahman Meaji",
+    "designation": "Ear, Nose, Throat, Thyroid, Sinusitis &  Sleep Disorder Specialist & Surgeon  Associate Professor, Department of ENT",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1790508815.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-mazibur-rahman-meaji",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 181,
+    "name": "Dr. Kazi Rumana Sharmin Rummee",
+    "designation": "Consultant",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786532610.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-kazi-rumana-sharmin-rummee.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 182,
+    "name": "Dr. Md. Sanowar Hossain Khan",
+    "designation": "Senior Oral & Dental Surgeon",
+    "hospital": "LABAID Diagnostic Kalabagan",
+    "imageURL": "https://labaid.com.bd/files/images/1786533227.png",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-md.-sanowar-hossain-khan.",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 183,
+    "name": "Dr. Kazi Jannat Ara",
+    "designation": "Neurology Specialist, Associate Professor, Department of Neurology",
+    "hospital": "LABAID Cardiac Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1789195315.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-kazi-jannat-ara",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 184,
+    "name": "Dr. Muhammad Ali Siddiquee",
+    "designation": "Advanced Colorectal & Laparoscopic Surgeon, Associate Professor",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1787048917.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/dr.-muhammad-ali-siddiquee",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  },
+  {
+    "id": 185,
+    "name": "Prof. Dr. A.K.M Ahsan Ullah",
+    "designation": "General & Laparoscopic Surgeon Ex. Professor of Department Surgery,BMU (PG Hospital), Dhaka",
+    "hospital": "LABAID Specialized Hospital",
+    "imageURL": "https://labaid.com.bd/files/images/1700977408.jpg",
+    "profileUrl": "https://labaid.com.bd/en/doctor/prof.-dr.-a.k.m-ahsan-ullah",
+    "socialLinks": {
+      "facebook": null,
+      "twitter": null,
+      "youtube": null,
+      "linkedin": null
+    }
+  }
+]

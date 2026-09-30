@@ -24,14 +24,6 @@ export default function ServicedetailsPage() {
                 </div>
               </div>
             </div>
-            <nav className="breadcrumbs">
-              <div className="container">
-                <ol>
-                  <li><a href="/">Home</a></li>
-                  <li className="current">Service Details</li>
-                </ol>
-              </div>
-            </nav>
           </div>{/* End Page Title */}
       
           {/* Service Details 2 Section */}

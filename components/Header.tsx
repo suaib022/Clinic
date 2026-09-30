@@ -20,9 +20,9 @@ export default function Header() {
       </div>
     </div>{/* End Top Bar */}
 
-    <div className="branding d-flex align-items-cente">
+    <div className="branding d-flex align-items-cente" style={{ backgroundColor: "var(--background-color, #ffffff)" }}>
 
-      <div className="container position-relative d-flex align-items-center justify-content-between">
+      <div className="container position-relative d-flex align-items-center justify-content-center gap-5">
         <a href="/" className="logo d-flex align-items-center">
           {/* Uncomment the line below if you also wish to use an image logo */}
           {/* <img src="assets/img/logo.webp" alt="" /> */}

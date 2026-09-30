@@ -24,14 +24,6 @@ export default function TestimonialsPage() {
                 </div>
               </div>
             </div>
-            <nav className="breadcrumbs">
-              <div className="container">
-                <ol>
-                  <li><a href="/">Home</a></li>
-                  <li className="current">Testimonials</li>
-                </ol>
-              </div>
-            </nav>
           </div>{/* End Page Title */}
       
           {/* Featured Testimonials Section */}
