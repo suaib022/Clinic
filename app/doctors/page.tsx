@@ -3,9 +3,17 @@ import Footer from "@/components/Footer";
 import { createClient } from "@/lib/supabase/server";
 import DoctorsClient from "./DoctorsClient";
 
-export default async function DoctorsPage() {
+export default async function DoctorsPage({ searchParams }: { searchParams: Promise<{ dept?: string }> }) {
   const supabase = await createClient();
-  const { data: doctors, error } = await supabase.from('doctors').select('*').order('name');
+  // Fetch from legacy_doctors to preserve the old frontend listing data for now
+  const { data: doctors, error } = await supabase.from('legacy_doctors').select('*, departments(name)').order('name');
+  
+  // Fetch departments for dynamic sidebar
+  const { data: dbDepartments } = await supabase.from('departments').select('name, overview').order('name');
+  const departmentsList = dbDepartments ? dbDepartments.map(d => ({ name: d.name, overview: d.overview, keywords: [] })) : [];
+  
+  const resolvedSearchParams = await searchParams;
+  const initialDept = resolvedSearchParams?.dept || "All Departments";
 
   return (
     <div className="doctors-page">
@@ -28,7 +36,7 @@ export default async function DoctorsPage() {
             </div>
           </div>{/* End Page Title */}
       
-          <DoctorsClient initialDoctors={doctors || []} />
+          <DoctorsClient initialDoctors={doctors || []} initialDept={initialDept} dynamicDepartments={departmentsList} />
       
         </main>
       <Footer />

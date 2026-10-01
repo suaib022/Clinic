@@ -5,10 +5,8 @@ import { addMinutes, parse, format } from "date-fns";
 export async function POST(request: Request) {
   const supabase = await createClient();
   
-  const { data: { session } } = await supabase.auth.getSession();
-  
   const body = await request.json();
-  const { doctor_id, appointment_date, start_time } = body;
+  const { doctor_id, appointment_date, start_time, patientType, patientData, oldPatientId } = body;
   
   if (!doctor_id || !appointment_date || !start_time) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -19,14 +17,45 @@ export async function POST(request: Request) {
   const endTimeParsed = addMinutes(startTimeParsed, 10);
   const end_time = format(endTimeParsed, 'HH:mm:ss');
   
+  let finalPatientId = oldPatientId;
+  let generatedUhid = null;
+  let generatedPin = null;
+
+  if (patientType === 'NEW') {
+      generatedUhid = `UHID${Math.floor(10000000 + Math.random() * 90000000)}`;
+      generatedPin = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      const { data: newPatient, error: patientError } = await supabase.from('patients').insert({
+          uhid: generatedUhid,
+          pin: generatedPin,
+          title: patientData.title,
+          full_name: patientData.full_name,
+          father_name: patientData.father_name,
+          gender: patientData.gender,
+          dob: patientData.dob,
+          mobile_no: patientData.mobile_no,
+          email: patientData.email,
+          address: patientData.address,
+          country: patientData.country,
+          state: patientData.state,
+          city: patientData.city
+      }).select().single();
+      
+      if (patientError) {
+          return NextResponse.json({ error: patientError.message }, { status: 500 });
+      }
+      
+      finalPatientId = newPatient.id;
+  }
+  
   // Insert with unique constraint handling
   const { data, error } = await supabase.from('appointments').insert({
-      patient_id: session?.user?.id || null,
+      patient_id: finalPatientId || null,
       doctor_id,
       appointment_date,
       start_time,
       end_time,
-      status: 'scheduled'
+      status: 'hold'
   }).select().single();
   
   if (error) {
@@ -36,5 +65,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
   }
   
-  return NextResponse.json({ success: true, appointment: data });
+  return NextResponse.json({ 
+      success: true, 
+      appointment: data,
+      uhid: generatedUhid,
+      pin: generatedPin
+  });
 }
+

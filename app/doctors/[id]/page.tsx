@@ -8,7 +8,7 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
   
   const supabase = await createClient();
   const { data: doctor, error } = await supabase
-    .from('doctors')
+    .from('legacy_doctors')
     .select('*')
     .eq('id', id)
     .single();
@@ -17,9 +17,9 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
     notFound();
   }
 
-  // Split designation by commas to show as separate items under "Speciality" if it's long
-  const specialties = doctor.designation 
-    ? doctor.designation.split(',').map((s: string) => s.trim()).filter(Boolean) 
+  // Split speciality by '|' or ',' to show as separate items if it's long
+  const specialties = (doctor.speciality || doctor.designation)
+    ? (doctor.speciality || doctor.designation).split(/[|,]/).map((s: string) => s.trim()).filter(Boolean) 
     : [];
 
   return (

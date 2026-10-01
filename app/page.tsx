@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuickLinksBar from "@/components/QuickLinksBar";
 import HeroCarousel from "@/components/HeroCarousel";
+import { createClient } from "@/lib/supabase/server";
 
-export default function IndexPage() {
+export default async function IndexPage() {
+  const supabase = await createClient();
+  const { data: doctors } = await supabase.from('legacy_doctors').select('*').limit(6);
   return (
     <div className="index-page">
       <Header />
@@ -402,198 +405,43 @@ export default function IndexPage() {
             </div>
 
             <div className="doctors-grid" data-aos="fade-up" data-aos-delay="300">
-              <div className="doctor-profile" data-aos="zoom-in" data-aos-delay="100">
-                <div className="profile-header">
-                  <div className="doctor-avatar">
-                    <img src="assets/img/health/staff-2.webp" alt="Dr. Amanda Foster" className="img-fluid" />
-                    <div className="status-indicator available"></div>
-                  </div>
-                  <div className="doctor-details">
-                    <h4>Dr. Amanda Foster</h4>
-                    <span className="specialty-tag">Cardiology Specialist</span>
-                    <div className="experience-info">
-                      <i className="bi bi-award"></i>
-                      <span>14 years experience</span>
+              {doctors?.map((doc: any, index: number) => (
+                <div className="doctor-profile" data-aos="zoom-in" data-aos-delay={(index + 1) * 100} key={doc.id}>
+                  <div className="profile-header">
+                    <div className="doctor-avatar">
+                      <img 
+                        src={doc.image_url || "assets/img/health/default-doctor.webp"} 
+                        alt={doc.name} 
+                        className="img-fluid" 
+                      />
+                      <div className="status-indicator available"></div>
+                    </div>
+                    <div className="doctor-details">
+                      <h4>{doc.name}</h4>
+                      <span className="specialty-tag">{doc.designation}</span>
+                      <div className="experience-info">
+                        <i className="bi bi-building"></i>
+                        <span>{doc.hospital}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="rating-section">
-                  <div className="stars">
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                  </div>
-                  <span className="rating-score">4.9</span>
-                  <span className="review-count">(127 reviews)</span>
-                </div>
-                <div className="action-buttons">
-                  <a href="#!" className="btn-secondary">View Details</a>
-                  <a href="#!" className="btn-primary">Book Now</a>
-                </div>
-              </div>{/* End Doctor Profile */}
-
-              <div className="doctor-profile" data-aos="zoom-in" data-aos-delay="200">
-                <div className="profile-header">
-                  <div className="doctor-avatar">
-                    <img src="assets/img/health/staff-6.webp" alt="Dr. Marcus Johnson" className="img-fluid" />
-                    <div className="status-indicator busy"></div>
-                  </div>
-                  <div className="doctor-details">
-                    <h4>Dr. Marcus Johnson</h4>
-                    <span className="specialty-tag">Neurology Expert</span>
-                    <div className="experience-info">
-                      <i className="bi bi-award"></i>
-                      <span>16 years experience</span>
+                  <div className="rating-section">
+                    <div className="stars">
+                      <i className="bi bi-star-fill"></i>
+                      <i className="bi bi-star-fill"></i>
+                      <i className="bi bi-star-fill"></i>
+                      <i className="bi bi-star-fill"></i>
+                      <i className="bi bi-star-half"></i>
                     </div>
+                    <span className="rating-score">4.8</span>
+                    <span className="review-count">(120+ reviews)</span>
+                  </div>
+                  <div className="action-buttons">
+                    <a href={`/doctors/${doc.id}`} className="btn-secondary">View Details</a>
+                    <a href={`/doctors/${doc.id}`} className="btn-primary">Book Now</a>
                   </div>
                 </div>
-                <div className="rating-section">
-                  <div className="stars">
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-half"></i>
-                  </div>
-                  <span className="rating-score">4.8</span>
-                  <span className="review-count">(89 reviews)</span>
-                </div>
-                <div className="action-buttons">
-                  <a href="#!" className="btn-secondary">View Details</a>
-                  <a href="#!" className="btn-primary">Schedule</a>
-                </div>
-              </div>{/* End Doctor Profile */}
-
-              <div className="doctor-profile" data-aos="zoom-in" data-aos-delay="300">
-                <div className="profile-header">
-                  <div className="doctor-avatar">
-                    <img src="assets/img/health/staff-4.webp" alt="Dr. Rachel Williams" className="img-fluid" />
-                    <div className="status-indicator available"></div>
-                  </div>
-                  <div className="doctor-details">
-                    <h4>Dr. Rachel Williams</h4>
-                    <span className="specialty-tag">Pediatrics Care</span>
-                    <div className="experience-info">
-                      <i className="bi bi-award"></i>
-                      <span>11 years experience</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="rating-section">
-                  <div className="stars">
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                  </div>
-                  <span className="rating-score">5.0</span>
-                  <span className="review-count">(203 reviews)</span>
-                </div>
-                <div className="action-buttons">
-                  <a href="#!" className="btn-secondary">View Details</a>
-                  <a href="#!" className="btn-primary">Book Now</a>
-                </div>
-              </div>{/* End Doctor Profile */}
-
-              <div className="doctor-profile" data-aos="zoom-in" data-aos-delay="400">
-                <div className="profile-header">
-                  <div className="doctor-avatar">
-                    <img src="assets/img/health/staff-8.webp" alt="Dr. David Chen" className="img-fluid" />
-                    <div className="status-indicator offline"></div>
-                  </div>
-                  <div className="doctor-details">
-                    <h4>Dr. David Chen</h4>
-                    <span className="specialty-tag">Orthopedic Surgery</span>
-                    <div className="experience-info">
-                      <i className="bi bi-award"></i>
-                      <span>22 years experience</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="rating-section">
-                  <div className="stars">
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-half"></i>
-                  </div>
-                  <span className="rating-score">4.7</span>
-                  <span className="review-count">(156 reviews)</span>
-                </div>
-                <div className="action-buttons">
-                  <a href="#!" className="btn-secondary">View Details</a>
-                  <a href="#!" className="btn-primary">Schedule</a>
-                </div>
-              </div>{/* End Doctor Profile */}
-
-              <div className="doctor-profile" data-aos="zoom-in" data-aos-delay="500">
-                <div className="profile-header">
-                  <div className="doctor-avatar">
-                    <img src="assets/img/health/staff-11.webp" alt="Dr. Victoria Torres" className="img-fluid" />
-                    <div className="status-indicator available"></div>
-                  </div>
-                  <div className="doctor-details">
-                    <h4>Dr. Victoria Torres</h4>
-                    <span className="specialty-tag">Dermatology Care</span>
-                    <div className="experience-info">
-                      <i className="bi bi-award"></i>
-                      <span>9 years experience</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="rating-section">
-                  <div className="stars">
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star"></i>
-                  </div>
-                  <span className="rating-score">4.5</span>
-                  <span className="review-count">(74 reviews)</span>
-                </div>
-                <div className="action-buttons">
-                  <a href="#!" className="btn-secondary">View Details</a>
-                  <a href="#!" className="btn-primary">Book Now</a>
-                </div>
-              </div>{/* End Doctor Profile */}
-
-              <div className="doctor-profile" data-aos="zoom-in" data-aos-delay="600">
-                <div className="profile-header">
-                  <div className="doctor-avatar">
-                    <img src="assets/img/health/staff-14.webp" alt="Dr. Benjamin Lee" className="img-fluid" />
-                    <div className="status-indicator available"></div>
-                  </div>
-                  <div className="doctor-details">
-                    <h4>Dr. Benjamin Lee</h4>
-                    <span className="specialty-tag">Oncology Treatment</span>
-                    <div className="experience-info">
-                      <i className="bi bi-award"></i>
-                      <span>19 years experience</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="rating-section">
-                  <div className="stars">
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                  </div>
-                  <span className="rating-score">4.9</span>
-                  <span className="review-count">(194 reviews)</span>
-                </div>
-                <div className="action-buttons">
-                  <a href="#!" className="btn-secondary">View Details</a>
-                  <a href="#!" className="btn-primary">Schedule</a>
-                </div>
-              </div>{/* End Doctor Profile */}
-
+              ))}
             </div>
 
             <div className="text-center mt-5" data-aos="fade-up" data-aos-delay="700">
