@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import DashboardSidebar from '@/components/DashboardSidebar';
 
 export default async function DoctorDashboard() {
     const cookieStore = await cookies();
@@ -10,8 +11,12 @@ export default async function DoctorDashboard() {
     }
 
     return (
-        <div className="container py-5">
-            <h2 style={{ color: '#0D7D72' }}>Doctor Dashboard</h2>
+        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+            <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
+                <DashboardSidebar role="doctor" />
+                <div className="flex-grow-1 p-4 p-md-5">
+                    <div className="container-fluid max-w-1200 mx-auto">
+                        <h2 style={{ color: '#0D7D72' }}>Doctor Dashboard</h2>
             <div className="row mt-4">
                 <div className="col-md-4">
                     <div className="card shadow-sm border-0 rounded-0 mb-3">
@@ -41,6 +46,9 @@ export default async function DoctorDashboard() {
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
+            </div>
+            </div>
+        </main>
     );
 }

@@ -1,67 +1,87 @@
-'use client';
 import React from 'react';
-import Header from "@/components/Header";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import DashboardSidebar from '@/components/DashboardSidebar';
+import LeaveForm from './LeaveForm';
 
-export default function DoctorLeavePage() {
+export default async function DoctorLeavePage() {
+    const cookieStore = await cookies();
+    const staffSession = cookieStore.get('staff_session')?.value;
+    const role = cookieStore.get('staff_role')?.value;
+    
+    if (role !== 'doctor' || !staffSession) {
+        redirect('/doctor/login');
+    }
+
+    const supabase = await createClient();
+    
+    const { data: requests } = await supabase
+        .from('doctor_leave_requests')
+        .select('*')
+        .eq('doctor_id', staffSession)
+        .order('created_at', { ascending: false });
+
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
-      <Header />
-      <main className="container pt-5 mt-5">
-        <h2 className="mb-4">Doctor: Leave & Break Requests</h2>
+    <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+      <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
+        <DashboardSidebar role="doctor" />
+        <div className="flex-grow-1 p-4 p-md-5">
+          <div className="container-fluid max-w-1200 mx-auto">
+            <h2 className="mb-4" style={{ color: '#0D7D72' }}>Doctor: Leave & Break Requests</h2>
         
         <div className="row">
-           <div className="col-md-6">
-              <div className="card shadow-sm p-4 mb-4">
-                 <h4>Submit New Request</h4>
-                 <form className="mt-3">
-                    <div className="mb-3">
-                       <label className="form-label">Request Type</label>
-                       <select className="form-select">
-                          <option value="full_day">Full Day Leave</option>
-                          <option value="partial_day">Partial Day Break</option>
-                       </select>
-                    </div>
-                    <div className="row mb-3">
-                       <div className="col">
-                          <label className="form-label">Start Date</label>
-                          <input type="date" className="form-control" />
-                       </div>
-                       <div className="col">
-                          <label className="form-label">End Date</label>
-                          <input type="date" className="form-control" />
-                       </div>
-                    </div>
-                    <div className="mb-3">
-                       <label className="form-label">Reason</label>
-                       <textarea className="form-control" rows={3}></textarea>
-                    </div>
-                    <button type="button" className="btn btn-primary">Submit Request</button>
-                 </form>
+           <div className="col-md-5">
+              <div className="card border-0 shadow-sm rounded-0 p-4 mb-4">
+                 <h5 className="mb-0 text-secondary fw-bold">Submit New Request</h5>
+                 <LeaveForm />
               </div>
            </div>
            
-           <div className="col-md-6">
-              <div className="card shadow-sm p-4">
-                 <h4>My Requests</h4>
-                 <table className="table mt-3">
-                    <thead>
-                       <tr>
-                          <th>Type</th>
-                          <th>Dates</th>
-                          <th>Status</th>
-                          <th>Action</th>
-                       </tr>
-                    </thead>
-                    <tbody>
-                       <tr>
-                          <td colSpan={4} className="text-center text-muted">No requests found</td>
-                       </tr>
-                    </tbody>
-                 </table>
+           <div className="col-md-7">
+              <div className="card border-0 shadow-sm rounded-0 p-4">
+                 <h5 className="mb-0 text-secondary fw-bold">My Requests</h5>
+                 <div className="table-responsive mt-3">
+                     <table className="table table-hover mb-0">
+                        <thead className="table-light">
+                           <tr>
+                              <th className="py-3">Type</th>
+                              <th className="py-3">Dates & Time</th>
+                              <th className="py-3">Status</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {requests && requests.length > 0 ? (
+                               requests.map((req) => (
+                                   <tr key={req.id}>
+                                      <td className="py-3">{req.type === 'full_day' ? 'Full Day' : 'Partial Day'}</td>
+                                      <td className="py-3">
+                                        <div>{req.start_date} to {req.end_date}</div>
+                                        {req.type === 'partial_day' && req.start_time && req.end_time && (
+                                            <small className="text-muted">{req.start_time.substring(0,5)} - {req.end_time.substring(0,5)}</small>
+                                        )}
+                                      </td>
+                                      <td className="py-3">
+                                        <span className={`badge ${req.status === 'pending' ? 'bg-warning text-dark' : req.status === 'approved' ? 'bg-success' : 'bg-danger'}`}>
+                                            {req.status.toUpperCase()}
+                                        </span>
+                                      </td>
+                                   </tr>
+                               ))
+                           ) : (
+                               <tr>
+                                  <td colSpan={3} className="text-center text-muted py-4">No requests found</td>
+                               </tr>
+                           )}
+                        </tbody>
+                     </table>
+                 </div>
               </div>
            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+      </div>
+    </main>
   );
 }

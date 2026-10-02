@@ -32,7 +32,7 @@ export async function patientLogin(formData: FormData) {
 
   // Set session cookie
   const cookieStore = await cookies()
-  cookieStore.set('app_session', JSON.stringify({ role: 'patient', id: patient.id }), {
+  cookieStore.set('patient_session', patient.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -40,7 +40,7 @@ export async function patientLogin(formData: FormData) {
   })
 
   revalidatePath('/', 'layout')
-  redirect('/patient-dashboard')
+  redirect('/patient/dashboard')
 }
 
 export async function staffPinLogin(formData: FormData) {
@@ -48,7 +48,7 @@ export async function staffPinLogin(formData: FormData) {
   
   const identifier = formData.get('identifier') as string
   const pin = formData.get('pin') as string
-  const role = formData.get('role') as string
+  let role = formData.get('role') as string
 
   // For doctors, identifier is doctor_id
   let userId = null;
@@ -72,6 +72,19 @@ export async function staffPinLogin(formData: FormData) {
         .single()
       if (user) userId = user.id
     }
+  } else if (role === 'staff') {
+    // Determine if it's admin or compounder from the users table
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('id, role')
+      .in('role', ['admin', 'compounder'])
+      .eq('email', identifier)
+      .single()
+      
+    if (!error && user) {
+      userId = user.id
+      role = user.role // Update role to the actual one for cookie
+    }
   }
   
   if (!userId) {
@@ -88,7 +101,13 @@ export async function staffPinLogin(formData: FormData) {
   
   // Set session cookie
   const cookieStore = await cookies()
-  cookieStore.set('app_session', JSON.stringify({ role: role, id: userId }), {
+  cookieStore.set('staff_session', userId, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+    path: '/'
+  })
+  cookieStore.set('staff_role', role, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -96,7 +115,8 @@ export async function staffPinLogin(formData: FormData) {
   })
 
   revalidatePath('/', 'layout')
-  redirect('/admin')
+  const dashboardPath = role === 'admin' ? '/admin/dashboard' : `/${role}/dashboard`
+  redirect(dashboardPath)
 }
 
 export async function login(formData: FormData) {
@@ -146,6 +166,14 @@ export async function signup(formData: FormData) {
 export async function logout() {
   const supabase = await createClient()
   await supabase.auth.signOut()
+  
+  // Clear custom role sessions
+  const cookieStore = await cookies()
+  cookieStore.delete('patient_session')
+  cookieStore.delete('staff_session')
+  cookieStore.delete('staff_role')
+  cookieStore.delete('app_session')
+  
   revalidatePath('/', 'layout')
   redirect('/')
 }

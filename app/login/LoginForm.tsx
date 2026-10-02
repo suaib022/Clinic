@@ -97,15 +97,16 @@ export default function LoginForm({ error, message }: { error?: string, message?
         )}
 
         {role === 'staff' && (
-          <form action={login}>
+          <form action={staffPinLogin}>
+            <input type="hidden" name="role" value="staff" />
             <div className="row gy-4">
               <div className="col-12">
-                <label className="form-label" style={{ fontWeight: "600" }}>Email</label>
-                <input type="email" name="email" className="form-control" placeholder="Staff Email Address" required />
+                <label className="form-label" style={{ fontWeight: "600" }}>Admin / Compounder Email</label>
+                <input type="email" name="identifier" className="form-control" placeholder="Staff Email Address" required />
               </div>
               <div className="col-12">
-                <label className="form-label" style={{ fontWeight: "600" }}>Password</label>
-                <input type="password" name="password" className="form-control" placeholder="Password" required />
+                <label className="form-label" style={{ fontWeight: "600" }}>Password / PIN</label>
+                <input type="password" name="pin" className="form-control" placeholder="Password" required />
               </div>
               
               <div className="col-12 mt-4">
