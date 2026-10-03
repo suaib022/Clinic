@@ -22,7 +22,7 @@ export default async function PatientRecordsPage() {
     const patientIds = patients.map((p: any) => p.id);
 
     // Fetch visits (completed appointments)
-    const { data: visits } = await supabase
+    const { data: visits, error: visitsErr } = await supabase
         .from('appointments')
         .select(`
             id,
@@ -31,12 +31,16 @@ export default async function PatientRecordsPage() {
             start_time,
             status,
             patient_id,
-            doctors:doctor_id (id, full_name, designation, departments(name))
+            doctors:users!appointments_doctor_id_fkey(id, full_name)
         `)
         .in('patient_id', patientIds)
         .eq('status', 'completed')
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
+
+    if (visitsErr) {
+        console.error('Error fetching visits:', visitsErr);
+    }
 
     // Fetch medical records
     const { data: records } = await supabase

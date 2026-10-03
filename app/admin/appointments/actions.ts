@@ -11,4 +11,7 @@ export async function updateAppointmentStatus(formData: FormData) {
         console.error('Update appointment status error:', error);
     }
     revalidatePath('/admin/appointments');
+    revalidatePath('/patient/records');
+    revalidatePath('/doctor/appointments');
+    revalidatePath('/patient/dashboard');
 }
