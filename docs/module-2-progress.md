@@ -23,7 +23,7 @@
 - [x] **V21**: Eligibility enforced in DB: patient has non-cancelled appointment with assigned doctor today/yesterday.
 
 ### Admin
-- [ ] **V14**: Admin can read/soft-delete any document via RLS and RPCs (audited). No UI in this module.
+- [x] **V14**: Admin can read/soft-delete any document via RLS and RPCs (audited). No UI in this module.
 
 ### Security and Storage
-- [ ] **V15**: Authorization lives in the DATABASE (RLS / triggers / RPCs).
+- [x] **V15**: Authorization lives in the DATABASE (RLS / triggers / RPCs).
