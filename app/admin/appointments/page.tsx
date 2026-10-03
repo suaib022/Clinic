@@ -6,14 +6,18 @@ import DashboardSidebar from '@/components/DashboardSidebar';
 import { updateAppointmentStatus } from './actions';
 import { requireRole } from '@/lib/auth/requireRole';
 import { getStatusLabel, getStatusBadgeColor, APPOINTMENT_STATUSES } from '@/lib/appointmentStatus';
+import TableSearchForm from '@/components/TableSearchForm';
 
-export default async function AdminAppointments() {
+export default async function AdminAppointments(props: { searchParams: Promise<{ q?: string }> }) {
     const cookieStore = await cookies();
     const { role } = await requireRole(['admin', 'doctor', 'compounder']);
     if (role !== 'admin') redirect('/login');
 
+    const searchParams = await props.searchParams;
+    const q = (searchParams.q || '').toLowerCase();
+
     const supabase = await createClient();
-    const { data: appointments } = await supabase
+    let { data: appointments } = await supabase
         .from('appointments')
         .select(`
             id, serial_no, appointment_date, start_time, end_time, status,
@@ -21,6 +25,14 @@ export default async function AdminAppointments() {
             doctor:users!appointments_doctor_id_fkey(full_name)
         `)
         .order('appointment_date', { ascending: false });
+        
+    if (q && appointments) {
+        appointments = appointments.filter((apt: any) => 
+            (apt.patient?.full_name?.toLowerCase().includes(q)) ||
+            (apt.doctor?.full_name?.toLowerCase().includes(q)) ||
+            (apt.serial_no?.toString().includes(q))
+        );
+    }
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -30,6 +42,7 @@ export default async function AdminAppointments() {
                     <div className="container-fluid max-w-1200 mx-auto">
                         <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
                             <h2 className="m-0" style={{ color: '#0D7D72' }}>Manage Appointments</h2>
+                            <TableSearchForm placeholder="Search by patient, doctor, or serial..." />
                         </div>
                         <div className="card border-0 shadow-sm rounded-3 p-4">
                             <div className="table-responsive">

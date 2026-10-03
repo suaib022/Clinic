@@ -4,14 +4,19 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
+import TableSearchForm from '@/components/TableSearchForm';
 
-export default async function AdminDoctors() {
+export default async function AdminDoctors(props: { searchParams: Promise<{ q?: string }> }) {
     const cookieStore = await cookies();
     const { role } = await requireRole(['admin', 'doctor', 'compounder']);
     if (role !== 'admin') redirect('/login');
 
+    const searchParams = await props.searchParams;
+    const q = searchParams.q || '';
+
     const supabase = await createClient();
-    const { data: doctors } = await supabase
+    
+    let query = supabase
         .from('users')
         .select(`
             id, full_name, email,
@@ -19,6 +24,12 @@ export default async function AdminDoctors() {
         `)
         .eq('role', 'doctor')
         .order('full_name');
+        
+    if (q) {
+        query = query.ilike('full_name', `%${q}%`);
+    }
+
+    const { data: doctors } = await query;
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -28,6 +39,7 @@ export default async function AdminDoctors() {
                     <div className="container-fluid max-w-1200 mx-auto">
                         <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
                             <h2 className="m-0" style={{ color: '#0D7D72' }}>All Doctors</h2>
+                            <TableSearchForm placeholder="Search doctors by name..." />
                         </div>
                         <div className="card border-0 shadow-sm rounded-3 p-4">
                             <div className="table-responsive">
