@@ -31,4 +31,4 @@
 - [x] C18 Time zone handling (Asia/Dhaka).
 - [x] C19 Loading, empty, error states. Paginated.
 - [x] C20 Navigation / shared components.
-- [ ] C21 Seed data and tooling.
+- [x] C21 Seed data and tooling.
