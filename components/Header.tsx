@@ -81,7 +81,7 @@ export default async function Header() {
                 <div className="mega-menu">
                   <div className="row gx-4 gy-2">
                     {specialities && specialities.map((dept: any) => (
-                      <div className="col-md-3 col-6" key={dept.id}>
+                      <div className="col-md-3 col-6" key={dept.id} suppressHydrationWarning>
                         <Link href={`/doctors?dept=${encodeURIComponent(dept.name)}`} className="text-decoration-none text-secondary small d-block py-2 department-link">
                           {dept.name}
                         </Link>

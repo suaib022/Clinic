@@ -1,0 +1,2 @@
+-- This script has been neutralized to prevent accidental resetting of PINs in production.
+-- DO NOT RUN. PINs are now securely managed through Supabase Auth.

@@ -39,6 +39,12 @@ export async function uploadMedicalRecord(formData: FormData) {
         file_path
     });
 
+    // Log the access since the compounder modified the patient's record
+    await supabase.rpc('log_patient_access', {
+        p_patient_id: patient_id,
+        p_action: 'Uploaded medical record'
+    });
+
     revalidatePath('/compounder/upload');
     return { success: true };
 }

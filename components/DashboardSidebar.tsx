@@ -34,6 +34,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                 { href: '/admin/appointments', label: 'All Appointments', icon: 'bi-calendar-check' },
                 { href: '/admin/doctors', label: 'Doctors', icon: 'bi-people' },
                 { href: '/admin/patients', label: 'Patients', icon: 'bi-person-badge' },
+                { href: '/admin/compounders', label: 'Compounders', icon: 'bi-person-badge-fill' },
                 { href: '/admin/specialities', label: 'Specialities', icon: 'bi-tags' },
                 { href: '/admin/reports', label: 'Reports', icon: 'bi-bar-chart' },
                 { href: '/admin/settings', label: 'Settings', icon: 'bi-gear' },

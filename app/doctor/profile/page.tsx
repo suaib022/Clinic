@@ -9,8 +9,8 @@ export default async function DoctorProfilePage() {
     const cookieStore = await cookies();
     
     // Basic auth check
-    const { role: staffRole } = await requireRole(['admin', 'doctor', 'compounder']);
-    
+    const { user: authUser, role: staffRole } = await requireRole(['admin', 'doctor', 'compounder']);
+
 
     const supabase = await createClient();
     
@@ -25,24 +25,26 @@ export default async function DoctorProfilePage() {
                 doctor_id,
                 consultation_fee,
                 avatar_url
+            ),
+            legacy_doctors (
+                name,
+                designation,
+                hospital,
+                image_url
             )
         `)
-        .eq('id', cookieStore.get('staff_session')?.value)
+        .eq('id', authUser.id)
         .single();
 
-    // Fetch legacy doctor details if available
-    let legacyProfile = null;
-    if (user?.full_name) {
-        const { data } = await supabase
-            .from('legacy_doctors')
-            .select('*')
-            .eq('name', user.full_name)
-            .single();
-        legacyProfile = data;
-    }
+    const doctorProfile = (user?.doctors?.[0] || user?.doctors || {}) as any;
+    const legacyDetails = (user?.legacy_doctors?.[0] || user?.legacy_doctors || {}) as any;
+    
+    const doctorDetails = { ...legacyDetails, ...doctorProfile };
+    const fullName = user?.full_name || legacyDetails?.name || 'Doctor';
+    const avatar = legacyDetails?.image_url || doctorProfile?.avatar_url || 'https://via.placeholder.com/150';
+    const designation = legacyDetails?.designation || 'Doctor';
+    const hospital = legacyDetails?.hospital || 'N/A';
 
-    const doctorDetails = (user?.doctors?.[0] || user?.doctors || {}) as any;
-    const avatar = legacyProfile?.image_url || doctorDetails?.avatar_url || 'https://via.placeholder.com/150';
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -60,14 +62,14 @@ export default async function DoctorProfilePage() {
                                     <div className="col-md-4 text-center">
                                         <img 
                                             src={avatar} 
-                                            alt={user?.full_name} 
+                                            alt={fullName} 
                                             className="rounded-circle mb-3 border" 
                                             style={{ width: '180px', height: '180px', objectFit: 'cover', borderColor: '#0ab1a9 !important', borderWidth: '3px !important' }} 
                                         />
-                                        <h4 className="fw-bold">{user?.full_name}</h4>
-                                        <p className="text-muted mb-1">{legacyProfile?.designation || 'Doctor'}</p>
+                                        <h4 className="fw-bold">{fullName}</h4>
+                                        <p className="text-muted mb-1">{designation}</p>
                                         <span className="badge bg-light text-dark border px-3 py-2 mt-2">
-                                            ID: {doctorDetails?.doctor_id}
+                                            ID: {doctorProfile?.doctor_id}
                                         </span>
                                     </div>
                                     <div className="col-md-8">
@@ -76,7 +78,7 @@ export default async function DoctorProfilePage() {
                                             <tbody>
                                                 <tr>
                                                     <th className="ps-0" style={{ width: '30%' }}>Full Name:</th>
-                                                    <td>{user?.full_name}</td>
+                                                    <td>{fullName}</td>
                                                 </tr>
                                                 <tr>
                                                     <th className="ps-0">Email Address:</th>
@@ -84,11 +86,11 @@ export default async function DoctorProfilePage() {
                                                 </tr>
                                                 <tr>
                                                     <th className="ps-0">Hospital:</th>
-                                                    <td>{legacyProfile?.hospital || 'N/A'}</td>
+                                                    <td>{hospital}</td>
                                                 </tr>
                                                 <tr>
                                                     <th className="ps-0">Consultation Fee:</th>
-                                                    <td>{doctorDetails?.consultation_fee ? `$${doctorDetails.consultation_fee}` : 'Not set'}</td>
+                                                    <td>{doctorProfile?.consultation_fee ? `$${doctorProfile.consultation_fee}` : 'Not set'}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

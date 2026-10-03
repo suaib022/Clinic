@@ -93,11 +93,20 @@ export default function LoginForm({ error: initialError, message }: { error?: st
         </li>
         <li className="nav-item">
           <button 
-            className={`nav-link ${role === 'staff' ? 'active' : ''}`} 
-            style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'staff' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'staff' ? '#fff' : '#333' }}
-            onClick={(e) => { e.preventDefault(); setRole('staff'); }}
+            className={`nav-link ${role === 'compounder' ? 'active' : ''}`} 
+            style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'compounder' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'compounder' ? '#fff' : '#333' }}
+            onClick={(e) => { e.preventDefault(); setRole('compounder'); }}
           >
-            Admin/Staff
+            Compounder
+          </button>
+        </li>
+        <li className="nav-item">
+          <button 
+            className={`nav-link ${role === 'admin' ? 'active' : ''}`} 
+            style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'admin' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'admin' ? '#fff' : '#333' }}
+            onClick={(e) => { e.preventDefault(); setRole('admin'); }}
+          >
+            Admin
           </button>
         </li>
       </ul>
@@ -142,13 +151,13 @@ export default function LoginForm({ error: initialError, message }: { error?: st
           </form>
         )}
 
-        {role === 'staff' && (
+        {role === 'compounder' && (
           <form onSubmit={handleStaffLogin}>
-            <input type="hidden" name="role" value="staff" />
+            <input type="hidden" name="role" value="compounder" />
             <div className="row gy-4">
               <div className="col-12">
-                <label className="form-label" style={{ fontWeight: "600" }}>Admin / Compounder Email</label>
-                <input type="email" name="identifier" className="form-control" placeholder="Staff Email Address" required />
+                <label className="form-label" style={{ fontWeight: "600" }}>Compounder Email</label>
+                <input type="email" name="identifier" className="form-control" placeholder="Compounder Email Address" required />
               </div>
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Password / PIN</label>
@@ -156,7 +165,27 @@ export default function LoginForm({ error: initialError, message }: { error?: st
               </div>
               
               <div className="col-12 mt-4">
-                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Staff</button>
+                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Compounder</button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {role === 'admin' && (
+          <form onSubmit={handleStaffLogin}>
+            <input type="hidden" name="role" value="admin" />
+            <div className="row gy-4">
+              <div className="col-12">
+                <label className="form-label" style={{ fontWeight: "600" }}>Admin Email</label>
+                <input type="email" name="identifier" className="form-control" placeholder="Admin Email Address" required />
+              </div>
+              <div className="col-12">
+                <label className="form-label" style={{ fontWeight: "600" }}>Password / PIN</label>
+                <input type="password" name="pin" className="form-control" placeholder="Password" required />
+              </div>
+              
+              <div className="col-12 mt-4">
+                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Admin</button>
               </div>
             </div>
           </form>

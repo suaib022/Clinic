@@ -39,6 +39,7 @@ const QuickLinksBar = () => {
                 <div 
                   className="bg-white d-flex align-items-center justify-content-center me-3" 
                   style={{ width: '56px', height: '56px', color: '#439794', boxShadow: 'none' }}
+                  suppressHydrationWarning
                 >
                   <i className={`${link.icon} fs-4`}></i>
                 </div>
