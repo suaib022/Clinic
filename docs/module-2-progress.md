@@ -11,16 +11,16 @@
 - [x] **V06**: `/patient/records/access-log` showing who accessed records, filterable.
 
 ### Doctor
-- [ ] **V07**: `/doctor/patients`: Patients with non-cancelled appointments. Search, last visit, next appointment. Paginated.
-- [ ] **V08**: `/doctor/patients/[id]`: Complete history from ALL sources, grouped by date. 404 without relationship. Audited opens.
-- [ ] **V09**: Doctor upload on patient page using shared upload component; optional "attach to visit" limited to doctor's own visits.
+- [x] **V07**: `/doctor/patients`: Patients with non-cancelled appointments. Search, last visit, next appointment. Paginated.
+- [x] **V08**: `/doctor/patients/[id]`: Complete history from ALL sources, grouped by date. 404 without relationship. Audited opens.
+- [x] **V09**: Doctor upload on patient page using shared upload component; optional "attach to visit" limited to doctor's own visits.
 
 ### Compounder
-- [ ] **V10**: `/compounder/upload`: Today's patients of assigned doctor (no clinical data).
-- [ ] **V11**: Upload form for compounder. After success, show only a receipt.
-- [ ] **V12**: "Recent uploads" receipts (24h) via SECURITY DEFINER RPC. Retract within 15 mins. No clinical metadata.
-- [ ] **V13**: Proof of write-only: No access to documents, signed URLs, or metadata beyond V12. Explanatory state if no assigned doctor.
-- [ ] **V21**: Eligibility enforced in DB: patient has non-cancelled appointment with assigned doctor today/yesterday.
+- [x] **V10**: `/compounder/upload`: Today's patients of assigned doctor (no clinical data).
+- [x] **V11**: Upload form for compounder. After success, show only a receipt.
+- [x] **V12**: "Recent uploads" receipts (24h) via SECURITY DEFINER RPC. Retract within 15 mins. No clinical metadata.
+- [x] **V13**: Proof of write-only: No access to documents, signed URLs, or metadata beyond V12. Explanatory state if no assigned doctor.
+- [x] **V21**: Eligibility enforced in DB: patient has non-cancelled appointment with assigned doctor today/yesterday.
 
 ### Admin
 - [ ] **V14**: Admin can read/soft-delete any document via RLS and RPCs (audited). No UI in this module.

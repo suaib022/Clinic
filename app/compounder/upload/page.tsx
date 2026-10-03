@@ -1,76 +1,70 @@
 import React from 'react';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
-import { uploadMedicalRecord } from '../actions';
 import { requireRole } from '@/lib/auth/requireRole';
+import CompounderUploadClient from './CompounderUploadClient';
+import { format } from 'date-fns';
 
-export default async function CompounderUpload() {
-    const cookieStore = await cookies();
-    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
-    const { user: { id: compounderId } } = await requireRole(['compounder']);
-    
-
+export default async function CompounderUploadPage() {
+    const { user } = await requireRole(['compounder']);
     const supabase = await createClient();
-    
-    const { data: compounder } = await supabase.from('compounders').select('assigned_doctor_id').eq('id', compounderId).single();
-    const doctorId = compounder?.assigned_doctor_id;
 
-    // Get unique patients for this doctor
-    const { data: appointments } = await supabase
+    // Fetch compounder's assigned doctor
+    const { data: userData } = await supabase
+        .from('users')
+        .select('id, full_name')
+        .eq('id', user.id)
+        .single();
+        
+    const { data: compounderDocId } = await supabase.rpc('compounder_doctor_id', { c_id: user.id });
+
+    if (!compounderDocId) {
+        return (
+            <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+                <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
+                    <DashboardSidebar role="compounder" />
+                    <div className="flex-grow-1 p-4 p-md-5">
+                        <div className="alert alert-warning">
+                            You are not assigned to any doctor. You cannot upload documents.
+                        </div>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
+    // V10: Today's patients of assigned doctor
+    // (Also include yesterday's patients to be safe, or just rely on what the RPC allows for upload)
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const { data: todaysAppointments } = await supabase
         .from('appointments')
-        .select(`
-            patient:patients(id, full_name, mobile_no)
-        `)
-        .eq('doctor_id', doctorId);
+        .select('patient_id, patient:patients(id, full_name, uhid)')
+        .eq('doctor_id', compounderDocId)
+        .eq('appointment_date', today)
+        .neq('status', 'cancelled');
 
-    // Filter unique patients
-    const uniquePatients = Array.from(new Map(appointments?.map((a: any) => [a.patient?.id, a.patient])).values());
+    // Deduplicate patients
+    const patientsMap = new Map();
+    todaysAppointments?.forEach((a: any) => {
+        if (a.patient) {
+            patientsMap.set(a.patient_id, a.patient);
+        }
+    });
+    const patients = Array.from(patientsMap.values());
+
+    // Fetch recent uploads (receipts)
+    const { data: recentUploads } = await supabase.rpc('get_recent_compounder_uploads');
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="compounder" />
                 <div className="flex-grow-1 p-4 p-md-5">
-                    <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Upload Medical Documents</h2>
-                        </div>
-                        <div className="card border-0 shadow-sm rounded-3 p-4 max-w-800">
-                            <form action={async (formData) => { await uploadMedicalRecord(formData); }}>
-                                <div className="mb-3">
-                                    <label className="form-label fw-bold">Select Patient</label>
-                                    <select name="patient_id" className="form-select" required>
-                                        <option value="">-- Choose Patient --</option>
-                                        {uniquePatients.map((p: any) => (
-                                            p && <option key={p.id} value={p.id}>{p.full_name} ({p.mobile_no})</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label fw-bold">Document Type</label>
-                                    <select name="record_type" className="form-select" required>
-                                        <option value="prescription">Prescription</option>
-                                        <option value="test_report">Test Report</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label fw-bold">Document Title</label>
-                                    <input type="text" name="title" className="form-control" placeholder="e.g. Blood Test Report" required />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="form-label fw-bold">File (PDF/Image)</label>
-                                    <input type="file" name="file" className="form-control" />
-                                    <div className="form-text text-muted">This simulates file upload. The actual file won't be stored in this demo.</div>
-                                </div>
-                                <button type="submit" className="btn text-white w-100" style={{ backgroundColor: '#0ab1a9' }}>
-                                    Upload Document on Behalf of Patient
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                    <CompounderUploadClient 
+                        patients={patients} 
+                        recentUploads={recentUploads || []} 
+                    />
                 </div>
             </div>
         </main>
