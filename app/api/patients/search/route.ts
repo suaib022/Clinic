@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -10,9 +10,7 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Missing type or q parameter' }, { status: 400 });
     }
 
-    const supabase = await createClient();
-
-    let query = supabase.from('patients').select('*');
+    let query = supabaseAdmin.from('patients').select('id, full_name, uhid, mobile_no, gender, email');
     if (type === 'mobile') {
         query = query.eq('mobile_no', q);
     } else if (type === 'uhid') {
