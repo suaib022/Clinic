@@ -43,7 +43,8 @@ export default function DashboardSidebar({ role }: { role: Role }) {
         case 'compounder':
             links = [
                 { href: '/compounder/dashboard', label: 'Dashboard', icon: 'bi-grid' },
-                { href: '/compounder/patients', label: 'Assigned Patients', icon: 'bi-people' },
+                { href: '/compounder/bookings', label: 'Bookings', icon: 'bi-calendar-check' },
+                { href: '/compounder/walk-in', label: 'Add Walk-in', icon: 'bi-person-plus' },
                 { href: '/compounder/upload', label: 'Upload Documents', icon: 'bi-file-arrow-up' },
             ];
             break;
