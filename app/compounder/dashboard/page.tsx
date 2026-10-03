@@ -1,15 +1,18 @@
 import React from 'react';
+import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { updateAppointmentStatus } from '../actions';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function CompounderDashboard() {
     const cookieStore = await cookies();
-    const role = cookieStore.get('staff_role')?.value;
-    const compounderId = cookieStore.get('staff_session')?.value;
-    if (role !== 'compounder' || !compounderId) redirect('/login');
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
+    const { user: { id: compounderId } } = await requireRole(['compounder']);
+    
 
     const supabase = await createClient();
     
@@ -23,7 +26,7 @@ export default async function CompounderDashboard() {
     const doctorId = compounder?.assigned_doctor_id;
 
     // Get today's appointments for the assigned doctor
-    const today = new Date().toISOString().split('T')[0];
+    const today = format(toZonedTime(new Date(), 'Asia/Dhaka'), 'yyyy-MM-dd');
     const { data: appointments } = await supabase
         .from('appointments')
         .select(`
@@ -42,7 +45,7 @@ export default async function CompounderDashboard() {
                     <div className="container-fluid max-w-1200 mx-auto">
                         <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
                             <h2 className="m-0" style={{ color: '#0D7D72' }}>
-                                Today's Appointments - {compounder?.doctor?.full_name}
+                                Today's Appointments - {((compounder?.doctor as any)?.[0] || compounder?.doctor as any)?.full_name}
                             </h2>
                         </div>
                         <div className="card border-0 shadow-sm rounded-3 p-4">

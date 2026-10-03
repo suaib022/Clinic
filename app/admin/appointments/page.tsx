@@ -4,10 +4,11 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { updateAppointmentStatus } from './actions';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function AdminAppointments() {
     const cookieStore = await cookies();
-    const role = cookieStore.get('staff_role')?.value;
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
     if (role !== 'admin') redirect('/login');
 
     const supabase = await createClient();
@@ -45,7 +46,7 @@ export default async function AdminAppointments() {
                                         {appointments?.map((apt: any) => (
                                             <tr key={apt.id}>
                                                 <td>
-                                                    <div className="fw-medium">{new Date(apt.appointment_date).toLocaleDateString()}</div>
+                                                    <div className="fw-medium">{apt.appointment_date}</div>
                                                     <div className="small text-muted">{apt.start_time} - {apt.end_time}</div>
                                                 </td>
                                                 <td>

@@ -3,12 +3,13 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function CompounderPatients() {
     const cookieStore = await cookies();
-    const role = cookieStore.get('staff_role')?.value;
-    const compounderId = cookieStore.get('staff_session')?.value;
-    if (role !== 'compounder' || !compounderId) redirect('/login');
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
+    const { user: { id: compounderId } } = await requireRole(['compounder']);
+    
 
     const supabase = await createClient();
     
@@ -52,7 +53,7 @@ export default async function CompounderPatients() {
                                                 <td className="fw-medium">{apt.patient?.full_name || 'N/A'}</td>
                                                 <td>{apt.patient?.mobile_no}</td>
                                                 <td>{apt.patient?.age} / {apt.patient?.gender}</td>
-                                                <td>{new Date(apt.appointment_date).toLocaleDateString()}</td>
+                                                <td>{apt.appointment_date}</td>
                                                 <td>
                                                     <span className={`badge ${
                                                         apt.status === 'scheduled' ? 'bg-primary' : 

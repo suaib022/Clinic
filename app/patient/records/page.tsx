@@ -1,15 +1,14 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function PatientRecordsPage() {
     const cookieStore = await cookies();
     
     // Basic auth check
-    const patientId = cookieStore.get('patient_session')?.value;
-    if (!patientId) {
-        redirect('/login');
-    }
+    const { patientId } = await requireRole(['patient']);
+    
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>

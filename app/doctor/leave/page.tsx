@@ -4,11 +4,12 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import LeaveForm from './LeaveForm';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function DoctorLeavePage() {
     const cookieStore = await cookies();
-    const staffSession = cookieStore.get('staff_session')?.value;
-    const role = cookieStore.get('staff_role')?.value;
+    const { user: { id: staffSession } } = await requireRole(['admin', 'doctor', 'compounder']);
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
     
     if (role !== 'doctor' || !staffSession) {
         redirect('/doctor/login');

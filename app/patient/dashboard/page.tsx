@@ -2,14 +2,13 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function PatientDashboard() {
     const cookieStore = await cookies();
-    const patientId = cookieStore.get('patient_session')?.value;
+    const { patientId } = await requireRole(['patient']);
     
-    if (!patientId) {
-        redirect('/patient/login');
-    }
+    
 
     const supabase = await createClient();
     

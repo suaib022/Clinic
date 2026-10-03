@@ -61,7 +61,7 @@ export default function DoctorsClient({
     
     dynamicDepartments.forEach(d => {
       const keywords = deptMap.has(d.name) ? deptMap.get(d.name)! : [];
-      merged.push({ name: d.name, overview: d.overview, keywords });
+      merged.push({ name: d.name, overview: d.overview, keywords } as any);
     });
     return merged;
   }, [dynamicDepartments]);
@@ -172,7 +172,7 @@ export default function DoctorsClient({
 
             {/* Department Article Block */}
             {activeDepartment !== "All Departments" && (() => {
-              const activeDepartmentConfig = allDepartments.find(d => d.name === activeDepartment);
+              const activeDepartmentConfig = allDepartments.find(d => d.name === activeDepartment) as any;
               const hasOverview = activeDepartmentConfig && activeDepartmentConfig.overview && (activeDepartmentConfig.overview as string).trim() !== '';
               
               return (

@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export async function updateAppointmentStatus(formData: FormData) {
     const id = formData.get('id') as string;
@@ -13,7 +14,7 @@ export async function updateAppointmentStatus(formData: FormData) {
 
 export async function uploadMedicalRecord(formData: FormData) {
     const cookieStore = await cookies();
-    const compounderId = cookieStore.get('staff_session')?.value;
+    const { user: { id: compounderId } } = await requireRole(['compounder']);
     
     if (!compounderId) throw new Error("Not authenticated");
 

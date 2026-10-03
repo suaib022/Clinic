@@ -4,12 +4,13 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { uploadMedicalRecord } from '../actions';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function CompounderUpload() {
     const cookieStore = await cookies();
-    const role = cookieStore.get('staff_role')?.value;
-    const compounderId = cookieStore.get('staff_session')?.value;
-    if (role !== 'compounder' || !compounderId) redirect('/login');
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
+    const { user: { id: compounderId } } = await requireRole(['compounder']);
+    
 
     const supabase = await createClient();
     
@@ -37,7 +38,7 @@ export default async function CompounderUpload() {
                             <h2 className="m-0" style={{ color: '#0D7D72' }}>Upload Medical Documents</h2>
                         </div>
                         <div className="card border-0 shadow-sm rounded-3 p-4 max-w-800">
-                            <form action={uploadMedicalRecord}>
+                            <form action={async (formData) => { await uploadMedicalRecord(formData); }}>
                                 <div className="mb-3">
                                     <label className="form-label fw-bold">Select Patient</label>
                                     <select name="patient_id" className="form-select" required>

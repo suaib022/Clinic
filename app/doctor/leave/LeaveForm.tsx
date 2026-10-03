@@ -7,7 +7,7 @@ export default function LeaveForm() {
     const [requestType, setRequestType] = useState('full_day');
 
     return (
-        <form action={submitLeaveRequest} className="mt-3">
+        <form action={async (formData) => { await submitLeaveRequest(formData); }} className="mt-3">
             <div className="mb-3">
                <label className="form-label">Request Type</label>
                <select name="type" className="form-select" value={requestType} onChange={(e) => setRequestType(e.target.value)}>

@@ -3,15 +3,14 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import ProfileForms from './ProfileForms';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function DoctorProfilePage() {
     const cookieStore = await cookies();
     
     // Basic auth check
-    const staffRole = cookieStore.get('staff_role')?.value;
-    if (staffRole !== 'doctor') {
-        redirect('/login');
-    }
+    const { role: staffRole } = await requireRole(['admin', 'doctor', 'compounder']);
+    
 
     const supabase = await createClient();
     
@@ -42,7 +41,7 @@ export default async function DoctorProfilePage() {
         legacyProfile = data;
     }
 
-    const doctorDetails = user?.doctors?.[0] || user?.doctors || {};
+    const doctorDetails = (user?.doctors?.[0] || user?.doctors || {}) as any;
     const avatar = legacyProfile?.image_url || doctorDetails?.avatar_url || 'https://via.placeholder.com/150';
 
     return (

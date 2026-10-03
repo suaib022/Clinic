@@ -3,10 +3,11 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export async function submitLeaveRequest(formData: FormData) {
     const cookieStore = await cookies();
-    const staffSession = cookieStore.get('staff_session')?.value;
+    const { user: { id: staffSession } } = await requireRole(['admin', 'doctor', 'compounder']);
     
     if (!staffSession) {
         return { error: 'Not authenticated' };

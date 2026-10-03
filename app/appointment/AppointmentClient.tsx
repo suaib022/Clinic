@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { format, addMinutes, parse } from 'date-fns';
+import { format, addMinutes, parse, differenceInYears, addYears, differenceInMonths, addMonths, differenceInDays, subYears, subMonths, subDays } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-
 export default function AppointmentClient() {
   const [specialities, setSpecialities] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -144,7 +143,7 @@ export default function AppointmentClient() {
     fetch('/api/specialities')
       .then(r => r.json())
       .then(data => {
-         if (Array.isArray(data)) setSpecialities(data);
+         if (Array.isArray(data)) setSpecialities(data as any);
       });
   }, []);
 
@@ -153,7 +152,7 @@ export default function AppointmentClient() {
     fetch(url)
       .then(r => r.json())
       .then(data => {
-         if (Array.isArray(data)) setDoctors(data);
+         if (Array.isArray(data)) setDoctors(data as any);
       });
   }, [selectedSpeciality]);
   

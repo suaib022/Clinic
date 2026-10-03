@@ -3,10 +3,11 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function AdminPatients() {
     const cookieStore = await cookies();
-    const role = cookieStore.get('staff_role')?.value;
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
     if (role !== 'admin') redirect('/login');
 
     const supabase = await createClient();
@@ -45,7 +46,7 @@ export default async function AdminPatients() {
                                                 <td>{pat.age || 'N/A'}</td>
                                                 <td>{pat.gender || 'N/A'}</td>
                                                 <td>{pat.blood_group || 'N/A'}</td>
-                                                <td>{new Date(pat.created_at).toLocaleDateString()}</td>
+                                                <td>{new Date(pat.created_at).toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}</td>
                                             </tr>
                                         ))}
                                         {!patients?.length && (

@@ -1,15 +1,14 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function DoctorPatientsPage() {
     const cookieStore = await cookies();
     
     // Basic auth check
-    const staffRole = cookieStore.get('staff_role')?.value;
-    if (staffRole !== 'doctor') {
-        redirect('/login');
-    }
+    const { role: staffRole } = await requireRole(['admin', 'doctor', 'compounder']);
+    
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>

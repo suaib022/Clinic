@@ -3,10 +3,11 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function AdminDoctors() {
     const cookieStore = await cookies();
-    const role = cookieStore.get('staff_role')?.value;
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
     if (role !== 'admin') redirect('/login');
 
     const supabase = await createClient();

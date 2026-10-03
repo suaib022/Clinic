@@ -3,11 +3,12 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function AdminDashboard() {
     const cookieStore = await cookies();
-    const staffSession = cookieStore.get('staff_session')?.value;
-    const role = cookieStore.get('staff_role')?.value;
+    const { user: { id: staffSession } } = await requireRole(['admin', 'doctor', 'compounder']);
+    const { role } = await requireRole(['admin', 'doctor', 'compounder']);
 
     if (role !== 'admin' || !staffSession) {
         redirect('/doctor/login');
@@ -107,7 +108,7 @@ export default async function AdminDashboard() {
                                         {recentAppointments && recentAppointments.length > 0 ? (
                                             recentAppointments.map((apt: any) => (
                                                 <tr key={apt.id}>
-                                                    <td>{new Date(apt.appointment_date).toLocaleDateString()}</td>
+                                                    <td>{apt.appointment_date}</td>
                                                     <td className="fw-medium">{apt.patient?.full_name || 'N/A'}</td>
                                                     <td>{apt.doctor?.full_name || 'N/A'}</td>
                                                     <td>

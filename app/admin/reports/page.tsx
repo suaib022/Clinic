@@ -1,12 +1,13 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
+import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function AdminReportsPage() {
     const cookieStore = await cookies();
     
     // Basic auth check
-    const staffRole = cookieStore.get('staff_role')?.value;
+    const { role: staffRole } = await requireRole(['admin', 'doctor', 'compounder']);
     if (staffRole !== 'admin') {
         redirect('/login');
     }

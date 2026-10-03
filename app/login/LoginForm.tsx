@@ -1,11 +1,57 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { login, patientLogin, staffPinLogin } from "../auth/actions";
 
-export default function LoginForm({ error, message }: { error?: string, message?: string }) {
+export default function LoginForm({ error: initialError, message }: { error?: string, message?: string }) {
   const [role, setRole] = useState("patient");
+  const [error, setError] = useState(initialError);
+  const router = useRouter();
+
+  const handlePatientLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(undefined);
+    const formData = new FormData(e.currentTarget);
+    const identifier = formData.get('mobile') as string;
+    const pin = formData.get('pin') as string;
+    
+    const res = await fetch('/api/patient/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, pin })
+    });
+    const data = await res.json();
+    if (res.ok) {
+        router.refresh();
+        router.push('/patient/dashboard');
+    } else {
+        setError(data.error || 'Login failed');
+    }
+  };
+
+  const handleStaffLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(undefined);
+    const formData = new FormData(e.currentTarget);
+    const identifier = formData.get('identifier') as string;
+    const pin = formData.get('pin') as string;
+    const roleType = formData.get('role') as string;
+    
+    const res = await fetch('/api/doctor/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, pin, role: roleType })
+    });
+    const data = await res.json();
+    if (res.ok) {
+        router.refresh();
+        const roleStr = data.user?.role;
+        router.push(roleStr === 'admin' ? '/admin/dashboard' : `/${roleStr}/dashboard`);
+    } else {
+        setError(data.error || 'Login failed');
+    }
+  };
 
   return (
     <div className="booking-wrapper" style={{ padding: "40px", backgroundColor: "#fff", borderRadius: "10px", boxShadow: "0px 0px 20px rgba(1, 41, 112, 0.1)" }}>
@@ -58,15 +104,15 @@ export default function LoginForm({ error, message }: { error?: string, message?
 
       <div className="appointment-form">
         {role === 'patient' && (
-          <form action={patientLogin}>
+          <form onSubmit={handlePatientLogin}>
             <div className="row gy-4">
               <div className="col-12">
-                <label className="form-label" style={{ fontWeight: "600" }}>Mobile Number</label>
-                <input type="text" name="mobile" className="form-control" placeholder="Enter your mobile number" required />
+                <label className="form-label" style={{ fontWeight: "600" }}>Mobile Number or UHID</label>
+                <input type="text" name="mobile" className="form-control" placeholder="Enter your mobile number or UHID" required />
               </div>
               <div className="col-12">
-                <label className="form-label" style={{ fontWeight: "600" }}>6-Digit PIN</label>
-                <input type="password" name="pin" className="form-control" placeholder="Enter your PIN" required maxLength={6} />
+                <label className="form-label" style={{ fontWeight: "600" }}>PIN or Password</label>
+                <input type="password" name="pin" className="form-control" placeholder="Enter your PIN" required />
               </div>
               
               <div className="col-12 mt-4">
@@ -77,7 +123,7 @@ export default function LoginForm({ error, message }: { error?: string, message?
         )}
 
         {role === 'doctor' && (
-          <form action={staffPinLogin}>
+          <form onSubmit={handleStaffLogin}>
             <input type="hidden" name="role" value="doctor" />
             <div className="row gy-4">
               <div className="col-12">
@@ -97,7 +143,7 @@ export default function LoginForm({ error, message }: { error?: string, message?
         )}
 
         {role === 'staff' && (
-          <form action={staffPinLogin}>
+          <form onSubmit={handleStaffLogin}>
             <input type="hidden" name="role" value="staff" />
             <div className="row gy-4">
               <div className="col-12">
