@@ -89,10 +89,18 @@ export default function RecordsClient({ patients, visits, records, userId }: { p
             alert('Could not download file: ' + error.message);
             return;
         }
+        
+        let downloadName = fileName;
+        // The path in storage usually looks like: patientId/timestamp-random.ext
+        const extMatch = path.match(/\.([^.]+)$/);
+        if (extMatch && !fileName.endsWith(extMatch[0])) {
+            downloadName += extMatch[0];
+        }
+
         const url = URL.createObjectURL(data);
         const a = document.createElement('a');
         a.href = url;
-        a.download = fileName;
+        a.download = downloadName;
         a.click();
         URL.revokeObjectURL(url);
     };

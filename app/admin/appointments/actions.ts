@@ -6,6 +6,9 @@ export async function updateAppointmentStatus(formData: FormData) {
     const id = formData.get('id') as string;
     const status = formData.get('status') as string;
     const supabase = await createClient();
-    await supabase.from('appointments').update({ status }).eq('id', id);
+    const { error } = await supabase.from('appointments').update({ status }).eq('id', id);
+    if (error) {
+        console.error('Update appointment status error:', error);
+    }
     revalidatePath('/admin/appointments');
 }
