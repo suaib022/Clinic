@@ -1,41 +1,33 @@
-import { cookies } from 'next/headers';
+import React from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
 
 export default async function PatientDashboard() {
-    const cookieStore = await cookies();
-    const { patientId } = await requireRole(['patient']);
-    
-    
-
+    const { user } = await requireRole(['patient']);
     const supabase = await createClient();
     
-    // Fetch patient info
-    const { data: patient } = await supabase
+    // Fetch user email
+    const { data: userData } = await supabase.auth.admin.getUserById(user.id);
+
+    // Fetch ALL patients for this user account
+    const { data: patients } = await supabase
         .from('patients')
         .select('*')
-        .eq('id', patientId)
-        .single();
+        .eq('auth_user_id', user.id);
 
-    if (!patient) {
-        redirect('/patient/login');
+    if (!patients || patients.length === 0) {
+        redirect('/login');
     }
 
-    // Fetch patient appointments
-    const { data: appointments } = await supabase
+    const patientIds = patients.map((p: any) => p.id);
+
+    // Fetch quick stats
+    const { count: appointmentCount } = await supabase
         .from('appointments')
-        .select(`
-            id,
-            appointment_date,
-            start_time,
-            status,
-            doctors:doctor_id (full_name)
-        `)
-        .eq('patient_id', patientId)
-        .order('appointment_date', { ascending: false })
-        .order('start_time', { ascending: false });
+        .select('*', { count: 'exact', head: true })
+        .in('patient_id', patientIds);
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -43,56 +35,51 @@ export default async function PatientDashboard() {
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
+                        
                         <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                    <h2 className="m-0" style={{ color: '#0D7D72' }}>Welcome, {patient.full_name}</h2>
-                    <div>
-                        <span className="badge bg-secondary me-2 p-2">UHID: {patient.uhid}</span>
-                        <a href="/" className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }}>Book New Appointment</a>
+                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Account Overview</h2>
+                            <div>
+                                <a href="/patient/book" className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }}>Book New Appointment</a>
+                            </div>
+                        </div>
+                        
+                        <div className="row g-4 mb-4">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="card border-0 shadow-sm rounded-0 h-100" style={{ borderLeft: '4px solid #0ab1a9 !important' }}>
+                                    <div className="card-body">
+                                        <h6 className="text-muted text-uppercase fw-bold mb-2">Registered Patients</h6>
+                                        <h2 className="display-5 fw-bold mb-0 text-dark">{patients.length}</h2>
+                                        <a href="/patient/members" className="text-decoration-none mt-3 d-inline-block" style={{ color: '#0D7D72' }}>View Family Members &rarr;</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="col-md-6 col-lg-4">
+                                <div className="card border-0 shadow-sm rounded-0 h-100" style={{ borderLeft: '4px solid #0D7D72 !important' }}>
+                                    <div className="card-body">
+                                        <h6 className="text-muted text-uppercase fw-bold mb-2">Total Appointments</h6>
+                                        <h2 className="display-5 fw-bold mb-0 text-dark">{appointmentCount || 0}</h2>
+                                        <a href="/patient/appointments" className="text-decoration-none mt-3 d-inline-block" style={{ color: '#0D7D72' }}>View Appointments &rarr;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="card border-0 shadow-sm rounded-0">
+                            <div className="card-body p-5">
+                                <h4 className="fw-bold text-dark mb-3">Welcome to your Patient Portal</h4>
+                                <p className="text-muted mb-4 text-break">
+                                    You are logged in as: <strong>{userData?.user?.email}</strong>
+                                </p>
+                                <p className="text-muted">
+                                    Use the sidebar navigation to manage your family members, book appointments, and view your medical records.
+                                    If you want to book an appointment for a family member, make sure they are added in the <strong>My Family / Patients</strong> section first.
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                
-                <div className="card border-0 shadow-sm rounded-0 mb-4">
-                    <div className="card-header bg-white py-3">
-                        <h5 className="mb-0 text-secondary fw-bold">My Appointments</h5>
-                    </div>
-                    <div className="card-body p-0">
-                        {appointments && appointments.length > 0 ? (
-                            <div className="table-responsive">
-                                <table className="table table-hover mb-0">
-                                    <thead className="table-light">
-                                        <tr>
-                                            <th className="px-4 py-3">Date</th>
-                                            <th className="py-3">Time</th>
-                                            <th className="py-3">Doctor</th>
-                                            <th className="px-4 py-3 text-end">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {appointments.map((apt: any) => (
-                                            <tr key={apt.id}>
-                                                <td className="px-4 py-3">{apt.appointment_date}</td>
-                                                <td className="py-3">{apt.start_time}</td>
-                                                <td className="py-3">{apt.doctors?.full_name}</td>
-                                                <td className="px-4 py-3 text-end">
-                                                    <span className={`badge ${apt.status === 'hold' ? 'bg-warning text-dark' : apt.status === 'confirmed' ? 'bg-success' : 'bg-secondary'}`}>
-                                                        {apt.status.toUpperCase()}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <div className="p-5 text-center text-muted">
-                                <i className="bi bi-calendar-x" style={{ fontSize: '3rem' }}></i>
-                                <p className="mt-3 mb-0">You have no appointments yet.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-            </div>
             </div>
         </main>
     );

@@ -17,8 +17,14 @@ export default function HeaderAuthLinks() {
   }
 
   return (
-    <li>
-      <LogoutButton />
-    </li>
+    <>
+      <li className="d-xl-none"><a href="/dashboard">Dashboard</a></li>
+      <li className="d-none d-xl-block ms-2">
+         <a href="/dashboard" className="btn text-white px-4 py-2" style={{ backgroundColor: '#0ab1a9', borderRadius: '50px', fontSize: '14px', fontWeight: '500' }}>Dashboard</a>
+      </li>
+      <li className="ms-2">
+        <LogoutButton />
+      </li>
+    </>
   )
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "eb7cd10f-9f4d-4c26-840d-f8f99b825339",
+    "patient_id": "476c5aa1-ac8d-49af-9496-8aeaa4c6eab6",
+    "doctor_id": "29bc60bb-ab32-4a39-9370-64943739ed23",
+    "appointment_date": "2026-10-01",
+    "start_time": "16:20:00",
+    "end_time": "16:30:00",
+    "status": "hold",
+    "created_at": "2026-10-01T05:09:30.820985+00:00"
+  },
+  {
+    "id": "6af22c58-dd4c-4056-93a8-a8529cc165be",
+    "patient_id": "476c5aa1-ac8d-49af-9496-8aeaa4c6eab6",
+    "doctor_id": "c4d882c6-4961-42bf-a6a6-5b704c759f41",
+    "appointment_date": "2026-10-03",
+    "start_time": "15:40:00",
+    "end_time": "15:50:00",
+    "status": "scheduled",
+    "created_at": "2026-10-03T06:01:42.0743+00:00"
+  }
+]

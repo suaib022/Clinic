@@ -11,8 +11,9 @@ export default function DashboardSidebar({ role }: { role: Role }) {
         case 'patient':
             links = [
                 { href: '/patient/dashboard', label: 'Dashboard', icon: 'bi-grid' },
+                { href: '/patient/members', label: 'My Family / Patients', icon: 'bi-people' },
                 { href: '/patient/appointments', label: 'My Appointments', icon: 'bi-calendar-check' },
-                { href: '/', label: 'Book Appointment', icon: 'bi-plus-circle' },
+                { href: '/patient/book', label: 'Book Appointment', icon: 'bi-plus-circle' },
                 { href: '/patient/records', label: 'Medical Records', icon: 'bi-file-medical' },
                 { href: '/patient/settings', label: 'Profile Settings', icon: 'bi-gear' },
             ];

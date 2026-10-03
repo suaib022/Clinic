@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { updateAppointmentStatus } from './actions';
 import { requireRole } from '@/lib/auth/requireRole';
+import { getStatusLabel, getStatusBadgeColor, APPOINTMENT_STATUSES } from '@/lib/appointmentStatus';
 
 export default async function AdminAppointments() {
     const cookieStore = await cookies();
@@ -15,7 +16,7 @@ export default async function AdminAppointments() {
     const { data: appointments } = await supabase
         .from('appointments')
         .select(`
-            id, appointment_date, start_time, end_time, status,
+            id, serial_no, appointment_date, start_time, end_time, status,
             patient:patients(full_name, mobile_no),
             doctor:users!appointments_doctor_id_fkey(full_name)
         `)
@@ -35,6 +36,7 @@ export default async function AdminAppointments() {
                                 <table className="table table-hover align-middle mb-0">
                                     <thead className="table-light">
                                         <tr>
+                                            <th>Serial No</th>
                                             <th>Date & Time</th>
                                             <th>Patient</th>
                                             <th>Doctor</th>
@@ -43,8 +45,10 @@ export default async function AdminAppointments() {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {appointments?.map((apt: any) => (
                                             <tr key={apt.id}>
+                                                <td>{apt.serial_no || '-'}</td>
                                                 <td>
                                                     <div className="fw-medium">{apt.appointment_date}</div>
                                                     <div className="small text-muted">{apt.start_time} - {apt.end_time}</div>
@@ -55,12 +59,8 @@ export default async function AdminAppointments() {
                                                 </td>
                                                 <td>{apt.doctor?.full_name || 'N/A'}</td>
                                                 <td>
-                                                    <span className={`badge ${
-                                                        apt.status === 'scheduled' ? 'bg-primary' : 
-                                                        apt.status === 'completed' ? 'bg-success' : 
-                                                        'bg-danger'
-                                                    }`}>
-                                                        {apt.status}
+                                                    <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
+                                                        {getStatusLabel(apt.status)}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -71,9 +71,9 @@ export default async function AdminAppointments() {
                                                             className="form-select form-select-sm d-inline-block w-auto me-2"
                                                             defaultValue={apt.status}
                                                         >
-                                                            <option value="scheduled">Scheduled (Approved)</option>
-                                                            <option value="completed">Completed</option>
-                                                            <option value="cancelled">Cancelled</option>
+                                                            {APPOINTMENT_STATUSES.map(s => (
+                                                                <option key={s} value={s}>{getStatusLabel(s)}</option>
+                                                            ))}
                                                         </select>
                                                         <button type="submit" className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }}>Update</button>
                                                     </form>

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
+import { getStatusLabel, getStatusBadgeColor } from '@/lib/appointmentStatus';
 
 export default async function AdminDashboard() {
     const cookieStore = await cookies();
@@ -98,6 +99,7 @@ export default async function AdminDashboard() {
                                 <table className="table table-hover align-middle mb-0">
                                     <thead className="table-light">
                                         <tr>
+                                            <th>Serial No</th>
                                             <th>Date</th>
                                             <th>Patient</th>
                                             <th>Doctor</th>
@@ -108,12 +110,13 @@ export default async function AdminDashboard() {
                                         {recentAppointments && recentAppointments.length > 0 ? (
                                             recentAppointments.map((apt: any) => (
                                                 <tr key={apt.id}>
+                                                    <td>{apt.serial_no || '-'}</td>
                                                     <td>{apt.appointment_date}</td>
                                                     <td className="fw-medium">{apt.patient?.full_name || 'N/A'}</td>
                                                     <td>{apt.doctor?.full_name || 'N/A'}</td>
                                                     <td>
-                                                        <span className={`badge ${apt.status === 'confirmed' ? 'bg-success' : apt.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary'}`}>
-                                                            {apt.status}
+                                                        <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
+                                                            {getStatusLabel(apt.status)}
                                                         </span>
                                                     </td>
                                                 </tr>

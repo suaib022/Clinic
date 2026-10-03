@@ -26,12 +26,12 @@ export async function POST(request: Request) {
         // Identifier could be mobile_no or uhid
         const { data: patientMatch } = await supabaseAdmin
             .from('patients')
-            .select('auth_user_id, users!patients_auth_user_id_fkey(email)')
+            .select('auth_user_id, email')
             .or(`mobile_no.eq.${identifier},uhid.eq.${identifier}`)
             .single();
             
-        if ((patientMatch?.users as any)?.email || (patientMatch?.users as any)?.[0]?.email) {
-            emailToLogin = (patientMatch?.users as any)?.email || (patientMatch?.users as any)?.[0]?.email;
+        if (patientMatch?.email) {
+            emailToLogin = patientMatch.email;
         } else {
             // Log attempt and fail
             await logAttempt(identifier, ip);

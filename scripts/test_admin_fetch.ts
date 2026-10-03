@@ -21,14 +21,10 @@ async function run() {
   }
 
   const { data, error } = await supabase
-    .from('appointments')
-    .select(`
-        id, appointment_date, start_time, end_time, status,
-        patient:patients(full_name, mobile_no),
-        doctor:users!appointments_doctor_id_fkey(full_name)
-    `);
+    .from('patients')
+    .select(`*`);
     
-  console.log("Appointments error:", error);
-  console.log("Appointments data:", data);
+  console.log("Patients error:", error);
+  console.log("Patients data:", data);
 }
 run();

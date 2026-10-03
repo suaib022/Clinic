@@ -1,32 +1,74 @@
-import { cookies } from 'next/headers';
+import React from 'react';
+import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
+import RecordsClient from './RecordsClient';
 
 export default async function PatientRecordsPage() {
-    const cookieStore = await cookies();
+    const { user } = await requireRole(['patient']);
+    const supabase = await createClient();
     
-    // Basic auth check
-    const { patientId } = await requireRole(['patient']);
-    
+    // Fetch ALL patients for this user account
+    const { data: patients } = await supabase
+        .from('patients')
+        .select('*')
+        .eq('auth_user_id', user.id);
+
+    if (!patients || patients.length === 0) {
+        redirect('/login');
+    }
+
+    const patientIds = patients.map((p: any) => p.id);
+
+    // Fetch visits (completed appointments)
+    const { data: visits } = await supabase
+        .from('appointments')
+        .select(`
+            id,
+            serial_no,
+            appointment_date,
+            start_time,
+            status,
+            patient_id,
+            doctors:doctor_id (id, full_name, designation, departments(name))
+        `)
+        .in('patient_id', patientIds)
+        .eq('status', 'completed')
+        .order('appointment_date', { ascending: false })
+        .order('start_time', { ascending: false });
+
+    // Fetch medical records
+    const { data: records } = await supabase
+        .from('medical_records')
+        .select(`
+            id,
+            patient_id,
+            doctor_id,
+            uploaded_by,
+            record_type,
+            title,
+            description,
+            file_path,
+            created_at,
+            document_date,
+            appointment_id,
+            file_size,
+            file_type,
+            uploader:uploaded_by(role, full_name),
+            doctor:doctor_id(full_name)
+        `)
+        .in('patient_id', patientIds)
+        .eq('is_deleted', false)
+        .order('document_date', { ascending: false })
+        .order('created_at', { ascending: false });
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
-                    <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Records</h2>
-                        </div>
-                        
-                        <div className="card border-0 shadow-sm rounded-0">
-                            <div className="card-body p-5 text-center text-muted">
-                                <i className="bi bi-tools" style={{ fontSize: '3rem' }}></i>
-                                <p className="mt-3 mb-0">This page is under construction.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <RecordsClient patients={patients} visits={visits || []} records={records || []} userId={user.id} />
                 </div>
             </div>
         </main>

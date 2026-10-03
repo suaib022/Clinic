@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:m1": "npx tsx scripts/m1-tests.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

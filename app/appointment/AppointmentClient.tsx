@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { format, addMinutes, parse, differenceInYears, addYears, differenceInMonths, addMonths, differenceInDays, subYears, subMonths, subDays } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-export default function AppointmentClient() {
+export default function AppointmentClient({ userPatients, isDashboard }: { userPatients?: any[], isDashboard?: boolean }) {
   const [specialities, setSpecialities] = useState([]);
   const [doctors, setDoctors] = useState([]);
   
@@ -122,15 +122,8 @@ export default function AppointmentClient() {
           });
           const data = await res.json();
           if (res.ok) {
-              if (patientType === 'NEW') {
-                  setSuccessData(data);
-                  setShowSuccessModal(true);
-              } else {
-                  setSuccess('Appointment requested successfully and is on hold!');
-                  setTimeout(() => {
-                      window.location.href = '/';
-                  }, 3000);
-              }
+              setSuccessData(data);
+              setShowSuccessModal(true);
           } else {
               setError(data.error || 'Failed to book appointment');
           }
@@ -270,6 +263,7 @@ export default function AppointmentClient() {
                   Appointment for Speciality: {specName} Doctor: {docName} on {dateFmt} {timeFmt} ( {dayOfWeek} )
               </div>
               
+              {!isDashboard && (
               <div className="p-3 text-white mb-4 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#0ab1a9' }}>
                   <h5 className="m-0 fw-bold" style={{ fontSize: '16px' }}>Patient Details</h5>
                   <div>
@@ -277,12 +271,27 @@ export default function AppointmentClient() {
                       <button className="btn rounded-0 text-white border-0 px-3 fw-bold" style={{ backgroundColor: patientType === 'NEW' ? '#5c5c5c' : '#737373', fontSize: '14px' }} onClick={() => setPatientType('NEW')}>NEW Patient</button>
                   </div>
               </div>
+              )}
 
               <div className="bg-white p-4" style={{ minHeight: '400px' }}>
                   {error && <div className="alert alert-danger rounded-0 py-2">{error}</div>}
                   {success && <div className="alert alert-success rounded-0 py-2">{success}</div>}
                   
-                  {patientType === 'OLD' ? (
+                  {isDashboard ? (
+                      <div className="row justify-content-center">
+                          <div className="col-md-8 text-center mb-4 pt-3">
+                              <h5 className="mb-3">Select Family Member for Appointment</h5>
+                              <select className="form-select rounded-0 border-secondary-subtle mb-4" value={selectedOldPatientId} onChange={e => setSelectedOldPatientId(e.target.value)}>
+                                  <option value="">-- Select Patient --</option>
+                                  {userPatients?.map(p => (
+                                      <option key={p.id} value={p.id}>{p.full_name} ({p.uhid})</option>
+                                  ))}
+                              </select>
+                              <button className="btn text-white rounded-0 px-4 me-2" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)}>Back</button>
+                              <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={handleSubmitAppointmentNew} disabled={!selectedOldPatientId}>Book Now</button>
+                          </div>
+                      </div>
+                  ) : patientType === 'OLD' ? (
                       <div className="row justify-content-center">
                           <div className="col-md-8">
                               <div className="row mb-3 align-items-center">
@@ -459,20 +468,30 @@ export default function AppointmentClient() {
                                   <h5 className="modal-title">Booking Successful</h5>
                                   <button type="button" className="btn-close btn-close-white" onClick={() => {
                                       setShowSuccessModal(false);
-                                      window.location.href = '/';
+                                      window.location.href = isDashboard ? '/patient/appointments' : '/';
                                   }}></button>
                               </div>
                               <div className="modal-body text-center py-4">
-                                  <h4 className="text-success mb-3">Appointment Requested</h4>
-                                  <p className="mb-2">Your appointment is currently on <strong>hold</strong> waiting for admin approval.</p>
-                                  <div className="alert alert-info rounded-0 my-3 text-start">
-                                      <p className="mb-1"><strong>Your UHID:</strong> {successData?.uhid}</p>
-                                      <p className="mb-0"><strong>Your Login PIN:</strong> {successData?.pin}</p>
-                                      <small className="text-muted d-block mt-2">Please remember this PIN for future logins (OTP will be added later).</small>
+                                  <h4 className="text-success mb-3">Booking Confirmed</h4>
+                                  <p className="mb-2">Your appointment has been successfully scheduled.</p>
+                                  
+                                  <div className="alert alert-success rounded-0 my-3 text-start">
+                                      <p className="mb-1"><strong>Doctor:</strong> {doctors.find((d: any) => d.id === selectedDoctorId)?.full_name}</p>
+                                      <p className="mb-1"><strong>Date:</strong> {selectedDate}</p>
+                                      <p className="mb-1"><strong>Time:</strong> {selectedSlot}</p>
+                                      <p className="mb-1"><strong>Serial No:</strong> <span className="fs-5 fw-bold">{successData?.appointment?.serial_no || '-'}</span></p>
                                   </div>
+
+                                  {patientType === 'NEW' && (
+                                    <div className="alert alert-info rounded-0 my-3 text-start">
+                                        <p className="mb-1"><strong>Your UHID:</strong> {successData?.uhid}</p>
+                                        <p className="mb-0"><strong>Your Login PIN:</strong> {successData?.pin}</p>
+                                        <small className="text-muted d-block mt-2">Please remember this PIN for future logins.</small>
+                                    </div>
+                                  )}
                                   <button className="btn text-white rounded-0 px-4 mt-2" style={{ backgroundColor: '#0ab1a9' }} onClick={() => {
                                       setShowSuccessModal(false);
-                                      window.location.href = '/';
+                                      window.location.href = isDashboard ? '/patient/appointments' : '/';
                                   }}>Done</button>
                               </div>
                           </div>
