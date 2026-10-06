@@ -14,7 +14,7 @@ export default function WalkInClient({ doctorOnBreak }: { doctorOnBreak: boolean
     const [lookupError, setLookupError] = useState('');
     
     // Step 2 State (New Patient)
-    const [newPatient, setNewPatient] = useState({ fullName: '', mobile: '', gender: 'Male', title: 'Mr.' });
+    const [newPatient, setNewPatient] = useState({ fullName: '', mobile: '+8801', gender: 'Male', title: 'Mr.' });
     const [registrationError, setRegistrationError] = useState('');
     
     // Step 3 State (Booking)
@@ -47,7 +47,13 @@ export default function WalkInClient({ doctorOnBreak }: { doctorOnBreak: boolean
                 if (res.patients.length === 0) {
                     // pre-fill mobile if query looks like one
                     if (query.match(/^(\+880|0)1[3-9]\d{8}$/)) {
-                        setNewPatient(prev => ({ ...prev, mobile: query }));
+                        let formattedMobile = query;
+                        if (query.startsWith('01')) {
+                            formattedMobile = '+88' + query;
+                        } else if (query.startsWith('880')) {
+                            formattedMobile = '+' + query;
+                        }
+                        setNewPatient(prev => ({ ...prev, mobile: formattedMobile }));
                     }
                 }
             } else {
@@ -60,6 +66,10 @@ export default function WalkInClient({ doctorOnBreak }: { doctorOnBreak: boolean
         setRegistrationError('');
         if (!newPatient.fullName.trim() || !newPatient.mobile.trim()) {
             setRegistrationError('Full Name and Mobile are required');
+            return;
+        }
+        if (!/^\+8801[3-9]\d{8}$/.test(newPatient.mobile)) {
+            setRegistrationError('Please enter a valid Bangladeshi mobile number starting with +8801');
             return;
         }
         startTransition(async () => {
@@ -222,7 +232,7 @@ export default function WalkInClient({ doctorOnBreak }: { doctorOnBreak: boolean
                             </div>
                             <div className="col-md-6">
                                 <label className="form-label">Mobile Number <span className="text-danger">*</span></label>
-                                <input type="text" className="form-control" value={newPatient.mobile} onChange={e => setNewPatient({...newPatient, mobile: e.target.value})} placeholder="01XXXXXXXXX" />
+                                <input type="text" maxLength={14} className="form-control" value={newPatient.mobile} onChange={e => setNewPatient({...newPatient, mobile: e.target.value})} placeholder="+8801XXXXXXXXX" />
                             </div>
                             <div className="col-md-6">
                                 <label className="form-label">Gender</label>

@@ -65,7 +65,7 @@ export default async function CompounderDashboard() {
     // Today's appointments - explicit field list (C13)
     const { data: appointments } = await supabase
         .from('appointments')
-        .select('id, serial_no, start_time, status, visit_source, is_priority, priority_reason, checked_in_at, patient:patients!inner(full_name, uhid, mobile, gender)')
+        .select('id, serial_no, start_time, status, visit_source, is_priority, priority_reason, checked_in_at, patient:patients!inner(full_name, uhid, mobile:mobile_no, gender)')
         .eq('doctor_id', doctorId)
         .eq('appointment_date', today)
         .order('serial_no', { ascending: true });

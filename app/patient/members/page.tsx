@@ -15,9 +15,7 @@ export default async function PatientMembersPage() {
         .select('*')
         .eq('auth_user_id', user.id);
 
-    if (!patients || patients.length === 0) {
-        redirect('/login');
-    }
+    const safePatients = patients || [];
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -33,7 +31,12 @@ export default async function PatientMembersPage() {
                         </div>
                         
                         <div className="row g-4">
-                            {patients.map((p: any) => (
+                            {safePatients.length === 0 ? (
+                                <div className="col-12 text-center py-5 text-muted">
+                                    <i className="bi bi-people fs-1"></i>
+                                    <p className="mt-3">No family members registered yet.</p>
+                                </div>
+                            ) : safePatients.map((p: any) => (
                                 <div className="col-md-6 col-lg-4" key={p.id}>
                                     <div className="card h-100 border-0 shadow-sm rounded-0">
                                         <div className="card-body">

@@ -72,7 +72,7 @@ export default function LoginForm({ error: initialError, message }: { error?: st
       )}
 
       {/* Role Selection Tabs */}
-      <ul className="nav nav-pills nav-fill mb-4" style={{ gap: "10px" }}>
+      <ul className="nav nav-pills nav-fill mb-4" style={{ gap: "10px" }} suppressHydrationWarning>
         <li className="nav-item">
           <button 
             className={`nav-link ${role === 'patient' ? 'active' : ''}`} 

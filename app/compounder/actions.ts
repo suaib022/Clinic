@@ -108,11 +108,15 @@ export async function registerNewPatient(
     
     const normalizedMobile = normalizePhoneNumber(mobile.trim());
     
+    if (!/^\+8801[3-9]\d{8}$/.test(normalizedMobile)) {
+        return { success: false, error: 'Please enter a valid Bangladeshi mobile number starting with +8801' };
+    }
+    
     // Check if mobile already exists
     const { data: existing } = await supabaseAdmin
         .from('patients')
         .select('id, full_name, uhid')
-        .eq('mobile', normalizedMobile)
+        .eq('mobile_no', normalizedMobile)
         .limit(1);
     
     if (existing && existing.length > 0) {
@@ -160,11 +164,10 @@ export async function registerNewPatient(
         .insert({
             auth_user_id: authData.user.id,
             full_name: fullName,
-            mobile: normalizedMobile,
+            mobile_no: normalizedMobile,
             gender,
             title,
-            uhid: newUhid,
-            is_active: true
+            uhid: newUhid
         })
         .select('id, uhid')
         .single();
@@ -207,13 +210,11 @@ export async function uploadMedicalRecord(formData: FormData) {
 function normalizePhoneNumber(input: string): string {
     // Remove spaces, dashes
     let cleaned = input.replace(/[\s\-()]/g, '');
-    // Convert +880XXXXXXXXXX to 01XXXXXXXXX
-    if (cleaned.startsWith('+880')) {
-        cleaned = '0' + cleaned.slice(4);
-    }
-    // Convert 880XXXXXXXXXX to 01XXXXXXXXX
+    
     if (cleaned.startsWith('880') && cleaned.length === 13) {
-        cleaned = '0' + cleaned.slice(3);
+        cleaned = '+' + cleaned;
+    } else if (cleaned.startsWith('01') && cleaned.length === 11) {
+        cleaned = '+88' + cleaned;
     }
     return cleaned;
 }

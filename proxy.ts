@@ -74,6 +74,9 @@ export async function proxy(request: NextRequest) {
         url.pathname = role === 'admin' ? '/admin/dashboard' : `/${role}/dashboard`
         return NextResponse.redirect(url)
       }
+      
+      // If we reach here, it's an authenticated private route. Prevent caching.
+      supabaseResponse.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate')
     }
   }
 

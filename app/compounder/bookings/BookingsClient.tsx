@@ -135,7 +135,9 @@ export default function BookingsClient({ todayAppts, upcomingAppts, previousAppt
                     <div className="row align-items-center g-2">
                         {/* Serial */}
                         <div className="col-auto">
-                            <span className="badge bg-light text-dark border rounded-pill px-3 py-2 fw-bold fs-6">#{a.serial_no}</span>
+                            <span className="badge bg-light text-dark border rounded-pill px-3 py-2 fw-bold fs-6">
+                                {a.serial_no ? `#${a.serial_no}` : 'N/A'}
+                            </span>
                         </div>
                         {/* Time */}
                         <div className="col-auto">

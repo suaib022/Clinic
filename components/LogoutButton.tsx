@@ -11,13 +11,16 @@ export default function LogoutButton() {
   const handleLogout = async (e: React.MouseEvent) => {
     e.preventDefault()
     setIsPending(true)
-    
     // Use client-side Supabase to instantly clear cookies and local state
     const supabase = createClient()
     await supabase.auth.signOut()
     
-    router.refresh() // Tell Next.js to re-render server components
-    router.push('/') // Redirect
+    // Clear server-side custom cookies
+    const { logout } = await import('@/app/auth/actions')
+    await logout()
+    
+    // Use a hard navigation to clear Next.js client router cache and BFCache
+    window.location.href = '/'
   }
 
   return (

@@ -15,14 +15,12 @@ export default async function PatientAppointmentsPage() {
         .select('*')
         .eq('auth_user_id', user.id);
 
-    if (!patients || patients.length === 0) {
-        redirect('/login');
-    }
-
-    const patientIds = patients.map((p: any) => p.id);
+    const patientIds = patients && patients.length > 0 ? patients.map((p: any) => p.id) : [];
 
     // Fetch appointments for ALL patients in this account
-    const { data: appointments } = await supabase
+    let appointments: any[] = [];
+    if (patientIds.length > 0) {
+        const { data } = await supabase
         .from('appointments')
         .select(`
             id,
@@ -36,6 +34,8 @@ export default async function PatientAppointmentsPage() {
         .in('patient_id', patientIds)
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
+        appointments = data || [];
+    }
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>

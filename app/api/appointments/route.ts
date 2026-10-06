@@ -18,6 +18,16 @@ export async function POST(request: Request) {
   let generatedPin = null;
 
   if (patientType === 'NEW') {
+      if (!/^\+8801[3-9]\d{8}$/.test(patientData.mobile_no)) {
+          return NextResponse.json({ error: 'Please enter a valid Bangladeshi mobile number starting with +8801' }, { status: 400 });
+      }
+      if (patientData.dob) {
+          const today = new Date().toISOString().split('T')[0];
+          if (patientData.dob >= today) {
+              return NextResponse.json({ error: 'Date of birth must be a past date' }, { status: 400 });
+          }
+      }
+
       generatedUhid = `UHID${Math.floor(10000000 + Math.random() * 90000000)}`;
       generatedPin = Math.floor(100000 + Math.random() * 900000).toString();
       

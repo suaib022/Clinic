@@ -15,14 +15,13 @@ export default async function PatientRecordsPage() {
         .select('*')
         .eq('auth_user_id', user.id);
 
-    if (!patients || patients.length === 0) {
-        redirect('/login');
-    }
-
-    const patientIds = patients.map((p: any) => p.id);
+    const safePatients = patients || [];
+    const patientIds = safePatients.length > 0 ? safePatients.map((p: any) => p.id) : [];
 
     // Fetch visits (completed appointments)
-    const { data: visits, error: visitsErr } = await supabase
+    let visits: any[] = [];
+    if (patientIds.length > 0) {
+        const { data, error: visitsErr } = await supabase
         .from('appointments')
         .select(`
             id,
@@ -38,12 +37,16 @@ export default async function PatientRecordsPage() {
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
 
-    if (visitsErr) {
-        console.error('Error fetching visits:', visitsErr);
+        visits = data || [];
+        if (visitsErr) {
+            console.error('Error fetching visits:', visitsErr);
+        }
     }
 
     // Fetch medical records
-    const { data: records } = await supabase
+    let records: any[] = [];
+    if (patientIds.length > 0) {
+        const { data } = await supabase
         .from('medical_records')
         .select(`
             id,
@@ -66,13 +69,15 @@ export default async function PatientRecordsPage() {
         .eq('is_deleted', false)
         .order('document_date', { ascending: false })
         .order('created_at', { ascending: false });
+        records = data || [];
+    }
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
-                    <RecordsClient patients={patients} visits={visits || []} records={records || []} userId={user.id} />
+                    <RecordsClient patients={safePatients} visits={visits || []} records={records || []} userId={user.id} />
                 </div>
             </div>
         </main>

@@ -43,7 +43,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         id, serial_no, appointment_date, start_time, end_time, status, visit_type,
         visit_source, is_priority, priority_reason, checked_in_at, scheduled_start,
         created_by_user_id, status_changed_by, created_at,
-        patient:patients!inner(full_name, uhid, mobile, gender)
+        patient:patients!inner(full_name, uhid, mobile:mobile_no, gender)
     `;
 
     // Fetch today's appointments

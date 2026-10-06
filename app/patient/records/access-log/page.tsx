@@ -15,14 +15,13 @@ export default async function AccessLogPage() {
         .select('*')
         .eq('auth_user_id', user.id);
 
-    if (!patients || patients.length === 0) {
-        redirect('/login');
-    }
-
-    const patientIds = patients.map((p: any) => p.id);
+    const safePatients = patients || [];
+    const patientIds = safePatients.length > 0 ? safePatients.map((p: any) => p.id) : [];
 
     // Fetch access logs
-    const { data: logs } = await supabase
+    let logs: any[] = [];
+    if (patientIds.length > 0) {
+        const { data } = await supabase
         .from('medical_records_access_log')
         .select(`
             id,
@@ -36,13 +35,15 @@ export default async function AccessLogPage() {
         .in('patient_id', patientIds)
         .neq('accessed_by', user.id) // excluding own actions
         .order('created_at', { ascending: false });
+        logs = data || [];
+    }
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
-                    <AccessLogClient patients={patients} logs={logs || []} />
+                    <AccessLogClient patients={safePatients} logs={logs || []} />
                 </div>
             </div>
         </main>

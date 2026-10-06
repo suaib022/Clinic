@@ -1,10 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import React from 'react';
-import { logout } from '@/app/auth/actions';
+import { usePathname } from 'next/navigation';
+import SidebarLogoutButton from '@/components/SidebarLogoutButton';
 
 type Role = 'patient' | 'doctor' | 'admin' | 'compounder';
 
 export default function DashboardSidebar({ role }: { role: Role }) {
+    const pathname = usePathname();
     let links: Array<{ href: string, label: string, icon: string }> = [];
     
     switch (role) {
@@ -58,41 +62,43 @@ export default function DashboardSidebar({ role }: { role: Role }) {
     };
 
     return (
-        <div className="dashboard-sidebar bg-white shadow-sm p-3 d-none d-md-block" style={{ width: '280px', borderRight: '1px solid #eee' }}>
-            <div className="d-flex flex-column h-100">
-                <div className="mb-4 px-3 py-2">
-                    <h5 className="m-0 fw-bold" style={{ color: '#0D7D72' }}>
-                        <i className="bi bi-shield-check me-2"></i>
-                        {roleTitles[role]}
-                    </h5>
-                </div>
-                <ul className="nav nav-pills flex-column mb-auto">
-                    {links.map((link, i) => (
+        <div className="dashboard-sidebar bg-white shadow-sm p-3 d-none d-md-flex flex-column flex-shrink-0" style={{ width: '280px', borderRight: '1px solid #eee', minHeight: 'calc(100vh - 100px)', position: 'sticky', top: '100px', height: 'calc(100vh - 100px)', overflowY: 'auto' }}>
+            <div className="mb-4 px-3 py-2">
+                <h5 className="m-0 fw-bold" style={{ color: '#0D7D72' }}>
+                    <i className="bi bi-shield-check me-2"></i>
+                    {roleTitles[role]}
+                </h5>
+            </div>
+            <ul className="nav nav-pills flex-column mb-auto">
+                {links.map((link, i) => {
+                    const isActive = pathname === link.href || pathname.startsWith(link.href + '/');
+                    return (
                         <li className="nav-item mb-2" key={i}>
-                            <Link href={link.href} className="nav-link text-dark d-flex align-items-center p-3 rounded-3 hover-bg-light fw-medium" style={{ gap: '12px', transition: 'all 0.2s' }}>
+                            <Link 
+                                href={link.href} 
+                                className={`nav-link d-flex align-items-center p-3 rounded-3 fw-medium ${isActive ? 'active-nav-link' : 'text-dark hover-bg-light'}`} 
+                                style={{ gap: '12px', transition: 'all 0.2s' }}
+                            >
                                 <i className={`bi ${link.icon} fs-5`}></i>
                                 <span>{link.label}</span>
                             </Link>
                         </li>
-                    ))}
-                </ul>
-                <hr className="my-4" />
-                <div className="mt-auto">
-                    <form action={logout}>
-                        <button type="submit" className="btn btn-light w-100 text-start d-flex align-items-center text-danger p-3 rounded-3 hover-bg-light-danger fw-medium" style={{ gap: '12px' }}>
-                            <i className="bi bi-box-arrow-right fs-5"></i>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </div>
+                    );
+                })}
+            </ul>
+            <hr className="my-4" />
+            <div className="mt-auto">
+                <SidebarLogoutButton />
             </div>
-            <style>{`
+            <style jsx>{`
                 .hover-bg-light:hover {
                     background-color: rgba(13, 125, 114, 0.1);
                     color: #0D7D72 !important;
                 }
-                .hover-bg-light-danger:hover {
-                    background-color: rgba(220, 53, 69, 0.1);
+                .active-nav-link {
+                    background-color: rgba(13, 125, 114, 0.1);
+                    color: #0D7D72 !important;
+                    font-weight: 600 !important;
                 }
             `}</style>
         </div>

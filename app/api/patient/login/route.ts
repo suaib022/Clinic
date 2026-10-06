@@ -24,10 +24,17 @@ export async function POST(request: Request) {
     if (!emailToLogin.includes('@')) {
         // Query users table joined with patients
         // Identifier could be mobile_no or uhid
+        let searchId = identifier;
+        if (/^01[3-9]\d{8}$/.test(identifier)) {
+            searchId = '+88' + identifier;
+        } else if (/^8801[3-9]\d{8}$/.test(identifier)) {
+            searchId = '+' + identifier;
+        }
+
         const { data: patientMatch } = await supabaseAdmin
             .from('patients')
             .select('auth_user_id, email')
-            .or(`mobile_no.eq.${identifier},uhid.eq.${identifier}`)
+            .or(`mobile_no.eq.${searchId},uhid.eq.${identifier}`)
             .single();
             
         if (patientMatch?.email) {

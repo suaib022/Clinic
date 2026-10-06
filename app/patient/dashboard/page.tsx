@@ -12,22 +12,28 @@ export default async function PatientDashboard() {
     const { data: userData } = await supabase.auth.admin.getUserById(user.id);
 
     // Fetch ALL patients for this user account
-    const { data: patients } = await supabase
+    const { data: patients, error: patientsError } = await supabase
         .from('patients')
         .select('*')
         .eq('auth_user_id', user.id);
 
-    if (!patients || patients.length === 0) {
-        redirect('/login');
-    }
+    console.log('--- DASHBOARD DEBUG ---');
+    console.log('Logged in user:', user.email, user.id);
+    console.log('Fetched patients:', patients);
+    console.log('Patients error:', patientsError);
+    console.log('-----------------------');
 
-    const patientIds = patients.map((p: any) => p.id);
+    const patientIds = patients && patients.length > 0 ? patients.map((p: any) => p.id) : [];
 
     // Fetch quick stats
-    const { count: appointmentCount } = await supabase
-        .from('appointments')
-        .select('*', { count: 'exact', head: true })
-        .in('patient_id', patientIds);
+    let appointmentCount = 0;
+    if (patientIds.length > 0) {
+        const { count } = await supabase
+            .from('appointments')
+            .select('*', { count: 'exact', head: true })
+            .in('patient_id', patientIds);
+        appointmentCount = count || 0;
+    }
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -48,7 +54,7 @@ export default async function PatientDashboard() {
                                 <div className="card border-0 shadow-sm rounded-0 h-100" style={{ borderLeft: '4px solid #0ab1a9 !important' }}>
                                     <div className="card-body">
                                         <h6 className="text-muted text-uppercase fw-bold mb-2">Registered Patients</h6>
-                                        <h2 className="display-5 fw-bold mb-0 text-dark">{patients.length}</h2>
+                                        <h2 className="display-5 fw-bold mb-0 text-dark">{patients?.length || 0}</h2>
                                         <a href="/patient/members" className="text-decoration-none mt-3 d-inline-block" style={{ color: '#0D7D72' }}>View Family Members &rarr;</a>
                                     </div>
                                 </div>
@@ -69,7 +75,7 @@ export default async function PatientDashboard() {
                             <div className="card-body p-5">
                                 <h4 className="fw-bold text-dark mb-3">Welcome to your Patient Portal</h4>
                                 <p className="text-muted mb-4 text-break">
-                                    You are logged in as: <strong>{userData?.user?.email}</strong>
+                                    You are logged in as: <strong>{user?.email}</strong>
                                 </p>
                                 <p className="text-muted">
                                     Use the sidebar navigation to manage your family members, book appointments, and view your medical records.

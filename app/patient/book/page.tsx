@@ -16,9 +16,7 @@ export default async function PatientBookAppointmentPage() {
         .select('*')
         .eq('auth_user_id', user.id);
 
-    if (!patients || patients.length === 0) {
-        redirect('/login');
-    }
+    const safePatients = patients || [];
 
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
@@ -32,7 +30,7 @@ export default async function PatientBookAppointmentPage() {
                         
                         <div className="card border-0 shadow-sm rounded-0">
                             <div className="card-body p-0">
-                                <AppointmentClient userPatients={patients} isDashboard={true} />
+                                <AppointmentClient userPatients={safePatients} isDashboard={true} />
                             </div>
                         </div>
                     </div>

@@ -262,7 +262,7 @@ BEGIN
     v_day_of_week := EXTRACT(DOW FROM v_appt_date);
     
     -- Validate Patient
-    IF NOT EXISTS (SELECT 1 FROM public.patients WHERE id = p_patient_id AND is_active = true) THEN
+    IF NOT EXISTS (SELECT 1 FROM public.patients WHERE id = p_patient_id) THEN
         RAISE EXCEPTION 'Patient not found or archived';
     END IF;
     
@@ -348,12 +348,11 @@ BEGIN
         RAISE EXCEPTION 'Rate limit exceeded. Please try again later.';
     END IF;
     
-    v_hash := encode(digest(p_query, 'sha256'), 'hex');
+    v_hash := md5(p_query);
     
     RETURN QUERY
     SELECT p.id, p.full_name, p.uhid, p.gender FROM public.patients p
-    WHERE p.is_active = true 
-    AND (p.uhid = p_query OR p.mobile = p_query OR p.mobile = '+88' || p_query OR p.mobile = '+880' || substring(p_query from 2))
+    WHERE (p.uhid = p_query OR p.mobile_no = p_query OR p.mobile_no = '+88' || p_query OR p.mobile_no = '+880' || substring(p_query from 2))
     LIMIT 5;
     
     GET DIAGNOSTICS v_count = ROW_COUNT;

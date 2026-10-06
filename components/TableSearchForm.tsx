@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function TableSearchForm({ placeholder = "Search..." }: { placeholder?: string }) {
+function SearchFormInner({ placeholder }: { placeholder?: string }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
@@ -36,5 +36,13 @@ export default function TableSearchForm({ placeholder = "Search..." }: { placeho
                 </button>
             )}
         </form>
+    );
+}
+
+export default function TableSearchForm({ placeholder = "Search..." }: { placeholder?: string }) {
+    return (
+        <Suspense fallback={<div style={{width: '320px', height: '31px', backgroundColor: '#e9ecef', borderRadius: '4px'}}></div>}>
+            <SearchFormInner placeholder={placeholder} />
+        </Suspense>
     );
 }

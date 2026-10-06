@@ -18,6 +18,15 @@ export async function addPatientToAccount(formData: FormData) {
     throw new Error('Please fill all required fields');
   }
 
+  if (!/^\+8801[3-9]\d{8}$/.test(mobile_no)) {
+    throw new Error('Please enter a valid Bangladeshi mobile number starting with +8801');
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  if (dob >= today) {
+    throw new Error('Date of birth must be a past date');
+  }
+
   const generatedUhid = `UHID${Math.floor(10000000 + Math.random() * 90000000)}`;
 
   // Also get the email from the current user account

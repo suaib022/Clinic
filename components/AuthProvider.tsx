@@ -34,11 +34,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false)
     })
 
-    // 2. Listen for auth changes (login, logout, token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
       setIsLoading(false)
+      
+      // Real-time protection: if session is gone and we are on a private route, kick to login
+      if (!session) {
+        const path = window.location.pathname
+        if (path.startsWith('/admin') || path.startsWith('/doctor') || path.startsWith('/compounder') || path.startsWith('/patient')) {
+          window.location.href = '/login'
+        }
+      }
     })
 
     return () => {

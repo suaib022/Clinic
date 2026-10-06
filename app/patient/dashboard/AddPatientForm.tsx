@@ -42,6 +42,8 @@ export default function AddPatientForm() {
         }
     }
 
+    const today = new Date().toISOString().split('T')[0];
+
     return (
         <form onSubmit={handleSubmit}>
             {error && <div className="alert alert-danger p-2 rounded-0 small">{error}</div>}
@@ -77,13 +79,23 @@ export default function AddPatientForm() {
                 </div>
                 <div className="col-md-6">
                     <label className="form-label small fw-bold">Date of Birth</label>
-                    <input type="date" name="dob" className="form-control" required />
+                    <input type="date" name="dob" className="form-control" required max={today} />
                 </div>
             </div>
 
             <div className="mb-4">
                 <label className="form-label small fw-bold">Mobile Number</label>
-                <input type="text" name="mobile_no" className="form-control" required placeholder="e.g. 018XXXXXXXX" />
+                <input 
+                    type="tel" 
+                    name="mobile_no" 
+                    className="form-control" 
+                    required 
+                    placeholder="e.g. +88018XXXXXXXX"
+                    defaultValue="+8801"
+                    maxLength={14}
+                    pattern="^\+8801[3-9]\d{8}$"
+                    title="Please enter a valid Bangladeshi mobile number starting with +8801"
+                />
             </div>
 
             <div className="d-grid">

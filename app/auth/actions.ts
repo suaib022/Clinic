@@ -125,17 +125,25 @@ export async function login(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error, data } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
 
-  if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`)
+  if (error || !data.user) {
+    redirect(`/login?error=${encodeURIComponent(error?.message || 'Login failed')}`)
   }
+  
+  // Fetch user role
+  const { data: userRecord } = await supabase.from('users').select('role').eq('id', data.user.id).single();
+  const role = userRecord?.role || 'patient';
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  
+  if (role === 'admin') redirect('/admin/dashboard');
+  if (role === 'doctor') redirect('/doctor/dashboard');
+  if (role === 'compounder') redirect('/compounder/dashboard');
+  redirect('/patient/dashboard');
 }
 
 export async function signup(formData: FormData) {
@@ -175,5 +183,5 @@ export async function logout() {
   cookieStore.delete('app_session')
   
   revalidatePath('/', 'layout')
-  redirect('/')
+  return { success: true }
 }

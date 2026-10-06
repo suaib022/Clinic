@@ -32,7 +32,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
 
   const [newPatientForm, setNewPatientForm] = useState({
       title: '', full_name: '', father_name: '', gender: 'Male', dob: '', 
-      ageY: '', ageM: '', ageD: '', mobile_no: '', email: '', 
+      ageY: '', ageM: '', ageD: '', mobile_no: '+8801', email: '', 
       address: '', country: '', state: '', city: ''
   });
   const [oldSearch, setOldSearch] = useState({ type: 'mobile', q: '' });
@@ -105,6 +105,17 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
               if (!newPatientForm.full_name || !newPatientForm.mobile_no || !newPatientForm.title) {
                   setError('Please fill all mandatory fields (Title, Name, Mobile)');
                   return;
+              }
+              if (!/^\+8801[3-9]\d{8}$/.test(newPatientForm.mobile_no)) {
+                  setError('Please enter a valid Bangladeshi mobile number starting with +8801');
+                  return;
+              }
+              if (newPatientForm.dob) {
+                  const today = new Date().toISOString().split('T')[0];
+                  if (newPatientForm.dob >= today) {
+                      setError('Date of birth must be a past date');
+                      return;
+                  }
               }
               payload.patientData = newPatientForm;
           } else {
@@ -392,7 +403,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                               <div className="row mb-3 align-items-center">
                                   <div className="col-md-3 text-end"><label className="small mb-0">DOB</label></div>
                                   <div className="col-md-4">
-                                      <input type="date" className="form-control rounded-0 border-secondary-subtle" value={newPatientForm.dob} onChange={handleDobChange} />
+                                      <input type="date" className="form-control rounded-0 border-secondary-subtle" max={new Date().toISOString().split('T')[0]} value={newPatientForm.dob} onChange={handleDobChange} />
                                   </div>
                                   <div className="col-md-5 d-flex align-items-center gap-2">
                                       <span className="small">Age</span>
@@ -407,7 +418,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                               <div className="row mb-3 align-items-center">
                                   <div className="col-md-3 text-end"><label className="small mb-0">Mobile No. <span className="text-danger">*</span></label></div>
                                   <div className="col-md-9">
-                                      <input type="text" className="form-control rounded-0 border-secondary-subtle" placeholder="Mobile Number" value={newPatientForm.mobile_no} onChange={e => setNewPatientForm({...newPatientForm, mobile_no: e.target.value})} />
+                                      <input type="text" maxLength={14} className="form-control rounded-0 border-secondary-subtle" placeholder="+8801XXXXXXXXX" value={newPatientForm.mobile_no} onChange={e => setNewPatientForm({...newPatientForm, mobile_no: e.target.value})} />
                                   </div>
                               </div>
                               <div className="row mb-3 align-items-center">
