@@ -84,9 +84,9 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                 <DashboardSidebar role="compounder" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <BookingsClient
-                        todayAppts={todayAppts || []}
-                        upcomingAppts={upcomingAppts || []}
-                        previousAppts={previousAppts || []}
+                        todayAppts={(todayAppts as any) || []}
+                        upcomingAppts={(upcomingAppts as any) || []}
+                        previousAppts={(previousAppts as any) || []}
                         currentUserId={user.id}
                         initialTab={tab}
                     />

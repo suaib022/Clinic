@@ -42,7 +42,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Real-time protection: if session is gone and we are on a private route, kick to login
       if (!session) {
         const path = window.location.pathname
-        if (path.startsWith('/admin') || path.startsWith('/doctor') || path.startsWith('/compounder') || path.startsWith('/patient')) {
+        const isProtectedRoute = ['/admin', '/doctor', '/compounder', '/patient'].some(
+          prefix => path === prefix || path.startsWith(`${prefix}/`)
+        )
+        if (isProtectedRoute) {
           window.location.href = '/login'
         }
       }

@@ -26,6 +26,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
             links = [
                 { href: '/doctor/dashboard', label: 'Dashboard', icon: 'bi-grid' },
                 { href: '/doctor/appointments', label: 'Today\'s Appointments', icon: 'bi-calendar-check' },
+                { href: '/doctor/all-appointments', label: 'All Appointments', icon: 'bi-list-ul' },
                 { href: '/doctor/patients', label: 'Patient Records', icon: 'bi-file-medical' },
                 { href: '/doctor/schedule', label: 'My Schedule', icon: 'bi-clock' },
                 { href: '/doctor/leave', label: 'Leave Requests', icon: 'bi-calendar-x' },

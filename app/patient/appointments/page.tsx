@@ -65,7 +65,7 @@ export default async function PatientAppointmentsPage() {
                                             </thead>
                                             <tbody>
                                                 {appointments.map((apt: any) => {
-                                                    const p = patients.find(pat => pat.id === apt.patient_id);
+                                                    const p = patients?.find(pat => pat.id === apt.patient_id);
                                                     return (
                                                         <tr key={apt.id}>
                                                             <td className="px-4 py-3">{apt.serial_no || '-'}</td>

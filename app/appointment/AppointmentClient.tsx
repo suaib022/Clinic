@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { format, addMinutes, parse, differenceInYears, addYears, differenceInMonths, addMonths, differenceInDays, subYears, subMonths, subDays } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 export default function AppointmentClient({ userPatients, isDashboard }: { userPatients?: any[], isDashboard?: boolean }) {
-  const [specialities, setSpecialities] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  const [specialities, setSpecialities] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
   
   const [selectedSpeciality, setSelectedSpeciality] = useState('');
   const [selectedDoctorId, setSelectedDoctorId] = useState('');

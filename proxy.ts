@@ -63,7 +63,7 @@ export async function proxy(request: NextRequest) {
   ];
 
   for (const route of protectedRoutes) {
-    if (pathname.startsWith(route.prefix) && !isAuthRoute) {
+    if ((pathname === route.prefix || pathname.startsWith(`${route.prefix}/`)) && !isAuthRoute) {
       if (!user) {
         const url = request.nextUrl.clone()
         url.pathname = route.loginUrl
