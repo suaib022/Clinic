@@ -52,7 +52,135 @@ export async function retractWalkIn(appointmentId: string) {
     return { success: true };
 }
 
-// ──── WALK-IN FLOW ────
+export async function startConsultation(appointmentId: string) {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { error } = await supabase.rpc('start_consultation', { p_id: appointmentId });
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
+
+export async function completeConsultation(appointmentId: string) {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { error } = await supabase.rpc('complete_consultation', { p_id: appointmentId });
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
+
+// ──── CHAMBER SESSION ACTIONS ────
+
+export async function startChamberSession(scheduledStart?: string, delayReason?: string, delayMinutes?: number) {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { data: compounder } = await supabase
+        .from('compounders')
+        .select('assigned_doctor_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!compounder?.assigned_doctor_id) {
+        return { success: false, error: 'No doctor assigned to this compounder account.' };
+    }
+
+    const { error } = await supabase.rpc('start_doctor_session', {
+        p_doctor_id: compounder.assigned_doctor_id,
+        p_scheduled_start: scheduledStart || null,
+        p_delay_reason: delayReason || null,
+        p_delay_minutes: delayMinutes ?? null
+    });
+
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
+
+export async function recordChamberDelay(delayMinutes: number, reason: string) {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { data: compounder } = await supabase
+        .from('compounders')
+        .select('assigned_doctor_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!compounder?.assigned_doctor_id) {
+        return { success: false, error: 'No doctor assigned.' };
+    }
+
+    const { error } = await supabase.rpc('record_doctor_delay', {
+        p_doctor_id: compounder.assigned_doctor_id,
+        p_delay_minutes: delayMinutes,
+        p_reason: reason || 'Emergency / Routine Delay'
+    });
+
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
+
+export async function pauseChamberSession(reason: string) {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { data: compounder } = await supabase
+        .from('compounders')
+        .select('assigned_doctor_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!compounder?.assigned_doctor_id) return { success: false, error: 'No doctor assigned.' };
+
+    const { error } = await supabase.rpc('pause_doctor_session', {
+        p_doctor_id: compounder.assigned_doctor_id,
+        p_reason: reason || 'Break'
+    });
+
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
+
+export async function resumeChamberSession() {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { data: compounder } = await supabase
+        .from('compounders')
+        .select('assigned_doctor_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!compounder?.assigned_doctor_id) return { success: false, error: 'No doctor assigned.' };
+
+    const { error } = await supabase.rpc('resume_doctor_session', {
+        p_doctor_id: compounder.assigned_doctor_id
+    });
+
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
+
+export async function endChamberSession() {
+    const { user } = await requireRole(['compounder']);
+    const supabase = await createClient();
+    const { data: compounder } = await supabase
+        .from('compounders')
+        .select('assigned_doctor_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!compounder?.assigned_doctor_id) return { success: false, error: 'No doctor assigned.' };
+
+    const { error } = await supabase.rpc('end_doctor_session', {
+        p_doctor_id: compounder.assigned_doctor_id
+    });
+
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    return { success: true };
+}
 
 export async function lookupPatient(query: string) {
     const { user } = await requireRole(['compounder']);

@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.staff_lookup_log (
     result_count INT NOT NULL,
     query_hash TEXT NOT NULL
 );
-ALTER TABLE public.staff_lookup_log ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Admins can read staff_lookup_log" ON public.staff_lookup_log;
 CREATE POLICY "Admins can read staff_lookup_log" ON public.staff_lookup_log FOR SELECT USING (is_admin(auth.uid()));
 
 -- Indexes

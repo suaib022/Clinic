@@ -38,13 +38,61 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         );
     }
 
-    // Explicit field list for compounder (C13) - no age, dob, email, notes, medical data
+    // Explicit field list for compounder (C13) - including consultation timestamps for queue DSS
     const selectFields = `
         id, serial_no, appointment_date, start_time, end_time, status, visit_type,
         visit_source, is_priority, priority_reason, checked_in_at, scheduled_start,
+        consult_started_at, consult_ended_at,
         created_by_user_id, status_changed_by, created_at,
         patient:patients!inner(full_name, uhid, mobile:mobile_no, gender)
     `;
+
+    // Fetch Doctor Info
+    const { data: doctor } = await supabase
+        .from('users')
+        .select('full_name')
+        .eq('id', doctorId)
+        .single();
+
+    // Fetch Doctor Speciality
+    const { data: docSpecs } = await supabase
+        .from('doctor_specialities')
+        .select('speciality:specialities!inner(name)')
+        .eq('doctor_id', doctorId)
+        .limit(1);
+
+    const specialityName = (docSpecs?.[0]?.speciality as any)?.name || 'General Physician';
+
+    // Fetch Benchmark for this Speciality
+    const { data: benchmarkRow } = await supabase
+        .from('department_benchmarks')
+        .select('*')
+        .eq('speciality_name', specialityName)
+        .single();
+
+    // Fetch Doctor Session Today
+    const { data: sessions } = await supabase
+        .from('doctor_sessions')
+        .select('id, status, started_at, scheduled_start, delay_minutes, delay_reason')
+        .eq('doctor_id', doctorId)
+        .eq('session_date', today)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+    const doctorSession = sessions?.[0] || null;
+
+    // Fetch Today's Scheduled Working Hours
+    const todayDateObj = new Date();
+    const dayOfWeek = todayDateObj.getDay();
+    const { data: schedule } = await supabase
+        .from('doctor_schedules')
+        .select('start_time, end_time')
+        .eq('doctor_id', doctorId)
+        .eq('day_of_week', dayOfWeek)
+        .eq('is_active', true)
+        .limit(1);
+
+    const scheduledStartTime = schedule?.[0]?.start_time || doctorSession?.scheduled_start || '09:00:00';
 
     // Fetch today's appointments
     const { data: todayAppts } = await supabase
@@ -89,6 +137,11 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                         previousAppts={(previousAppts as any) || []}
                         currentUserId={user.id}
                         initialTab={tab}
+                        doctorName={doctor?.full_name || 'Assigned Doctor'}
+                        specialityName={specialityName}
+                        doctorSession={doctorSession}
+                        scheduledStartTime={scheduledStartTime}
+                        benchmarkMinutes={benchmarkRow?.avg_consult_minutes || 10}
                     />
                 </div>
             </div>
