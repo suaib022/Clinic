@@ -1,4 +1,6 @@
-import 'server-only'
+if (typeof window !== 'undefined') {
+  throw new Error('This module cannot be imported from a Client Component module. It should only be used from a Server Component.')
+}
 import { createClient } from '@supabase/supabase-js'
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {

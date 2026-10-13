@@ -55,12 +55,14 @@ export default async function CompounderDashboard() {
     // Doctor session today
     const { data: sessions } = await supabase
         .from('doctor_sessions')
-        .select('status')
+        .select('status, delay_minutes, delay_reason, started_at, scheduled_start')
         .eq('doctor_id', doctorId)
         .eq('session_date', today)
+        .order('created_at', { ascending: false })
         .limit(1);
     
-    const sessionStatus = sessions?.[0]?.status || 'not_started';
+    const currentSession = sessions?.[0];
+    const sessionStatus = currentSession?.status || 'not_started';
 
     // Today's appointments - explicit field list (C13)
     const { data: appointments } = await supabase
@@ -84,7 +86,7 @@ export default async function CompounderDashboard() {
 
     const sessionLabels: Record<string, { label: string; color: string }> = {
         not_started: { label: 'Not Started', color: 'text-muted' },
-        open: { label: 'Open', color: 'text-success' },
+        open: { label: 'Active', color: 'text-success' },
         paused: { label: 'Paused', color: 'text-warning' },
         ended: { label: 'Ended', color: 'text-danger' },
     };
@@ -100,9 +102,12 @@ export default async function CompounderDashboard() {
                             <h2 className="m-0" style={{ color: '#0D7D72' }}>
                                 <i className="bi bi-grid me-2"></i>Dashboard
                             </h2>
+                            <Link href="/compounder/bookings" className="btn btn-sm btn-primary" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}>
+                                <i className="bi bi-calendar-check me-1"></i>Manage Live Queue & Chamber
+                            </Link>
                         </div>
 
-                        {/* Doctor Card */}
+                        {/* Doctor Card with Chamber Delay Status */}
                         <div className="card border-0 shadow-sm rounded-3 mb-4" style={{ borderLeft: '4px solid #0D7D72' }}>
                             <div className="card-body d-flex align-items-center gap-3 p-4">
                                 <div className="rounded-circle bg-light d-flex align-items-center justify-content-center" style={{ width: 56, height: 56 }}>
@@ -111,9 +116,18 @@ export default async function CompounderDashboard() {
                                 <div>
                                     <h5 className="m-0 fw-bold">Dr. {doctor?.full_name}</h5>
                                     <small className="text-muted">{docSpeciality?.designation || 'General Physician'}</small>
+                                    {currentSession && currentSession.delay_minutes > 0 && (
+                                        <div className="mt-1">
+                                            <span className="badge bg-danger-subtle text-danger border border-danger-subtle small fw-semibold">
+                                                <i className="bi bi-clock-history me-1"></i>
+                                                Chamber Delayed by {currentSession.delay_minutes} min
+                                                {currentSession.delay_reason ? ` (${currentSession.delay_reason})` : ''}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="ms-auto text-end">
-                                    <small className="text-muted d-block">Session Today</small>
+                                    <small className="text-muted d-block">Chamber Today</small>
                                     <span className={`fw-bold ${sess.color}`}>
                                         <i className="bi bi-circle-fill me-1" style={{ fontSize: '0.5rem' }}></i>
                                         {sess.label}

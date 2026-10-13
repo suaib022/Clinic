@@ -103,9 +103,13 @@ export function getAvailableActions(
       }
     }
 
-    // Compounder CANNOT: start, complete, cancel
-    results.start_consultation = { allowed: false, reason: 'Only doctors can start consultations' };
-    results.complete_consultation = { allowed: false, reason: 'Only doctors can complete consultations' };
+    // Compounder CAN manage consultation lifecycle for assigned doctor
+    if (status === 'checked_in') {
+      results.start_consultation = { allowed: true };
+    }
+    if (status === 'in_consultation') {
+      results.complete_consultation = { allowed: true };
+    }
     results.cancel = { allowed: false, reason: 'Compounders cannot cancel appointments' };
   }
 

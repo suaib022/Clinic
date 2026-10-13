@@ -3,10 +3,13 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
+import { todayDhaka } from '@/lib/format';
+import PatientLiveQueueCard from '@/components/queue/PatientLiveQueueCard';
 
 export default async function PatientDashboard() {
     const { user } = await requireRole(['patient']);
     const supabase = await createClient();
+    const today = todayDhaka();
     
     // Fetch user email
     const { data: userData } = await supabase.auth.admin.getUserById(user.id);
@@ -17,22 +20,30 @@ export default async function PatientDashboard() {
         .select('*')
         .eq('auth_user_id', user.id);
 
-    console.log('--- DASHBOARD DEBUG ---');
-    console.log('Logged in user:', user.email, user.id);
-    console.log('Fetched patients:', patients);
-    console.log('Patients error:', patientsError);
-    console.log('-----------------------');
-
     const patientIds = patients && patients.length > 0 ? patients.map((p: any) => p.id) : [];
 
     // Fetch quick stats
     let appointmentCount = 0;
+    let todayAppt: { id: string } | null = null;
     if (patientIds.length > 0) {
         const { count } = await supabase
             .from('appointments')
             .select('*', { count: 'exact', head: true })
             .in('patient_id', patientIds);
         appointmentCount = count || 0;
+
+        const { data: todayList } = await supabase
+            .from('appointments')
+            .select('id')
+            .in('patient_id', patientIds)
+            .eq('appointment_date', today)
+            .neq('status', 'cancelled')
+            .order('serial_no', { ascending: true })
+            .limit(1);
+
+        if (todayList && todayList.length > 0) {
+            todayAppt = todayList[0];
+        }
     }
 
     return (
@@ -48,6 +59,13 @@ export default async function PatientDashboard() {
                                 <a href="/patient/book" className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }}>Book New Appointment</a>
                             </div>
                         </div>
+
+                        {/* Today's Live Queue Widget */}
+                        {todayAppt && (
+                            <div className="mb-4">
+                                <PatientLiveQueueCard appointmentId={todayAppt.id} />
+                            </div>
+                        )}
                         
                         <div className="row g-4 mb-4">
                             <div className="col-md-6 col-lg-4">
