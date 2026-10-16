@@ -6,6 +6,7 @@ import { requireRole } from '@/lib/auth/requireRole';
 import { getStatusLabel, getStatusBadgeColor } from '@/lib/appointmentStatus';
 import { todayDhaka } from '@/lib/format';
 import PatientLiveQueueCard from '@/components/queue/PatientLiveQueueCard';
+import PatientAppointmentsTable from '@/components/patient/PatientAppointmentsTable';
 
 export default async function PatientAppointmentsPage() {
     const { user } = await requireRole(['patient']);
@@ -32,13 +33,30 @@ export default async function PatientAppointmentsPage() {
             start_time,
             status,
             patient_id,
-            doctors:doctor_id (full_name)
+            doctor_id,
+            prescription_record_id,
+            cancelled_at,
+            cancelled_by_role,
+            cancel_reason,
+            payment_status,
+            paid_amount,
+            refund_status,
+            doctors:doctor_id (id, full_name),
+            medical_records (id, title, file_path, record_type),
+            appointment_feedbacks (id, doctor_rating, service_rating, overall_rating, comment, created_at)
         `)
         .in('patient_id', patientIds)
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
         appointments = data || [];
     }
+
+    // Fetch active doctors for rebooking modal
+    const { data: allDoctors } = await supabase
+        .from('users')
+        .select('id, full_name')
+        .eq('role', 'doctor')
+        .order('full_name');
 
     const todayActiveAppts = appointments.filter(
         a => a.appointment_date === today && a.status !== 'cancelled'
@@ -64,50 +82,11 @@ export default async function PatientAppointmentsPage() {
                             </div>
                         )}
                         
-                        <div className="card border-0 shadow-sm rounded-0">
-                            <div className="card-body p-0">
-                                {appointments && appointments.length > 0 ? (
-                                    <div className="table-responsive">
-                                        <table className="table table-hover mb-0">
-                                            <thead className="table-light">
-                                                <tr>
-                                                    <th className="px-4 py-3">Serial No</th>
-                                                    <th className="py-3">Patient</th>
-                                                    <th className="py-3">Date</th>
-                                                    <th className="py-3">Time</th>
-                                                    <th className="py-3">Doctor</th>
-                                                    <th className="px-4 py-3 text-end">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {appointments.map((apt: any) => {
-                                                    const p = patients?.find(pat => pat.id === apt.patient_id);
-                                                    return (
-                                                        <tr key={apt.id}>
-                                                            <td className="px-4 py-3">{apt.serial_no || '-'}</td>
-                                                            <td className="py-3 fw-medium">{p?.full_name}</td>
-                                                            <td className="py-3">{apt.appointment_date}</td>
-                                                            <td className="py-3">{apt.start_time}</td>
-                                                            <td className="py-3">{apt.doctors?.full_name}</td>
-                                                            <td className="px-4 py-3 text-end">
-                                                                <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
-                                                                    {getStatusLabel(apt.status)}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                ) : (
-                                    <div className="p-5 text-center text-muted">
-                                        <i className="bi bi-calendar-x" style={{ fontSize: '3rem' }}></i>
-                                        <p className="mt-3 mb-0">You have no appointments yet.</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <PatientAppointmentsTable 
+                            initialAppointments={appointments} 
+                            patients={patients || []} 
+                            availableDoctors={allDoctors || []}
+                        />
                     </div>
                 </div>
             </div>
