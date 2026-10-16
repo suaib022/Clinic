@@ -11,7 +11,9 @@ import {
     setPriority,
     retractWalkIn,
     startConsultation,
+    endConsultation,
     completeConsultation,
+    uploadVisitPrescription,
     startChamberSession,
     recordChamberDelay,
     pauseChamberSession,
@@ -87,6 +89,50 @@ export default function BookingsClient({
     const [delayModalOpen, setDelayModalOpen] = useState(false);
     const [delayMinutesInput, setDelayMinutesInput] = useState('30');
     const [delayReasonInput, setDelayReasonInput] = useState('Doctor delayed due to emergency');
+
+    // Prescription upload modal state
+    const [prescriptionModalAppt, setPrescriptionModalAppt] = useState<Appointment | null>(null);
+    const [prescriptionFile, setPrescriptionFile] = useState<File | null>(null);
+    const [prescriptionNotes, setPrescriptionNotes] = useState('');
+    const [isUploadingPrescription, setIsUploadingPrescription] = useState(false);
+
+    const handleEndConsultation = async (appt: Appointment) => {
+        await doAction(() => endConsultation(appt.id));
+        setPrescriptionModalAppt(appt);
+        setPrescriptionFile(null);
+        setPrescriptionNotes('');
+    };
+
+    const handlePrescriptionSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!prescriptionModalAppt || !prescriptionFile) {
+            alert('Please select a prescription document (PDF or image).');
+            return;
+        }
+        setIsUploadingPrescription(true);
+        try {
+            const formData = new FormData();
+            formData.append('appointmentId', prescriptionModalAppt.id);
+            formData.append('file', prescriptionFile);
+            formData.append('notes', prescriptionNotes);
+
+            const res = await uploadVisitPrescription(formData);
+            if (res.success) {
+                setActionMessage({ type: 'success', text: res.message || 'Prescription uploaded and visit marked completed!' });
+                setPrescriptionModalAppt(null);
+                setPrescriptionFile(null);
+                setPrescriptionNotes('');
+                router.refresh();
+            } else {
+                setActionMessage({ type: 'error', text: res.error || 'Failed to upload prescription.' });
+            }
+        } catch (err: any) {
+            setActionMessage({ type: 'error', text: err.message || 'Upload failed.' });
+        } finally {
+            setIsUploadingPrescription(false);
+            setTimeout(() => setActionMessage(null), 6000);
+        }
+    };
 
     // Auto refresh every 20s
     React.useEffect(() => {
@@ -178,6 +224,8 @@ export default function BookingsClient({
     const waitingPresentCount = todayAppts.filter(a => a.status === 'checked_in').length;
     const notArrivedCount = todayAppts.filter(a => a.status === 'scheduled').length;
     const completedCount = todayAppts.filter(a => a.status === 'completed').length;
+    const prescriptionPendingAppts = todayAppts.filter(a => a.status === 'prescription_pending');
+    const prescriptionPendingCount = prescriptionPendingAppts.length;
     const chamberStatus = doctorSession?.status || 'not_started';
 
     const renderRow = (a: Appointment, showActions: boolean) => {
@@ -293,15 +341,31 @@ export default function BookingsClient({
                                 </button>
                             )}
 
-                            {/* Complete Consultation (Visit Done) */}
-                            {actions.complete_consultation.allowed && (
+                            {/* In Consultation -> Visit Done (Frees room, opens Rx upload) */}
+                            {a.status === 'in_consultation' && (
                                 <button
                                     className="btn btn-sm btn-success fw-bold px-3 shadow-sm"
                                     disabled={isPending}
-                                    onClick={() => doAction(() => completeConsultation(a.id))}
-                                    title="Mark visit complete (records analytics & frees room)"
+                                    onClick={() => handleEndConsultation(a)}
+                                    title="Mark doctor consultation done, frees chamber for next patient, and prepares prescription"
                                 >
-                                    <i className="bi bi-check-circle-fill me-1"></i>Complete Visit (Done)
+                                    <i className="bi bi-door-closed me-1"></i>Visit Done (Prepare Rx)
+                                </button>
+                            )}
+
+                            {/* Prescription Pending -> Upload Prescription */}
+                            {a.status === 'prescription_pending' && (
+                                <button
+                                    className="btn btn-sm btn-warning text-dark fw-bold px-3 shadow-sm"
+                                    disabled={isPending}
+                                    onClick={() => {
+                                        setPrescriptionModalAppt(a);
+                                        setPrescriptionFile(null);
+                                        setPrescriptionNotes('');
+                                    }}
+                                    title="Upload patient prescription to complete visit"
+                                >
+                                    <i className="bi bi-file-earmark-arrow-up-fill me-1"></i>Upload Prescription
                                 </button>
                             )}
 
@@ -502,7 +566,7 @@ export default function BookingsClient({
 
                         {/* DSS Live Serial Indicators Bar */}
                         <div className="row g-2 mt-3 pt-3 border-top">
-                            <div className="col-6 col-md-3">
+                            <div className="col-6 col-md">
                                 <div className="p-2 rounded bg-light text-center border">
                                     <small className="text-muted d-block">Serving Inside</small>
                                     <strong className="fs-5 text-primary">
@@ -510,26 +574,57 @@ export default function BookingsClient({
                                     </strong>
                                 </div>
                             </div>
-                            <div className="col-6 col-md-3">
+                            <div className="col-6 col-md">
                                 <div className="p-2 rounded bg-light text-center border">
                                     <small className="text-muted d-block">Present & Waiting</small>
                                     <strong className="fs-5 text-info">{waitingPresentCount} Patients</strong>
                                 </div>
                             </div>
-                            <div className="col-6 col-md-3">
+                            <div className="col-6 col-md">
+                                <div className={`p-2 rounded text-center border ${prescriptionPendingCount > 0 ? 'bg-warning-subtle border-warning' : 'bg-light'}`}>
+                                    <small className="text-muted d-block">Rx Pending</small>
+                                    <strong className={`fs-5 ${prescriptionPendingCount > 0 ? 'text-warning-emphasis' : 'text-secondary'}`}>
+                                        {prescriptionPendingCount} Patients
+                                    </strong>
+                                </div>
+                            </div>
+                            <div className="col-6 col-md">
                                 <div className="p-2 rounded bg-light text-center border">
                                     <small className="text-muted d-block">Visits Completed</small>
                                     <strong className="fs-5 text-success">{completedCount} Patients</strong>
                                 </div>
                             </div>
-                            <div className="col-6 col-md-3">
+                            <div className="col-6 col-md">
                                 <div className="p-2 rounded bg-light text-center border">
-                                    <small className="text-muted d-block">Avg Consult Benchmark</small>
-                                    <strong className="fs-5 text-dark">~{benchmarkMinutes || 10} min/patient</strong>
+                                    <small className="text-muted d-block">Benchmark</small>
+                                    <strong className="fs-5 text-dark">~{benchmarkMinutes || 10}m</strong>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Prescription Pending Callout Banner */}
+            {tab === 'today' && prescriptionPendingCount > 0 && (
+                <div className="alert alert-warning border-warning d-flex flex-wrap align-items-center justify-content-between mb-3 shadow-sm py-2 px-3 gap-2">
+                    <div className="d-flex align-items-center gap-2">
+                        <i className="bi bi-file-earmark-medical-fill fs-4 text-warning"></i>
+                        <div>
+                            <strong>{prescriptionPendingCount} patient{prescriptionPendingCount > 1 ? 's' : ''} awaiting prescription upload.</strong>
+                            <div className="text-muted small">Doctor room is free for the next patient. Upload prescription to finalize visits.</div>
+                        </div>
+                    </div>
+                    <button
+                        className="btn btn-sm btn-warning text-dark fw-bold shadow-sm"
+                        onClick={() => {
+                            setPrescriptionModalAppt(prescriptionPendingAppts[0]);
+                            setPrescriptionFile(null);
+                            setPrescriptionNotes('');
+                        }}
+                    >
+                        <i className="bi bi-upload me-1"></i>Upload for Serial #{prescriptionPendingAppts[0].serial_no}
+                    </button>
                 </div>
             )}
 
@@ -581,6 +676,7 @@ export default function BookingsClient({
                         <option value="scheduled">Scheduled (Not Arrived)</option>
                         <option value="checked_in">Present (Waiting)</option>
                         <option value="in_consultation">In Consultation</option>
+                        <option value="prescription_pending">Prescription Pending ({prescriptionPendingCount})</option>
                         <option value="completed">Completed</option>
                         <option value="no_show">No Show</option>
                         <option value="cancelled">Cancelled</option>
@@ -686,6 +782,104 @@ export default function BookingsClient({
                                     </button>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Prescription Upload Modal */}
+            {prescriptionModalAppt && (
+                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content border-0 shadow">
+                            <form onSubmit={handlePrescriptionSubmit}>
+                                <div className="modal-header text-white" style={{ backgroundColor: '#0D7D72' }}>
+                                    <h5 className="modal-title fw-bold">
+                                        <i className="bi bi-file-earmark-arrow-up me-2"></i>
+                                        Upload Prescription (Serial #{prescriptionModalAppt.serial_no})
+                                    </h5>
+                                    <button 
+                                        type="button" 
+                                        className="btn-close btn-close-white" 
+                                        disabled={isUploadingPrescription}
+                                        onClick={() => setPrescriptionModalAppt(null)}
+                                    ></button>
+                                </div>
+                                <div className="modal-body p-4">
+                                    <div className="bg-light p-3 rounded mb-3 border">
+                                        <div className="fw-bold fs-6 text-dark">{prescriptionModalAppt.patient?.full_name}</div>
+                                        <div className="text-muted small">
+                                            UHID: <strong>{prescriptionModalAppt.patient?.uhid || 'N/A'}</strong> · Serial: <strong>#{prescriptionModalAppt.serial_no}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-3">
+                                        <label className="form-label fw-bold">
+                                            Prescription Document <span className="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            accept="image/*,.pdf"
+                                            required
+                                            disabled={isUploadingPrescription}
+                                            onChange={(e) => {
+                                                if (e.target.files && e.target.files[0]) {
+                                                    setPrescriptionFile(e.target.files[0]);
+                                                }
+                                            }}
+                                        />
+                                        <div className="form-text">
+                                            Supports PDF documents or scanned images (JPG, PNG). Max 15MB.
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-3">
+                                        <label className="form-label fw-bold">Clinical Notes / Medication Summary (Optional):</label>
+                                        <textarea
+                                            className="form-control"
+                                            rows={2}
+                                            placeholder="e.g. 5-day antibiotic course prescribed, follow-up in 2 weeks"
+                                            value={prescriptionNotes}
+                                            disabled={isUploadingPrescription}
+                                            onChange={(e) => setPrescriptionNotes(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="alert alert-info py-2 px-3 small mb-0 d-flex align-items-center gap-2">
+                                        <i className="bi bi-info-circle-fill fs-5"></i>
+                                        <div>
+                                            Uploading this prescription will mark the visit as <strong>Completed</strong>. The prescription will be instantly organized and downloadable by the patient in their Medical Records Vault.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer d-flex justify-content-between">
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-outline-secondary" 
+                                        disabled={isUploadingPrescription}
+                                        onClick={() => setPrescriptionModalAppt(null)}
+                                    >
+                                        Upload Later
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="btn btn-success fw-bold px-4"
+                                        disabled={isUploadingPrescription || !prescriptionFile}
+                                    >
+                                        {isUploadingPrescription ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                                Uploading...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="bi bi-check-circle-fill me-1"></i>Upload & Complete Visit
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
