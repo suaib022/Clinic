@@ -25,6 +25,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
         case 'doctor':
             links = [
                 { href: '/doctor/dashboard', label: 'Dashboard', icon: 'bi-grid' },
+                { href: '/dashboard/triage', label: 'Aura Triage Desk', icon: 'bi-robot' },
                 { href: '/doctor/appointments', label: 'Today\'s Appointments', icon: 'bi-calendar-check' },
                 { href: '/doctor/all-appointments', label: 'All Appointments', icon: 'bi-list-ul' },
                 { href: '/doctor/patients', label: 'Patient Records', icon: 'bi-file-medical' },
@@ -36,6 +37,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
         case 'admin':
             links = [
                 { href: '/admin/dashboard', label: 'Dashboard', icon: 'bi-grid' },
+                { href: '/dashboard/triage', label: 'Aura Triage Desk', icon: 'bi-robot' },
                 { href: '/admin/appointments', label: 'All Appointments', icon: 'bi-calendar-check' },
                 { href: '/admin/doctors', label: 'Doctors', icon: 'bi-people' },
                 { href: '/admin/patients', label: 'Patients', icon: 'bi-person-badge' },

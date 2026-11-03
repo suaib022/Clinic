@@ -40,6 +40,9 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
   const [selectedOldPatientId, setSelectedOldPatientId] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successData, setSuccessData] = useState<any>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'counter'>('online');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentRedirecting, setPaymentRedirecting] = useState(false);
 
   const handleDobChange = (e: any) => {
       const dobStr = e.target.value;
@@ -94,6 +97,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
       }
       setError('');
       setSuccess('');
+      setIsSubmitting(true);
       try {
           let payload: any = {
               doctor_id: selectedDoctorId,
@@ -104,16 +108,19 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
           if (patientType === 'NEW') {
               if (!newPatientForm.full_name || !newPatientForm.mobile_no || !newPatientForm.title) {
                   setError('Please fill all mandatory fields (Title, Name, Mobile)');
+                  setIsSubmitting(false);
                   return;
               }
               if (!/^\+8801[3-9]\d{8}$/.test(newPatientForm.mobile_no)) {
                   setError('Please enter a valid Bangladeshi mobile number starting with +8801');
+                  setIsSubmitting(false);
                   return;
               }
               if (newPatientForm.dob) {
                   const today = new Date().toISOString().split('T')[0];
                   if (newPatientForm.dob >= today) {
                       setError('Date of birth must be a past date');
+                      setIsSubmitting(false);
                       return;
                   }
               }
@@ -121,6 +128,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
           } else {
               if (!selectedOldPatientId) {
                   setError('Please select an old patient');
+                  setIsSubmitting(false);
                   return;
               }
               payload.oldPatientId = selectedOldPatientId;
@@ -132,14 +140,41 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
               body: JSON.stringify(payload)
           });
           const data = await res.json();
-          if (res.ok) {
-              setSuccessData(data);
-              setShowSuccessModal(true);
-          } else {
+          if (!res.ok) {
               setError(data.error || 'Failed to book appointment');
+              setIsSubmitting(false);
+              return;
           }
+
+          // If online payment selected, initiate SSLCommerz payment immediately
+          if (paymentMethod === 'online' && data.appointment?.id) {
+              setPaymentRedirecting(true);
+              const payRes = await fetch('/api/payment/initiate', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ appointment_id: data.appointment.id })
+              });
+              const payData = await payRes.json();
+              if (payRes.ok && payData.gatewayUrl) {
+                  window.location.href = payData.gatewayUrl;
+                  return;
+              } else {
+                  setError(payData.error || 'Appointment reserved, but failed to connect to payment portal.');
+                  setSuccessData(data);
+                  setShowSuccessModal(true);
+                  setPaymentRedirecting(false);
+                  setIsSubmitting(false);
+                  return;
+              }
+          }
+
+          setSuccessData(data);
+          setShowSuccessModal(true);
+          setIsSubmitting(false);
       } catch (err: any) {
           setError(err.message);
+          setIsSubmitting(false);
+          setPaymentRedirecting(false);
       }
   };
 
@@ -240,6 +275,53 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
   
   const daysMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
+  const renderPaymentOptions = () => (
+      <div className="border p-3 mb-4 rounded-0 bg-light text-start shadow-xs">
+          <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+              <span className="fw-bold small text-dark">
+                  Doctor Consultation Fee
+              </span>
+              <span className="fw-bold fs-5 text-success">
+                  {doctorDetails ? `BDT ${doctorDetails.consultation_fee || 1200}` : 'BDT 1,200'}
+              </span>
+          </div>
+          <label className="small fw-bold text-dark d-block mb-2">Select Payment Option:</label>
+          <div className="form-check mb-2 p-2 border bg-white rounded-0">
+              <input 
+                  className="form-check-input ms-1 me-2" 
+                  type="radio" 
+                  name="paymentMethod" 
+                  id="payOnline" 
+                  checked={paymentMethod === 'online'} 
+                  onChange={() => setPaymentMethod('online')} 
+              />
+              <label className="form-check-label small fw-semibold text-dark" htmlFor="payOnline" style={{ cursor: 'pointer' }}>
+                  Pay Online via SSLCommerz
+                  <span className="badge bg-success ms-2 py-1 px-2" style={{ fontSize: '10px' }}>Recommended</span>
+                  <span className="d-block text-muted fw-normal mt-1" style={{ fontSize: '12px' }}>
+                      Cards (Visa, Mastercard, Amex), Mobile Banking (bKash, Nagad, Rocket) & Net Banking
+                  </span>
+              </label>
+          </div>
+          <div className="form-check p-2 border bg-white rounded-0">
+              <input 
+                  className="form-check-input ms-1 me-2" 
+                  type="radio" 
+                  name="paymentMethod" 
+                  id="payCounter" 
+                  checked={paymentMethod === 'counter'} 
+                  onChange={() => setPaymentMethod('counter')} 
+              />
+              <label className="form-check-label small fw-semibold text-dark" htmlFor="payCounter" style={{ cursor: 'pointer' }}>
+                  Pay at Hospital Counter
+                  <span className="d-block text-muted fw-normal mt-1" style={{ fontSize: '12px' }}>
+                      Pay cash at the hospital counter on the day of consultation
+                  </span>
+              </label>
+          </div>
+      </div>
+  );
+
 
   if (step === 2) {
       let specName = '';
@@ -298,8 +380,13 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                       <option key={p.id} value={p.id}>{p.full_name} ({p.uhid})</option>
                                   ))}
                               </select>
-                              <button className="btn text-white rounded-0 px-4 me-2" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)}>Back</button>
-                              <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={handleSubmitAppointmentNew} disabled={!selectedOldPatientId}>Book Now</button>
+                              {renderPaymentOptions()}
+                              <div className="d-flex justify-content-center">
+                                  <button className="btn text-white rounded-0 px-4 me-2" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
+                                  <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={handleSubmitAppointmentNew} disabled={!selectedOldPatientId || isSubmitting}>
+                                      {isSubmitting ? 'Processing...' : (paymentMethod === 'online' ? 'Proceed to Payment' : 'Confirm Appointment')}
+                                  </button>
+                              </div>
                           </div>
                       </div>
                   ) : patientType === 'OLD' ? (
@@ -355,11 +442,19 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                       <input type="email" className="form-control rounded-0 border-secondary-subtle bg-light" disabled value={oldPatientsList.find(p => p.id === selectedOldPatientId)?.email || ''} />
                                   </div>
                               </div>
+
+                              <div className="row mb-3">
+                                  <div className="col-md-8 offset-md-4">
+                                      {renderPaymentOptions()}
+                                  </div>
+                              </div>
                               
                               <div className="row">
                                   <div className="col-md-8 offset-md-4 d-flex justify-content-end">
-                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)}>Back</button>
-                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={handleSubmitAppointmentNew}>Submit</button>
+                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={handleSubmitAppointmentNew} disabled={isSubmitting || !selectedOldPatientId}>
+                                          {isSubmitting ? 'Processing...' : (paymentMethod === 'online' ? 'Proceed to Payment' : 'Confirm Appointment')}
+                                      </button>
                                   </div>
                               </div>
                           </div>
@@ -460,10 +555,17 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                       </select>
                                   </div>
                               </div>
+                              <div className="row mb-3">
+                                  <div className="col-md-9 offset-md-3">
+                                      {renderPaymentOptions()}
+                                  </div>
+                              </div>
                               <div className="row">
                                   <div className="col-md-9 offset-md-3 d-flex justify-content-end">
-                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)}>Back</button>
-                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={handleSubmitAppointmentNew}>Submit</button>
+                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={handleSubmitAppointmentNew} disabled={isSubmitting}>
+                                          {isSubmitting ? 'Processing...' : (paymentMethod === 'online' ? 'Proceed to Payment' : 'Confirm Appointment')}
+                                      </button>
                                   </div>
                               </div>
                           </div>
@@ -500,11 +602,50 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                         <small className="text-muted d-block mt-2">Please remember this PIN for future logins.</small>
                                     </div>
                                   )}
-                                  <button className="btn text-white rounded-0 px-4 mt-2" style={{ backgroundColor: '#0ab1a9' }} onClick={() => {
-                                      setShowSuccessModal(false);
-                                      window.location.href = isDashboard ? '/patient/appointments' : '/';
-                                  }}>Done</button>
+
+                                  <div className="d-flex justify-content-center gap-2 mt-3">
+                                      {successData?.appointment?.id && (
+                                          <button
+                                              className="btn btn-outline-success rounded-0 px-3"
+                                              onClick={async () => {
+                                                  setPaymentRedirecting(true);
+                                                  const payRes = await fetch('/api/payment/initiate', {
+                                                      method: 'POST',
+                                                      headers: { 'Content-Type': 'application/json' },
+                                                      body: JSON.stringify({ appointment_id: successData.appointment.id })
+                                                  });
+                                                  const payData = await payRes.json();
+                                                  if (payData.gatewayUrl) {
+                                                      window.location.href = payData.gatewayUrl;
+                                                  } else {
+                                                      setPaymentRedirecting(false);
+                                                      alert(payData.error || 'Failed to initiate payment');
+                                                  }
+                                              }}
+                                          >
+                                              Pay Online Now
+                                          </button>
+                                      )}
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={() => {
+                                          setShowSuccessModal(false);
+                                          window.location.href = isDashboard ? '/patient/appointments' : '/';
+                                      }}>View Appointments</button>
+                                  </div>
                               </div>
+                          </div>
+                      </div>
+                  </div>
+              )}
+
+              {paymentRedirecting && (
+                  <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1070 }}>
+                      <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '420px' }}>
+                          <div className="modal-content rounded-0 border-0 p-4 text-center shadow-lg">
+                              <div className="spinner-border mx-auto mb-3" role="status" style={{ width: '3rem', height: '3rem', color: '#0D7D72' }}>
+                                  <span className="visually-hidden">Loading...</span>
+                              </div>
+                              <h5 className="fw-bold mb-1" style={{ color: '#0D7D72' }}>Redirecting to SSLCommerz</h5>
+                              <p className="text-muted small mb-0">Connecting to secure payment gateway. Please wait...</p>
                           </div>
                       </div>
                   </div>

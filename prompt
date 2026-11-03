@@ -1,0 +1,127 @@
+You are a Principal Full-Stack AI Engineer. Your task is to build an enterprise-grade AI Healthcare Assistant called "Aura" (24/7 Clinical Triage, Appointments & Patient Desk) using Next.js (App Router), TypeScript, Tailwind CSS, @elevenlabs/client, Supabase (Database & Storage), and n8n webhook automation.
+
+The architecture must replicate the exact Dual-Mode Voice/Chat + Generative UI + ElevenLabs Real-Time Tool Calling + Async Settlement Sync pattern detailed below.
+
+---
+
+### 1. CORE ARCHITECTURE & TECH STACK
+
+1. Frontend Widget: Custom React/Next.js client widget (`HealthcareChatWidget.tsx`) embedded floating or as a modal with:
+   - Real-time text WebSocket chat.
+   - WebRTC bidirectional voice mode using `@elevenlabs/client` with live audio waveform visuals.
+   - Multimodal attachment staging (medical records, lab test PDFs, symptom/wound photos).
+2. Local Code Logic & Generative UI Engine (`lib/chat/messageParser.ts`):
+   - Client-side parser that detects agent intent and extracts rich entities.
+   - In-chat Rich Cards (Appointment Confirmation, Lab Result Status, Prescription Refill, Urgent Clinical Escalation).
+   - Guardrails: Suppress irrelevant cards (e.g., never display an appointment card when discussing symptom triage).
+3. Backend & Storage:
+   - Supabase tables: `patients`, `appointments`, `triage_intakes`, `intake_attachments`, `prescriptions`.
+   - Supabase Storage buckets: `medical-records` (private/public signed storage).
+4. Automation Engine (n8n):
+   - Webhook endpoints receiving real-time tool calls from the ElevenLabs Agent.
+   - Settle loop: Polling ElevenLabs `/v1/convai/conversations/{conv_id}` with retry backoff to extract transcripts and files once the patient's session ends (`status: "done"`).
+   - Binary file streaming with `inputDataFieldName: "data"` to prevent 0-byte storage uploads.
+5. Clinician / Review Dashboard:
+   - Interactive conversation viewer with speaker filtering (Patient vs. Aura AI), search highlighting, full conversation ID copy, and inline PDF/image medical report viewers.
+
+---
+
+### 2. ELEVENLABS AGENT PROCEDURES & TOOL DEFINITIONS
+
+Configure the ElevenLabs Agent with the following automated procedures:
+
+1. Patient Identity Verification (`verify_patient`):
+   - Parameters: `patient_name`, `dob_or_phone`, `mrn_number`.
+   - Returns verified patient ID and active bookings.
+2. Schedule / Reschedule Appointment (`book_appointment`):
+   - Parameters: `patient_id`, `doctor_id` / `specialty`, `preferred_datetime`, `appointment_type` (in-person, video, routine).
+   - Tool Webhook: POST `https://<n8n-url>/webhook/agent/book_appointment`
+   - Returns appointment reference (e.g., `APT-2026-881290`).
+3. Symptom Triage & Intake Reporting (`submit_triage`):
+   - Parameters: `patient_id`, `symptom_summary`, `severity` (mild, moderate, urgent), `duration_days`, `has_file_attachment` (boolean), `conversation_id`.
+   - Tool Webhook: POST `https://<n8n-url>/webhook/agent/submit_triage`
+   - Returns triage reference (e.g., `TRG-5A91F20C`).
+4. Prescription Refill Request (`request_refill`):
+   - Parameters: `patient_id`, `medication_name`, `dosage`, `pharmacy_name`.
+   - Tool Webhook: POST `https://<n8n-url>/webhook/agent/refill_medication`
+   - Returns refill request ID (e.g., `RX-901234`).
+5. Human Clinical Triage Escalation (`escalate_to_nurse`):
+   - Parameters: `urgency_reason`, `patient_contact`.
+   - Webhook creates an immediate priority nurse handoff ticket.
+
+---
+
+### 3. CHAT WIDGET & LOCAL CODE LOGIC SPECIFICATIONS
+
+#### A. Dual-Mode Voice & Text (`HealthcareChatWidget.tsx`)
+- Support text inputs and voice mode toggling with microphone permissions via `@elevenlabs/client` `Conversation.startSession({ agentId, textOnly })`.
+- Maintain active `conversationId` (`conv_...`) throughout the call.
+- Auto-settle lifecycle: When Aura confirms an appointment or triage submission (`"reference number is ..."`), automatically call `conv.endSession()` after a 6-second speaking buffer, or upon widget minimize/page unload.
+
+#### B. Multimodal Evidence Staging
+- File attachment button allowing images (JPEG, PNG) and documents (PDF).
+- Staged attachment preview tray with remove/file-size badges.
+- When sending a message with files, invoke `conv.uploadFile(file)` and pass `fileIds` to `conv.sendMultimodalMessage({ text, fileIds })`.
+
+#### C. In-Chat Generative UI Cards (`ConfirmationCard.tsx` & `messageParser.ts`)
+Render dynamic, interactive UI cards inside the chat stream:
+1. **Appointment Card (`type: 'appointment'`):**
+   - Doctor Name, Specialty, Clinic Room / Telehealth Link, Date & Time, Milestone Checklist ("Scheduled", "Confirmed", "Doctor Assigned").
+   - 1-click "Add to Calendar" and "Copy Booking ID" buttons.
+2. **Clinical Intake Card (`type: 'triage'`):**
+   - Reference ID (e.g., `TRG-74B216E6`), Urgency Badge (Low / Moderate / Immediate Nurse Review), Assigned Triage Protocol.
+3. **Prescription Refill Card (`type: 'prescription'`):**
+   - Medication, Dosage, Target Pharmacy, Estimated Ready Time.
+4. **Action Choice Buttons:**
+   - Detect when agent asks if user wants to fill a form or continue chatting, presenting dual choice buttons ("Open Patient Form" vs "Continue Chatting").
+
+#### D. Message Parser & Regex Guardrails (`lib/chat/messageParser.ts`)
+- Use strict capture regex for reference IDs to prevent capturing conversational words:
+  `reference\s*(?:number\s*)?(?:is\s*)?#?([a-f0-9]{8}|[A-Za-z0-9_-]{6,})`
+- Prefix clean IDs (`TRG-XXXXXXXX` or `APT-XXXXXXXX`).
+- Guardrail: Never parse an appointment card if the message text contains triage, emergency, or symptoms keywords.
+
+---
+
+### 4. N8N AUTOMATION PIPELINE (SETTLED POLLING & STORAGE)
+
+When ElevenLabs executes `submit_triage` or `book_appointment`:
+1. **Webhook Node:** Captures payload (`conversation_id`, `symptom_summary`, `order_id` / `patient_id`, `has_file_attachment`).
+2. **Supabase Insert:** Inserts record immediately with `status: 'pending_review'`.
+3. **Wait Node (5 Seconds):** Allows the call or current turn to settle.
+4. **Get ElevenLabs Conversation Node (HTTP Request):**
+   - Calls `GET https://api.elevenlabs.io/v1/convai/conversations/{{ $json.conversation_id }}` with header `xi-api-key`.
+5. **Polling Settle Loop (Crucial):**
+   - If response `status === "in-progress"`, route to a 6-second Wait node and retry fetching (up to 8 attempts) until `status === "done"`.
+6. **Transcript Formatter Node:**
+   - Iterates through `data.transcript`, formats clean turns (`Patient: ...`, `Aura (AI): ...`), and updates the database record.
+7. **File Downloader & Storage Uploader:**
+   - Extracts all `file_inputs` from transcript turns.
+   - Downloads each file using its Google Cloud signed URL or ElevenLabs file ID.
+   - Uploads to Supabase Storage `medical-records/intakes/{{ intake_id }}/{{ filename }}`.
+   - **CRITICAL:** Set `specifyBody: "binary"` and `inputDataFieldName: "data"` in the HTTP upload node so image/PDF binary bytes are streamed without 0-byte corruption.
+   - Inserts attachment records into `intake_attachments`.
+
+---
+
+### 5. CLINICAL ADMIN DASHBOARD
+
+Build a Clinician Review Portal (`/dashboard/triage`):
+- High-level metric cards: Total Intakes, Urgent Cases, Pending Doctor Review.
+- Interactive Data Table: Patient Name, MRN, Triage Reference, Evidence badge, Date.
+- Slide-over Review Drawer:
+  * Full Conversation ID with 1-click copy and a manual "Sync Session" refresh button.
+  * Dedicated `ConversationTranscriptViewer`: Chat bubble view with Doctor vs. Patient initials, live search filter with keyword `<mark>` highlighting, and raw script view.
+  * Collapsible Evidence Viewer: Inline high-resolution photo inspect and embedded PDF iframe viewer (`#toolbar=0`) with full download links.
+
+---
+
+### 6. DELIVERABLES
+Generate the complete production codebase with:
+1. `components/chat/HealthcareChatWidget.tsx` (Full dual-mode chat and voice UI).
+2. `lib/chat/messageParser.ts` (Regex parser, intent detection, card generator).
+3. `components/chat/ConfirmationCard.tsx` (Interactive appointment, prescription, and triage cards).
+4. `components/chat/ConversationTranscriptViewer.tsx` (Clean conversation transcript component).
+5. `app/api/triage/sync/route.ts` & `lib/chat/syncSession.ts` (Server-side fallback sync utility).
+6. SQL schema migrations for Supabase tables and storage RLS policies.
+7. n8n workflow JSON definition for the settled polling loop.

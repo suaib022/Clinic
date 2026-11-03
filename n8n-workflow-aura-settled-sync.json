@@ -1,0 +1,338 @@
+{
+  "name": "Aura AI Healthcare - Settle Polling & Multimodal Storage Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agent/submit_triage",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "node_webhook_triage",
+      "name": "Webhook: Agent Tool submit_triage",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.triage_intakes (triage_ref, patient_id, conversation_id, symptom_summary, severity, duration_days, has_file_attachment, status, sync_status) VALUES ('TRG-' || upper(substr(md5(random()::text), 1, 8)), NULLIF('{{ $json.body.patient_id }}', ''), '{{ $json.body.conversation_id }}', '{{ $json.body.symptom_summary }}', COALESCE('{{ $json.body.severity }}', 'moderate'), COALESCE({{ $json.body.duration_days }}, 1), {{ $json.body.has_file_attachment || false }}, 'pending_review', 'syncing') RETURNING id, triage_ref, conversation_id;"
+      },
+      "id": "node_supabase_insert",
+      "name": "Supabase: Insert Initial Intake",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "node_initial_settle_wait",
+      "name": "Wait 5s (Turn Settle Buffer)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.elevenlabs.io/v1/convai/conversations/{{ $('Supabase: Insert Initial Intake').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "={{ $env.ELEVENLABS_API_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node_get_elevenlabs_conv",
+      "name": "Get ElevenLabs Conversation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond_done",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "done",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node_if_status_done",
+      "name": "Check If Status == 'done'",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "amount": 6,
+        "unit": "seconds"
+      },
+      "id": "node_retry_backoff_wait",
+      "name": "Wait 6s (Retry Backoff)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1080, 480]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Settle loop retry guard (up to 8 iterations)\nconst loopCount = $('Get ElevenLabs Conversation').context.runIndex || 0;\nif (loopCount > 8) {\n  throw new Error('ElevenLabs conversation did not reach done state within 8 polling iterations.');\n}\nreturn $input.all();"
+      },
+      "id": "node_loop_counter_guard",
+      "name": "Guard: Max 8 Retries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 480]
+    },
+    {
+      "parameters": {
+        "jsCode": "const convData = $input.first().json;\nconst transcript = convData.transcript || [];\n\nconst formattedTurns = transcript.map(t => ({\n  role: t.role === 'user' ? 'user' : 'agent',\n  speaker: t.role === 'user' ? 'Patient' : 'Aura (AI)',\n  message: t.message || '',\n  time_secs: t.time_in_call_secs || 0,\n  attachments: t.file_inputs || []\n}));\n\nconst rawScript = formattedTurns.map(t => `[${t.speaker}]: ${t.message}`).join('\\n\\n');\n\n// Extract attachments\nconst filesToDownload = [];\ntranscript.forEach(t => {\n  if (t.file_inputs && Array.isArray(t.file_inputs)) {\n    t.file_inputs.forEach(f => {\n      filesToDownload.push({\n        file_id: f.file_id,\n        filename: f.filename || `report_${Date.now()}.png`,\n        signed_url: f.signed_url || f.url,\n        content_type: f.content_type || 'image/png'\n      });\n    });\n  }\n});\n\nreturn [{\n  json: {\n    intake_id: $('Supabase: Insert Initial Intake').item.json.id,\n    conversation_id: convData.conversation_id,\n    transcript: formattedTurns,\n    raw_transcript: rawScript,\n    files: filesToDownload,\n    has_files: filesToDownload.length > 0\n  }\n}];"
+      },
+      "id": "node_transcript_formatter",
+      "name": "Transcript Formatter Node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, 240]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE public.triage_intakes SET transcript = '{{ JSON.stringify($json.transcript) }}'::jsonb, raw_transcript = '{{ $json.raw_transcript.replace(/'/g, \"''\") }}', sync_status = 'settled', synced_at = NOW(), has_file_attachment = {{ $json.has_files }} WHERE id = '{{ $json.intake_id }}';"
+      },
+      "id": "node_update_triage_transcript",
+      "name": "Supabase: Settle Transcript",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1540, 240]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "files",
+        "options": {}
+      },
+      "id": "node_split_files",
+      "name": "Split Files Array",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1320, 420]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.signed_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "node_download_binary_file",
+      "name": "Download File Stream (Binary)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 420]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.NEXT_PUBLIC_SUPABASE_URL }}/storage/v1/object/medical-records/intakes/{{ $('Supabase: Insert Initial Intake').item.json.id }}/{{ $json.filename }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.content_type }}"
+            }
+          ]
+        },
+        "specifyBody": "binary",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "node_upload_supabase_storage",
+      "name": "Upload to Supabase Storage (Binary Stream)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1760, 420]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.intake_attachments (intake_id, conversation_id, elevenlabs_file_id, filename, storage_path, storage_bucket, public_url) VALUES ('{{ $('Supabase: Insert Initial Intake').item.json.id }}', '{{ $('Supabase: Insert Initial Intake').item.json.conversation_id }}', '{{ $json.file_id }}', '{{ $json.filename }}', 'intakes/{{ $('Supabase: Insert Initial Intake').item.json.id }}/{{ $json.filename }}', 'medical-records', '{{ $env.NEXT_PUBLIC_SUPABASE_URL }}/storage/v1/object/public/medical-records/intakes/{{ $('Supabase: Insert Initial Intake').item.json.id }}/{{ $json.filename }}');"
+      },
+      "id": "node_insert_attachment_row",
+      "name": "Supabase: Insert Attachment Record",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1980, 420]
+    }
+  ],
+  "connections": {
+    "Webhook: Agent Tool submit_triage": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Initial Intake",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Insert Initial Intake": {
+      "main": [
+        [
+          {
+            "node": "Wait 5s (Turn Settle Buffer)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5s (Turn Settle Buffer)": {
+      "main": [
+        [
+          {
+            "node": "Get ElevenLabs Conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ElevenLabs Conversation": {
+      "main": [
+        [
+          {
+            "node": "Check If Status == 'done'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Status == 'done'": {
+      "main": [
+        [
+          {
+            "node": "Transcript Formatter Node",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 6s (Retry Backoff)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 6s (Retry Backoff)": {
+      "main": [
+        [
+          {
+            "node": "Guard: Max 8 Retries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guard: Max 8 Retries": {
+      "main": [
+        [
+          {
+            "node": "Get ElevenLabs Conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcript Formatter Node": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Settle Transcript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Files Array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Files Array": {
+      "main": [
+        [
+          {
+            "node": "Download File Stream (Binary)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File Stream (Binary)": {
+      "main": [
+        [
+          {
+            "node": "Upload to Supabase Storage (Binary Stream)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Supabase Storage (Binary Stream)": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Attachment Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
+

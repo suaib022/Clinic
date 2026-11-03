@@ -41,7 +41,7 @@ export default async function CompounderDashboard() {
     // Doctor info
     const { data: doctor } = await supabase
         .from('users')
-        .select('full_name')
+        .select('full_name, email')
         .eq('id', doctorId)
         .single();
 
@@ -115,7 +115,20 @@ export default async function CompounderDashboard() {
                                 </div>
                                 <div>
                                     <h5 className="m-0 fw-bold">Dr. {doctor?.full_name}</h5>
-                                    <small className="text-muted">{docSpeciality?.designation || 'General Physician'}</small>
+                                    <div className="d-flex flex-wrap align-items-center gap-2 mt-1">
+                                        <small className="text-muted">{docSpeciality?.designation || 'General Physician'}</small>
+                                        {doctor?.email && (
+                                            <>
+                                                <span className="text-muted" style={{ fontSize: '11px' }}>•</span>
+                                                <small className="text-muted d-inline-flex align-items-center gap-1">
+                                                    <i className="bi bi-envelope" style={{ color: '#0D7D72' }}></i>
+                                                    <a href={`mailto:${doctor.email}`} className="text-decoration-none text-muted">
+                                                        {doctor.email}
+                                                    </a>
+                                                </small>
+                                            </>
+                                        )}
+                                    </div>
                                     {currentSession && currentSession.delay_minutes > 0 && (
                                         <div className="mt-1">
                                             <span className="badge bg-danger-subtle text-danger border border-danger-subtle small fw-semibold">

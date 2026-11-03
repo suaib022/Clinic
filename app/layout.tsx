@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import ScriptLoader from "@/components/ScriptLoader";
-import ChatbotWidget from "@/components/ChatbotWidget";
+import HealthcareChatWidget from "@/components/chat/HealthcareChatWidget";
 import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
@@ -46,8 +46,7 @@ export default function RootLayout({
 
         <ScriptLoader />
 
-        <ChatbotWidget />
-        <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" strategy="lazyOnload" />
+        <HealthcareChatWidget />
       </body>
     </html>
   );

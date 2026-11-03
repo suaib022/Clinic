@@ -18,59 +18,90 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Too many failed attempts. Try again later.' }, { status: 429 });
     }
 
-    // Resolve identifier to email using service client
-    let emailToLogin = identifier.toLowerCase();
-    
-    if (!emailToLogin.includes('@')) {
-        // Query users table joined with patients
-        // Identifier could be mobile_no or uhid
-        let searchId = identifier;
-        if (/^01[3-9]\d{8}$/.test(identifier)) {
-            searchId = '+88' + identifier;
-        } else if (/^8801[3-9]\d{8}$/.test(identifier)) {
-            searchId = '+' + identifier;
-        }
+    const cleanIdentifier = identifier.trim();
+    let candidateEmails: string[] = [];
 
-        const { data: patientMatch } = await supabaseAdmin
+    if (cleanIdentifier.includes('@')) {
+        candidateEmails.push(cleanIdentifier.toLowerCase());
+    } else {
+        // 1. Try exact UHID search first (case-insensitive)
+        const { data: uhidMatches } = await supabaseAdmin
             .from('patients')
             .select('auth_user_id, email')
-            .or(`mobile_no.eq.${searchId},uhid.eq.${identifier}`)
-            .single();
-            
-        if (patientMatch?.email) {
-            emailToLogin = patientMatch.email;
+            .ilike('uhid', cleanIdentifier)
+            .limit(1);
+
+        if (uhidMatches && uhidMatches.length > 0 && uhidMatches[0].email) {
+            candidateEmails.push(uhidMatches[0].email);
         } else {
-            // Log attempt and fail
-            await logAttempt(identifier, ip);
-            return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+            // 2. Try Mobile search with Bangladeshi country code prefixes
+            let searchMobile = cleanIdentifier;
+            if (/^01[3-9]\d{8}$/.test(cleanIdentifier)) {
+                searchMobile = '+88' + cleanIdentifier;
+            } else if (/^8801[3-9]\d{8}$/.test(cleanIdentifier)) {
+                searchMobile = '+' + cleanIdentifier;
+            }
+
+            const { data: mobileMatches } = await supabaseAdmin
+                .from('patients')
+                .select('auth_user_id, email')
+                .or(`mobile_no.eq.${searchMobile},mobile_no.eq.${cleanIdentifier}`);
+
+            if (mobileMatches && mobileMatches.length > 0) {
+                candidateEmails = mobileMatches.map(m => m.email).filter(Boolean) as string[];
+            }
         }
     }
 
-    // Now attempt Auth with the resolved email
-    const supabase = await createClient();
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: emailToLogin,
-        password: pin,
-    });
-
-    if (authError || !authData.user) {
+    if (candidateEmails.length === 0) {
         await logAttempt(identifier, ip);
         return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // Verify role is patient
+    // Attempt Supabase Auth login with candidate emails
+    const supabase = await createClient();
+    let authenticatedUser: any = null;
+
+    for (const email of candidateEmails) {
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+            email,
+            password: pin,
+        });
+
+        if (!authError && authData.user) {
+            authenticatedUser = authData.user;
+            break;
+        }
+    }
+
+    if (!authenticatedUser) {
+        await logAttempt(identifier, ip);
+        return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    }
+
+    // Verify role is patient or create missing user record
     const { data: userRecord } = await supabaseAdmin
         .from('users')
         .select('role')
-        .eq('id', authData.user.id)
+        .eq('id', authenticatedUser.id)
         .single();
 
-    if (!userRecord || userRecord.role !== 'patient') {
+    if (!userRecord) {
+        await supabaseAdmin.from('users').insert({
+            id: authenticatedUser.id,
+            full_name: authenticatedUser.user_metadata?.full_name || 'Patient',
+            email: authenticatedUser.email,
+            role: 'patient'
+        });
+    } else if (userRecord.role !== 'patient') {
         await supabase.auth.signOut();
         return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
     // Success
     await clearAttempts(identifier, ip);
-    return NextResponse.json({ success: true, user: { ...authData.user, role: userRecord.role } });
+    return NextResponse.json({
+        success: true,
+        user: { ...authenticatedUser, role: 'patient' }
+    });
 }

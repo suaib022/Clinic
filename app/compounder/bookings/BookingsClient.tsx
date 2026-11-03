@@ -59,6 +59,7 @@ export default function BookingsClient({
     currentUserId,
     initialTab,
     doctorName,
+    doctorEmail,
     specialityName,
     doctorSession,
     scheduledStartTime,
@@ -70,6 +71,7 @@ export default function BookingsClient({
     currentUserId: string;
     initialTab: string;
     doctorName?: string;
+    doctorEmail?: string;
     specialityName?: string;
     doctorSession?: DoctorSession | null;
     scheduledStartTime?: string;
@@ -428,6 +430,14 @@ export default function BookingsClient({
                     </h2>
                     <small className="text-muted">
                         Assigned to: <strong>Dr. {doctorName || 'Doctor'}</strong> ({specialityName || 'General'})
+                        {doctorEmail && (
+                            <span className="ms-2 d-inline-flex align-items-center gap-1">
+                                • <i className="bi bi-envelope" style={{ color: '#0D7D72' }}></i>
+                                <a href={`mailto:${doctorEmail}`} className="text-decoration-none text-muted">
+                                    {doctorEmail}
+                                </a>
+                            </span>
+                        )}
                     </small>
                 </div>
                 <div className="d-flex align-items-center gap-2">

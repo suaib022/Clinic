@@ -121,6 +121,29 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
     const [isProcessingRebook, setIsProcessingRebook] = useState<boolean>(false);
     const [rebookError, setRebookError] = useState<string | null>(null);
 
+    const [payingApptId, setPayingApptId] = useState<string | null>(null);
+
+    const handlePayOnline = async (appointmentId: string) => {
+        try {
+            setPayingApptId(appointmentId);
+            const res = await fetch('/api/payment/initiate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ appointment_id: appointmentId })
+            });
+            const data = await res.json();
+            if (res.ok && data.gatewayUrl) {
+                window.location.href = data.gatewayUrl;
+            } else {
+                setPayingApptId(null);
+                alert(data.error || 'Failed to initiate payment gateway');
+            }
+        } catch (err: any) {
+            setPayingApptId(null);
+            alert(err?.message || 'Error connecting to payment gateway');
+        }
+    };
+
     // Tomorrow date helper for min rebook date
     const tomorrowStr = React.useMemo(() => {
         const d = new Date();
@@ -432,9 +455,41 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                                             )}
                                                         </div>
                                                     ) : (
-                                                        <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
-                                                            {getStatusLabel(apt.status)}
-                                                        </span>
+                                                        <div className="d-flex flex-column align-items-end gap-1">
+                                                            <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
+                                                                {getStatusLabel(apt.status)}
+                                                            </span>
+                                                            {apt.status === 'scheduled' && apt.payment_status !== 'paid' && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-success py-0 px-2 fw-semibold"
+                                                                    style={{ fontSize: '0.72rem' }}
+                                                                    disabled={payingApptId === apt.id}
+                                                                    onClick={() => handlePayOnline(apt.id)}
+                                                                >
+                                                                    {payingApptId === apt.id ? (
+                                                                        <span>Connecting...</span>
+                                                                    ) : (
+                                                                        <><i className="bi bi-credit-card me-1"></i>Pay Online</>
+                                                                    )}
+                                                                </button>
+                                                            )}
+                                                            {apt.payment_status === 'paid' && (
+                                                                <>
+                                                                    <span className="badge bg-success-subtle text-success border border-success" style={{ fontSize: '0.7rem' }}>
+                                                                        <i className="bi bi-check-circle me-1"></i>Paid (BDT {apt.paid_amount || '1,200'})
+                                                                    </span>
+                                                                    <a
+                                                                        href={`/appointment/confirmation?appointment_id=${apt.id}`}
+                                                                        className="btn btn-sm btn-link p-0 text-decoration-none fw-semibold"
+                                                                        style={{ fontSize: '0.74rem', color: '#0D7D72' }}
+                                                                        title="View Booking Slip, Payment Receipt, and Prescription"
+                                                                    >
+                                                                        <i className="bi bi-file-earmark-medical me-1"></i>Slips & Prescription
+                                                                    </a>
+                                                                </>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </td>
                                             </tr>

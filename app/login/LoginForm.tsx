@@ -4,52 +4,103 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+type Role = 'patient' | 'doctor' | 'compounder' | 'admin';
+
+const DEFAULT_CREDENTIALS: Record<Role, { identifier: string; pin: string }> = {
+  compounder: {
+    identifier: "compounder_DOC-532373@staff.clinic.local",
+    pin: "123456"
+  },
+  doctor: {
+    identifier: "doc-532373@staff.clinic.local",
+    pin: "123456"
+  },
+  admin: {
+    identifier: "admin@gmail.com",
+    pin: "123456"
+  },
+  patient: {
+    identifier: "UHID61569802",
+    pin: "123456"
+  }
+};
+
 export default function LoginForm({ error: initialError, message }: { error?: string, message?: string }) {
-  const [role, setRole] = useState("patient");
+  const [role, setRole] = useState<Role>("patient");
   const [error, setError] = useState(initialError);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const [formData, setFormData] = useState<Record<Role, { identifier: string; pin: string }>>({
+    patient: { ...DEFAULT_CREDENTIALS.patient },
+    doctor: { ...DEFAULT_CREDENTIALS.doctor },
+    compounder: { ...DEFAULT_CREDENTIALS.compounder },
+    admin: { ...DEFAULT_CREDENTIALS.admin }
+  });
+
+  const handleRoleChange = (newRole: Role) => {
+    setRole(newRole);
+    setError(undefined);
+    // Autofill with the role's default credentials
+    setFormData(prev => ({
+      ...prev,
+      [newRole]: { ...DEFAULT_CREDENTIALS[newRole] }
+    }));
+  };
 
   const handlePatientLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(undefined);
-    const formData = new FormData(e.currentTarget);
-    const identifier = formData.get('mobile') as string;
-    const pin = formData.get('pin') as string;
+    setLoading(true);
+    const identifier = formData.patient.identifier;
+    const pin = formData.patient.pin;
     
-    const res = await fetch('/api/patient/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier, pin })
-    });
-    const data = await res.json();
-    if (res.ok) {
-        router.refresh();
-        router.push('/patient/dashboard');
-    } else {
-        setError(data.error || 'Login failed');
+    try {
+      const res = await fetch('/api/patient/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, pin })
+      });
+      const data = await res.json();
+      if (res.ok) {
+          router.refresh();
+          router.push('/patient/dashboard');
+      } else {
+          setError(data.error || 'Login failed');
+          setLoading(false);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Login failed');
+      setLoading(false);
     }
   };
 
   const handleStaffLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(undefined);
-    const formData = new FormData(e.currentTarget);
-    const identifier = formData.get('identifier') as string;
-    const pin = formData.get('pin') as string;
-    const roleType = formData.get('role') as string;
+    setLoading(true);
+    const identifier = formData[role].identifier;
+    const pin = formData[role].pin;
     
-    const res = await fetch('/api/doctor/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier, pin, role: roleType })
-    });
-    const data = await res.json();
-    if (res.ok) {
-        router.refresh();
-        const roleStr = data.user?.role;
-        router.push(roleStr === 'admin' ? '/admin/dashboard' : `/${roleStr}/dashboard`);
-    } else {
-        setError(data.error || 'Login failed');
+    try {
+      const res = await fetch('/api/doctor/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, pin, role })
+      });
+      const data = await res.json();
+      if (res.ok) {
+          router.refresh();
+          const roleStr = data.user?.role;
+          router.push(roleStr === 'admin' ? '/admin/dashboard' : `/${roleStr}/dashboard`);
+      } else {
+          setError(data.error || 'Login failed');
+          setLoading(false);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Login failed');
+      setLoading(false);
     }
   };
 
@@ -75,36 +126,40 @@ export default function LoginForm({ error: initialError, message }: { error?: st
       <ul className="nav nav-pills nav-fill mb-4" style={{ gap: "10px" }} suppressHydrationWarning>
         <li className="nav-item">
           <button 
+            type="button"
             className={`nav-link ${role === 'patient' ? 'active' : ''}`} 
             style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'patient' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'patient' ? '#fff' : '#333' }}
-            onClick={(e) => { e.preventDefault(); setRole('patient'); }}
+            onClick={() => handleRoleChange('patient')}
           >
             Patient
           </button>
         </li>
         <li className="nav-item">
           <button 
+            type="button"
             className={`nav-link ${role === 'doctor' ? 'active' : ''}`} 
             style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'doctor' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'doctor' ? '#fff' : '#333' }}
-            onClick={(e) => { e.preventDefault(); setRole('doctor'); }}
+            onClick={() => handleRoleChange('doctor')}
           >
             Doctor
           </button>
         </li>
         <li className="nav-item">
           <button 
+            type="button"
             className={`nav-link ${role === 'compounder' ? 'active' : ''}`} 
             style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'compounder' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'compounder' ? '#fff' : '#333' }}
-            onClick={(e) => { e.preventDefault(); setRole('compounder'); }}
+            onClick={() => handleRoleChange('compounder')}
           >
             Compounder
           </button>
         </li>
         <li className="nav-item">
           <button 
+            type="button"
             className={`nav-link ${role === 'admin' ? 'active' : ''}`} 
             style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'admin' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'admin' ? '#fff' : '#333' }}
-            onClick={(e) => { e.preventDefault(); setRole('admin'); }}
+            onClick={() => handleRoleChange('admin')}
           >
             Admin
           </button>
@@ -112,80 +167,220 @@ export default function LoginForm({ error: initialError, message }: { error?: st
       </ul>
 
       <div className="appointment-form">
+        {/* Patient Form */}
         {role === 'patient' && (
           <form onSubmit={handlePatientLogin}>
             <div className="row gy-4">
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Mobile Number or UHID</label>
-                <input type="text" name="mobile" className="form-control" placeholder="Enter your mobile number or UHID" required />
+                <input 
+                  type="text" 
+                  name="mobile" 
+                  className="form-control" 
+                  placeholder="Enter your mobile number or UHID" 
+                  value={formData.patient.identifier}
+                  onChange={(e) => setFormData(prev => ({ ...prev, patient: { ...prev.patient, identifier: e.target.value } }))}
+                  required 
+                />
               </div>
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>PIN or Password</label>
-                <input type="password" name="pin" className="form-control" placeholder="Enter your PIN" required />
+                <div className="position-relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="pin" 
+                    className="form-control pe-5" 
+                    placeholder="Enter your PIN" 
+                    value={formData.patient.pin}
+                    onChange={(e) => setFormData(prev => ({ ...prev, patient: { ...prev.patient, pin: e.target.value } }))}
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted text-decoration-none pe-3"
+                    style={{ zIndex: 5 }}
+                    tabIndex={-1}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </button>
+                </div>
               </div>
               
               <div className="col-12 mt-4">
-                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Patient</button>
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn-book" 
+                  style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}
+                >
+                  {loading ? 'Logging in...' : 'Login as Patient'}
+                </button>
               </div>
             </div>
           </form>
         )}
 
+        {/* Doctor Form */}
         {role === 'doctor' && (
           <form onSubmit={handleStaffLogin}>
             <input type="hidden" name="role" value="doctor" />
             <div className="row gy-4">
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Doctor ID / Email</label>
-                <input type="text" name="identifier" className="form-control" placeholder="Enter your Doctor ID or Email" required />
+                <input 
+                  type="text" 
+                  name="identifier" 
+                  className="form-control" 
+                  placeholder="Enter your Doctor ID or Email" 
+                  value={formData.doctor.identifier}
+                  onChange={(e) => setFormData(prev => ({ ...prev, doctor: { ...prev.doctor, identifier: e.target.value } }))}
+                  required 
+                />
               </div>
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>PIN / Password</label>
-                <input type="password" name="pin" className="form-control" placeholder="Enter your PIN or Password" required />
+                <div className="position-relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="pin" 
+                    className="form-control pe-5" 
+                    placeholder="Enter your PIN or Password" 
+                    value={formData.doctor.pin}
+                    onChange={(e) => setFormData(prev => ({ ...prev, doctor: { ...prev.doctor, pin: e.target.value } }))}
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted text-decoration-none pe-3"
+                    style={{ zIndex: 5 }}
+                    tabIndex={-1}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </button>
+                </div>
               </div>
               
               <div className="col-12 mt-4">
-                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Doctor</button>
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn-book" 
+                  style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}
+                >
+                  {loading ? 'Logging in...' : 'Login as Doctor'}
+                </button>
               </div>
             </div>
           </form>
         )}
 
+        {/* Compounder Form */}
         {role === 'compounder' && (
           <form onSubmit={handleStaffLogin}>
             <input type="hidden" name="role" value="compounder" />
             <div className="row gy-4">
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Compounder Email</label>
-                <input type="email" name="identifier" className="form-control" placeholder="Compounder Email Address" required />
+                <input 
+                  type="email" 
+                  name="identifier" 
+                  className="form-control" 
+                  placeholder="Compounder Email Address" 
+                  value={formData.compounder.identifier}
+                  onChange={(e) => setFormData(prev => ({ ...prev, compounder: { ...prev.compounder, identifier: e.target.value } }))}
+                  required 
+                />
               </div>
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Password / PIN</label>
-                <input type="password" name="pin" className="form-control" placeholder="Password" required />
+                <div className="position-relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="pin" 
+                    className="form-control pe-5" 
+                    placeholder="Password" 
+                    value={formData.compounder.pin}
+                    onChange={(e) => setFormData(prev => ({ ...prev, compounder: { ...prev.compounder, pin: e.target.value } }))}
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted text-decoration-none pe-3"
+                    style={{ zIndex: 5 }}
+                    tabIndex={-1}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </button>
+                </div>
               </div>
               
               <div className="col-12 mt-4">
-                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Compounder</button>
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn-book" 
+                  style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}
+                >
+                  {loading ? 'Logging in...' : 'Login as Compounder'}
+                </button>
               </div>
             </div>
           </form>
         )}
 
+        {/* Admin Form */}
         {role === 'admin' && (
           <form onSubmit={handleStaffLogin}>
             <input type="hidden" name="role" value="admin" />
             <div className="row gy-4">
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Admin Email</label>
-                <input type="email" name="identifier" className="form-control" placeholder="Admin Email Address" required />
+                <input 
+                  type="email" 
+                  name="identifier" 
+                  className="form-control" 
+                  placeholder="Admin Email Address" 
+                  value={formData.admin.identifier}
+                  onChange={(e) => setFormData(prev => ({ ...prev, admin: { ...prev.admin, identifier: e.target.value } }))}
+                  required 
+                />
               </div>
               <div className="col-12">
                 <label className="form-label" style={{ fontWeight: "600" }}>Password / PIN</label>
-                <input type="password" name="pin" className="form-control" placeholder="Password" required />
+                <div className="position-relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="pin" 
+                    className="form-control pe-5" 
+                    placeholder="Password" 
+                    value={formData.admin.pin}
+                    onChange={(e) => setFormData(prev => ({ ...prev, admin: { ...prev.admin, pin: e.target.value } }))}
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted text-decoration-none pe-3"
+                    style={{ zIndex: 5 }}
+                    tabIndex={-1}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </button>
+                </div>
               </div>
               
               <div className="col-12 mt-4">
-                <button type="submit" className="btn-book" style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}>Login as Admin</button>
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn-book" 
+                  style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}
+                >
+                  {loading ? 'Logging in...' : 'Login as Admin'}
+                </button>
               </div>
             </div>
           </form>

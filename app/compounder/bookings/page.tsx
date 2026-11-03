@@ -50,7 +50,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
     // Fetch Doctor Info
     const { data: doctor } = await supabase
         .from('users')
-        .select('full_name')
+        .select('full_name, email')
         .eq('id', doctorId)
         .single();
 
@@ -138,6 +138,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                         currentUserId={user.id}
                         initialTab={tab}
                         doctorName={doctor?.full_name || 'Assigned Doctor'}
+                        doctorEmail={doctor?.email}
                         specialityName={specialityName}
                         doctorSession={doctorSession}
                         scheduledStartTime={scheduledStartTime}
