@@ -19,6 +19,12 @@ export default async function AllAppointmentsPage() {
             patients (
                 full_name,
                 mobile_no
+            ),
+            appointment_feedbacks (
+                doctor_rating,
+                service_rating,
+                overall_rating,
+                comment
             )
         `)
         .eq('doctor_id', user.id)
@@ -49,18 +55,19 @@ export default async function AllAppointmentsPage() {
                                                     <th>Patient Name</th>
                                                     <th>Mobile</th>
                                                     <th>Visit Type</th>
+                                                    <th>Rating & Feedback</th>
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {appointments?.length === 0 ? (
                                                     <tr>
-                                                        <td colSpan={6} className="text-center py-4 text-muted">
+                                                        <td colSpan={7} className="text-center py-4 text-muted">
                                                             No appointments found.
                                                         </td>
                                                     </tr>
                                                 ) : (
-                                                    appointments?.map((appt) => {
+                                                    appointments?.map((appt: any) => {
                                                         let statusBadgeClass = 'bg-secondary';
                                                         switch (appt.status) {
                                                             case 'completed':
@@ -80,6 +87,7 @@ export default async function AllAppointmentsPage() {
                                                         }
 
                                                         const patientInfo: any = Array.isArray(appt.patients) ? appt.patients[0] : appt.patients;
+                                                        const fb: any = Array.isArray(appt.appointment_feedbacks) ? appt.appointment_feedbacks[0] : appt.appointment_feedbacks;
 
                                                         return (
                                                             <tr key={appt.id}>
@@ -103,6 +111,24 @@ export default async function AllAppointmentsPage() {
                                                                 </td>
                                                                 <td className="text-capitalize">
                                                                     {appt.visit_type ? appt.visit_type.replace('_', ' ') : 'N/A'}
+                                                                </td>
+                                                                <td>
+                                                                    {fb ? (
+                                                                        <div>
+                                                                            <span className="badge bg-warning text-dark fw-bold px-2 py-1 me-1">
+                                                                                <i className="bi bi-star-fill me-1"></i>{Number(fb.overall_rating).toFixed(1)}
+                                                                            </span>
+                                                                            {fb.comment && (
+                                                                                <span className="small text-muted text-truncate d-inline-block align-middle" style={{ maxWidth: '180px' }} title={fb.comment}>
+                                                                                    "{fb.comment}"
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    ) : appt.status === 'completed' ? (
+                                                                        <span className="small text-muted">Awaiting Review</span>
+                                                                    ) : (
+                                                                        <span className="text-muted small">-</span>
+                                                                    )}
                                                                 </td>
                                                                 <td>
                                                                     <span className={`badge ${statusBadgeClass} text-capitalize px-3 py-2 rounded-pill`}>

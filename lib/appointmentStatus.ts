@@ -3,6 +3,7 @@ export const APPOINTMENT_STATUSES = [
   'scheduled',
   'checked_in',
   'in_consultation',
+  'prescription_pending',
   'completed',
   'cancelled',
   'no_show'
@@ -15,6 +16,7 @@ export const STATUS_LABELS: Record<AppointmentStatus, string> = {
   scheduled: 'Scheduled',
   checked_in: 'Checked In',
   in_consultation: 'In Consultation',
+  prescription_pending: 'Prescription Pending',
   completed: 'Completed',
   cancelled: 'Cancelled',
   no_show: 'No Show'
@@ -25,6 +27,7 @@ export const STATUS_BADGE_COLORS: Record<AppointmentStatus, string> = {
   scheduled: 'bg-primary',
   checked_in: 'bg-info text-dark',
   in_consultation: 'bg-secondary',
+  prescription_pending: 'bg-warning text-dark',
   completed: 'bg-success',
   cancelled: 'bg-danger',
   no_show: 'bg-dark'
@@ -34,7 +37,8 @@ export const ALLOWED_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]>
   hold: ['scheduled', 'cancelled'],
   scheduled: ['checked_in', 'cancelled', 'no_show'],
   checked_in: ['in_consultation', 'no_show', 'cancelled'],
-  in_consultation: ['completed'],
+  in_consultation: ['prescription_pending', 'completed'],
+  prescription_pending: ['completed'],
   completed: [],
   cancelled: [],
   no_show: ['scheduled'] // admin only

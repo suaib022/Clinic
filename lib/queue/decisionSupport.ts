@@ -188,8 +188,8 @@ export async function calculateQueueEstimate(appointmentId: string): Promise<Que
 
     const todayAppts = allAppts || [];
 
-    // 7. Calculate Empirical Average Consultation Duration from Completed Patients Today
-    const completedAppts = todayAppts.filter(a => a.status === 'completed' && a.consult_started_at && a.consult_ended_at);
+    // 7. Calculate Empirical Average Consultation Duration from Completed / Consultation Ended Patients Today
+    const completedAppts = todayAppts.filter(a => ['completed', 'prescription_pending'].includes(a.status) && a.consult_started_at && a.consult_ended_at);
     let empiricalAvg = benchmark.avg_consult_minutes;
 
     if (completedAppts.length >= 2) {
@@ -235,13 +235,13 @@ export async function calculateQueueEstimate(appointmentId: string): Promise<Que
     // 9. Categorize Patients Ahead of Target Serial
     const aheadAppts = todayAppts.filter(a =>
         a.serial_no < targetSerial &&
-        !['completed', 'cancelled', 'no_show'].includes(a.status)
+        !['completed', 'cancelled', 'no_show', 'prescription_pending'].includes(a.status)
     );
 
     const patientsAheadTotal = aheadAppts.length;
     const patientsAheadPresent = aheadAppts.filter(a => ['checked_in', 'in_consultation'].includes(a.status)).length;
     const patientsAheadNotPresent = aheadAppts.filter(a => a.status === 'scheduled').length;
-    const patientsCompletedCount = todayAppts.filter(a => a.status === 'completed' && a.serial_no < targetSerial).length;
+    const patientsCompletedCount = todayAppts.filter(a => ['completed', 'prescription_pending'].includes(a.status) && a.serial_no < targetSerial).length;
 
     // 10. Handle Special Terminal / In-Progress States for Target Patient
     if (appt.status === 'in_consultation') {
@@ -280,7 +280,8 @@ export async function calculateQueueEstimate(appointmentId: string): Promise<Que
         };
     }
 
-    if (appt.status === 'completed') {
+    if (appt.status === 'completed' || appt.status === 'prescription_pending') {
+        const isPrescriptionPending = appt.status === 'prescription_pending';
         return {
             success: true,
             appointmentId,
@@ -307,11 +308,15 @@ export async function calculateQueueEstimate(appointmentId: string): Promise<Que
             avgConsultMinutes: Math.round(effectiveConsultMins),
             estimatedWaitMinutes: 0,
             safetyBufferMinutes: 0,
-            expectedConsultStartTime: 'Completed',
-            recommendedArrivalTime: 'Completed',
+            expectedConsultStartTime: isPrescriptionPending ? 'Prescription Pending' : 'Completed',
+            recommendedArrivalTime: isPrescriptionPending ? 'Prescription Pending' : 'Completed',
             urgencyLevel: 'comfortable',
-            recommendationMessage: 'Your visit has already been completed.',
-            chatbotReply: `Your appointment with Dr. ${doctorName} (Serial #${targetSerial}) has already been completed today.`
+            recommendationMessage: isPrescriptionPending
+                ? 'Your doctor consultation is finished. Your prescription is being uploaded by the clinic staff.'
+                : 'Your visit has already been completed.',
+            chatbotReply: isPrescriptionPending
+                ? `Your consultation with Dr. ${doctorName} (Serial #${targetSerial}) is finished. Your prescription is being uploaded by the clinic staff.`
+                : `Your appointment with Dr. ${doctorName} (Serial #${targetSerial}) has already been completed today.`
         };
     }
 

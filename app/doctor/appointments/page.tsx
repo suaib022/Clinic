@@ -64,9 +64,14 @@ export default async function DoctorAppointmentsPage() {
                                 </h2>
                                 <small className="text-muted">Live serial tracking and consultation overview</small>
                             </div>
-                            <Link href="/doctor/all-appointments" className="btn btn-outline-secondary btn-sm">
-                                <i className="bi bi-list-ul me-1"></i>All Appointments
-                            </Link>
+                            <div className="d-flex gap-2">
+                                <Link href="/doctor/schedule" className="btn btn-outline-danger btn-sm">
+                                    <i className="bi bi-calendar-x me-1"></i>Cancel Schedule / Days
+                                </Link>
+                                <Link href="/doctor/all-appointments" className="btn btn-outline-secondary btn-sm">
+                                    <i className="bi bi-list-ul me-1"></i>All Appointments
+                                </Link>
+                            </div>
                         </div>
 
                         {/* Chamber Status Bar */}

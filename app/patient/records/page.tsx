@@ -33,7 +33,7 @@ export default async function PatientRecordsPage() {
             doctors:users!appointments_doctor_id_fkey(id, full_name)
         `)
         .in('patient_id', patientIds)
-        .eq('status', 'completed')
+        .in('status', ['completed', 'prescription_pending'])
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
 

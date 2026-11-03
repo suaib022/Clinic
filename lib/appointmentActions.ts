@@ -13,6 +13,7 @@ export type AppointmentAction =
   | 'set_priority' 
   | 'start_consultation' 
   | 'complete_consultation' 
+  | 'upload_prescription'
   | 'cancel' 
   | 'retract_walk_in';
 
@@ -46,6 +47,7 @@ export function getAvailableActions(
     set_priority: { allowed: false, reason: 'Not available' },
     start_consultation: { allowed: false, reason: 'Not available' },
     complete_consultation: { allowed: false, reason: 'Not available' },
+    upload_prescription: { allowed: false, reason: 'Not available' },
     cancel: { allowed: false, reason: 'Not available' },
     retract_walk_in: { allowed: false, reason: 'Not available' },
   };
@@ -110,6 +112,9 @@ export function getAvailableActions(
     if (status === 'in_consultation') {
       results.complete_consultation = { allowed: true };
     }
+    if (status === 'prescription_pending') {
+      results.upload_prescription = { allowed: true };
+    }
     results.cancel = { allowed: false, reason: 'Compounders cannot cancel appointments' };
   }
 
@@ -117,6 +122,7 @@ export function getAvailableActions(
     if (status === 'scheduled' && ctx.isToday) results.check_in = { allowed: true };
     if (status === 'checked_in') results.start_consultation = { allowed: true };
     if (status === 'in_consultation') results.complete_consultation = { allowed: true };
+    if (status === 'prescription_pending') results.upload_prescription = { allowed: true };
     if (['scheduled', 'checked_in'].includes(status)) results.cancel = { allowed: true };
     if (['scheduled', 'checked_in'].includes(status)) results.set_priority = { allowed: true };
     if (status === 'scheduled' && ctx.isToday) results.mark_no_show = { allowed: true };
@@ -126,6 +132,7 @@ export function getAvailableActions(
     if (status === 'scheduled' && ctx.isToday) results.check_in = { allowed: true };
     if (status === 'checked_in') results.start_consultation = { allowed: true };
     if (status === 'in_consultation') results.complete_consultation = { allowed: true };
+    if (status === 'prescription_pending') results.upload_prescription = { allowed: true };
     if (!['completed', 'cancelled'].includes(status)) results.cancel = { allowed: true };
     if (['scheduled', 'checked_in'].includes(status)) results.set_priority = { allowed: true };
     if (status === 'scheduled') results.mark_no_show = { allowed: true };

@@ -61,13 +61,129 @@ export async function startConsultation(appointmentId: string) {
     return { success: true };
 }
 
+export async function endConsultation(appointmentId: string) {
+    const { user } = await requireRole(['compounder', 'doctor', 'admin']);
+    const supabase = await createClient();
+    const { error } = await supabase.rpc('end_consultation', { p_id: appointmentId });
+    if (error) return { success: false, error: friendlyError(error.message) };
+    revalidatePath('/compounder');
+    revalidatePath('/compounder/bookings');
+    revalidatePath('/doctor/appointments');
+    return { success: true };
+}
+
 export async function completeConsultation(appointmentId: string) {
-    const { user } = await requireRole(['compounder']);
+    const { user } = await requireRole(['compounder', 'doctor', 'admin']);
     const supabase = await createClient();
     const { error } = await supabase.rpc('complete_consultation', { p_id: appointmentId });
     if (error) return { success: false, error: friendlyError(error.message) };
     revalidatePath('/compounder');
+    revalidatePath('/compounder/bookings');
+    revalidatePath('/doctor/appointments');
     return { success: true };
+}
+
+export async function uploadVisitPrescription(formData: FormData) {
+    const { user } = await requireRole(['compounder', 'doctor', 'admin']);
+    const appointmentId = formData.get('appointmentId') as string;
+    const file = formData.get('file') as File;
+    const notes = (formData.get('notes') as string) || '';
+
+    if (!appointmentId) {
+        return { success: false, error: 'Appointment ID is required' };
+    }
+    if (!file || file.size === 0) {
+        return { success: false, error: 'Please select a prescription file to upload' };
+    }
+
+    try {
+        // 1. Fetch appointment details
+        const { data: appt, error: apptErr } = await supabaseAdmin
+            .from('appointments')
+            .select(`
+                id,
+                patient_id,
+                doctor_id,
+                appointment_date,
+                status,
+                serial_no,
+                doctor:users!appointments_doctor_id_fkey(id, full_name),
+                patient:patients!inner(id, full_name)
+            `)
+            .eq('id', appointmentId)
+            .single();
+
+        if (apptErr || !appt) {
+            return { success: false, error: 'Appointment not found' };
+        }
+
+        // 2. Upload file to Supabase storage
+        const fileExt = file.name.split('.').pop() || 'pdf';
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const fileName = `${appt.patient_id}/${Date.now()}-prescription-${cleanName}`;
+        const buffer = Buffer.from(await file.arrayBuffer());
+
+        const { error: storageErr } = await supabaseAdmin.storage
+            .from('medical_documents')
+            .upload(fileName, buffer, {
+                contentType: file.type || 'application/pdf',
+                upsert: false
+            });
+
+        if (storageErr) {
+            return { success: false, error: `Storage upload failed: ${storageErr.message}` };
+        }
+
+        // 3. Create medical_records entry
+        const doctorName = (appt.doctor as any)?.full_name || 'Consultant';
+        const { data: record, error: recordErr } = await supabaseAdmin
+            .from('medical_records')
+            .insert({
+                patient_id: appt.patient_id,
+                doctor_id: appt.doctor_id,
+                appointment_id: appt.id,
+                uploaded_by: user.id,
+                record_type: 'prescription',
+                title: `Prescription - Dr. ${doctorName} (${appt.appointment_date})`,
+                description: notes.trim() || `Prescription uploaded for Serial #${appt.serial_no}`,
+                file_path: fileName,
+                document_date: appt.appointment_date,
+                file_size: file.size,
+                file_type: file.type || 'application/pdf'
+            })
+            .select()
+            .single();
+
+        if (recordErr || !record) {
+            return { success: false, error: `Failed to save record metadata: ${recordErr?.message}` };
+        }
+
+        // 4. Update appointment to 'completed' with prescription_record_id via RPC
+        const { error: rpcErr } = await supabaseAdmin.rpc('complete_prescription_upload', {
+            p_appointment_id: appt.id,
+            p_record_id: record.id
+        });
+
+        if (rpcErr) {
+            return { success: false, error: `Failed to finalize appointment: ${rpcErr.message}` };
+        }
+
+        // 5. Revalidate paths
+        revalidatePath('/compounder');
+        revalidatePath('/compounder/bookings');
+        revalidatePath('/doctor/appointments');
+        revalidatePath('/patient/records');
+        revalidatePath('/patient/appointments');
+        revalidatePath('/patient/dashboard');
+
+        return { 
+            success: true, 
+            recordId: record.id,
+            message: `Prescription uploaded successfully. Serial #${appt.serial_no} is now marked Complete.` 
+        };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Prescription upload failed' };
+    }
 }
 
 // ──── CHAMBER SESSION ACTIONS ────
