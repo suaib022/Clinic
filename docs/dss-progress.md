@@ -37,3 +37,23 @@ Branch `feature/dss`. Status values: **done / partial / blocked**. "DB test" = V
 10. **Completed visits can never go back to waiting**, admin included. Reverse moves (`in_consultation→checked_in`, `prescription_pending→in_consultation`, `no_show→checked_in`) are only allowed inside `dss_undo`.
 11. **Lint**: the repo has 220 pre-existing ESLint errors. `verify-dss` lints the DSS files with `--max-warnings=0`, and the rest is left as is.
 12. **`test:m1`** pointed at a missing file and was removed. `npm test` and `npm run test:dss` were added.
+
+## M2: engine (`lib/queue/engine/`, pure TypeScript)
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-30 | computeQueueOrder (B2, B3) | done | engine/order.ts | tests "queue order" (late arrival lands between 5 and 6, grace, emergency, skip, rejoin) |
+| DSS-31 | computeExpectedDurations (B4) | done | engine/durations.ts | tests "durations" (median/quartiles 9/6/13, dept → slot fallback, clamp, last 30, outlier) |
+| DSS-32 | computeEstimates (B5, B6) with range, ahead, confidence, label, flags, reason | done | engine/estimates.ts | B5 worked example: **7:02 PM, 6:53–7:14, Running late, wait 15–35**; label edges 5/15 |
+| DSS-33 | computeSuggestions (B8) with id, type, severity, message, action, key | done | engine/suggestions.ts | tests "suggestions" (all 8 situations, dismissals, stable keys, urgent first) |
+| DSS-34 | Old calculateQueueEstimate → deprecated wrapper over the engine | done (M3) | lib/queue/decisionSupport.ts | M3 tests |
+| DSS-35 | Vitest suite | done | tests/dss/engine/engine.test.ts | 37/37 pass |
+| DSS-36 | Simulator | done | scripts/dss-simulate.ts (`npm run dss:simulate`) | runs in verify; fails if mean error > 15 min |
+
+Engine decisions:
+- Median and quartiles use linear interpolation (p = 0.25 / 0.5 / 0.75). Only durations of 1–120 min feed history (the DB has sub-minute test rows).
+- Without enough history there is no spread, so short/long = typical × 0.7 / × 1.4 (then clamped).
+- The department average is used only when the doctor's speciality has a benchmark row. The generic `DEFAULT` row is **not** used, so the rule "then the slot length" can actually happen.
+- Not-arrived patients get a hypothetical "if you check in now" start (for "please arrive by"), labelled *Not arrived* and with low confidence. They are never counted for others.
+- While **paused**, estimates assume the doctor resumes now and say "Doctor is on a short break". On resume they are recalculated, because the pause is subtracted from the visit in progress.
+- "Doctor delay" = expected start minus booked time of the first on-time patient in line (or the lateness of the visit in the room, or the minutes past the session start if not started).

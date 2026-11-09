@@ -24,6 +24,7 @@ const steps: Array<[string, string[]]> = [
   ['Typecheck', ['npx', 'tsc', '--noEmit']],
   ['Lint (DSS files)', ['npx', 'eslint', '--max-warnings=0', ...DSS_PATHS]],
   ['Tests', ['npx', 'vitest', 'run', ...(args.has('--skip-db') ? ['tests/dss/engine', 'tests/dss/ui'] : [])]],
+  ['Engine day simulation', ['npx', 'tsx', 'scripts/dss-simulate.ts']],
 ];
 if (!args.has('--skip-build')) steps.push(['Build', ['npm', 'run', 'build']]);
 
