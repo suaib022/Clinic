@@ -54,6 +54,7 @@ export interface QueueAppointment {
   /** Staff-only fields; absent for patient views. */
   patientName?: string | null;
   patientUhid?: string | null;
+  patientMobile?: string | null;
 }
 
 export interface Pause {

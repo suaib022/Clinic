@@ -35,6 +35,8 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
@@ -42,6 +44,7 @@
     "dotenv": "^16.6.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "jsdom": "^26.1.0",
     "pg": "^8.23.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",

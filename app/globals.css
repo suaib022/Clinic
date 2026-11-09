@@ -130,3 +130,25 @@
     @apply font-sans;
   }
 }
+/* DSS queue screens: the theme forces every .btn teal with !important; outline buttons for secondary
+   and dangerous actions need to stay distinguishable (colour comes from --dss-c). */
+.btn.dss-outline {
+  background-color: #fff !important;
+  color: var(--dss-c, #0D7D72) !important;
+  border-color: var(--dss-c, #0D7D72) !important;
+}
+.btn.dss-outline:hover,
+.btn.dss-outline:focus-visible {
+  background-color: var(--dss-c, #0D7D72) !important;
+  color: #fff !important;
+}
+.btn.dss-solid-warning {
+  background-color: #ffc107 !important;
+  border-color: #ffc107 !important;
+  color: #212529 !important;
+}
+.btn.dss-solid-danger {
+  background-color: #b02a37 !important;
+  border-color: #b02a37 !important;
+  color: #fff !important;
+}

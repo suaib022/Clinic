@@ -102,7 +102,7 @@ export default async function CompounderDashboard() {
                             <h2 className="m-0" style={{ color: '#0D7D72' }}>
                                 <i className="bi bi-grid me-2"></i>Dashboard
                             </h2>
-                            <Link href="/compounder/bookings" className="btn btn-sm btn-primary" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}>
+                            <Link href="/compounder/queue" className="btn btn-sm btn-primary" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}>
                                 <i className="bi bi-calendar-check me-1"></i>Manage Live Queue & Chamber
                             </Link>
                         </div>

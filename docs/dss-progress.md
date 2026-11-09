@@ -91,3 +91,24 @@ M4 decisions and findings:
 - "Near turn", "you're next", "time moved 10+ min" and "label changed" are decided **in the database** (`dss_sync_estimates`), from the engine numbers that staff screens send after each load. It remembers the last time it told the patient, so reloads never repeat a notice. Estimate notifications therefore need a staff screen (compounder or doctor queue page) to be open, as it is during a clinic day. Action notifications (check-in, called, no-show, pause, delay) come from the action itself.
 - The old `patient_notifications` policy let **any doctor or compounder write any patient's notifications**. It is now admin-only, and existing rows are copied and new ones mirrored into `notifications`.
 - Dev-only quick login `/api/dev/login-as?as=<account>` exists only with `DSS_DEV_SEED=1`, a `DSS_TEST_PASSWORD`, and a request to localhost.
+
+## M5: compounder live queue (`/compounder/queue`)
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-60 | Doctor switcher for multi-doctor compounders | done | app/compounder/queue/page.tsx, QueueConsole | `listManagedDoctors` + `?doctor=` (validated against assignments) |
+| DSS-61 | Now serving: serial, name, new/follow-up, timer, expected, overrun; big Done / Call next | done | console/Panels.tsx | UI tests "active session"; browser |
+| DSS-62 | Next 3 with arrived/not and call button | done | console/QueueLists.tsx `NextUp` | browser |
+| DSS-63 | Waiting list with booked vs expected, arrived, priority, label, source; row actions | done | `WaitingList` | browser; UI test "no-show asks for confirmation" |
+| DSS-64 | Suggestions with confirm + dismiss (remembered for the day) | done | `SuggestionsPanel`, `dss_dismiss_suggestion` | UI test "confirming a suggestion" |
+| DSS-65 | Walk-in via Module 4 lookup, impact shown first | done | console/WalkInPanel.tsx, `walkInImpact` | browser |
+| DSS-66 | Day summary bar | done | `DaySummary` | browser |
+| DSS-67 | Session banner + Pause/Resume + "Notify all waiting" preview with count | done | `SessionBanner`, confirm dialog | browser |
+| DSS-68 | Realtime on appointments/events/sessions, debounced; 10 s fallback; Live/Reconnecting | done | console/useLiveSnapshot.ts, lib/realtime.ts | browser: a second compounder's check-in appeared within 3 s |
+| DSS-69 | Confirm no-show, 2-min Undo bar, buttons disabled while working, "Already updated by someone else", server wins | done | QueueConsole | UI tests "double tap", "collision" |
+| DSS-70 | Nothing medical | done | — | UI test scans the screen's sources for medical tables/words |
+| DSS-71 | Component tests | done | tests/dss/ui/queue-console.test.tsx | 18/18 |
+| DSS-72 | Sidebar link; proxy | done | DashboardSidebar | `/compounder/*` already protected by `proxy.ts` |
+
+Notes: the site theme forces every `.btn` teal with `!important`. Secondary and dangerous actions use scoped `.btn.dss-outline` / `.dss-solid-danger` classes (app/globals.css). Dialogs sit above the site's floating chat widget.
+Dev helper: `npx tsx scripts/dss/demo-day.ts` sets up a realistic day for test doctor A.

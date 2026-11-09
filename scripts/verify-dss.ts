@@ -17,6 +17,7 @@ const env = { ...process.env, DSS_DEV_SEED: process.env.DSS_DEV_SEED ?? '1' };
 // Large legacy files that DSS only touches lightly keep their pre-existing lint debt (listed explicitly).
 const LEGACY_LINT_DEBT = new Set<string>([
   'components/queue/PatientLiveQueueCard.tsx', // replaced in DSS-M6
+  'app/compounder/dashboard/page.tsx', // DSS changed one link; 3 pre-existing lint errors
 ]);
 const git = (a: string[]) => (spawnSync('git', a, { encoding: 'utf8' }).stdout ?? '').split('\n').filter(Boolean);
 const DSS_PATHS = [...new Set([

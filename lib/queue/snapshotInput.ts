@@ -19,7 +19,7 @@ export interface RawSnapshot {
     id: string; serial_no: number; status: ApptStatus; booked_at: string; slot_minutes: number | null;
     checked_in_at: Ts; called_at: Ts; consult_started_at: Ts; consult_ended_at: Ts; priority_level: number;
     visit_type: VisitType | null; visit_source: 'online' | 'walk_in' | null; skipped_at: Ts; rejoined_at: Ts;
-    no_show_marked_at: Ts; patient_name?: string | null; patient_uhid?: string | null;
+    no_show_marked_at: Ts; patient_name?: string | null; patient_uhid?: string | null; patient_mobile?: string | null;
   }[];
   history: { new: number[] | null; follow_up: number[] | null };
   benchmark: { speciality: string; avg: number; min: number; max: number } | null;
@@ -93,6 +93,7 @@ export function toEngineInput(raw: RawSnapshot, now = Date.parse(raw.server_now)
     rejoinedAt: ms(a.rejoined_at),
     patientName: a.patient_name ?? null,
     patientUhid: a.patient_uhid ?? null,
+    patientMobile: a.patient_mobile ?? null,
   }));
   return {
     now,

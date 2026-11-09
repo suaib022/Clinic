@@ -127,11 +127,15 @@ describe('notifications from queue actions', () => {
   });
 
   it('warning/urgent suggestions reach compounders once per day', async () => {
+    await setTimes(ids.f2, { scheduled_start: new Date(Date.now() - 40 * min) }); // → "mark no-show" warning
     const { suggestions } = await sync(compA1);
     await sync(compA2);
     const warn = suggestions.filter((x) => x.severity !== 'info');
+    expect(warn.some((w) => w.key === `no_show:${ids.f2}`)).toBe(true);
     const got = await notes(s.users.compA2, 'suggestion');
-    expect(got.length).toBe(warn.length);
+    for (const w of warn) expect(got.filter((n) => n.dedupe_key.endsWith(`:${w.key}`))).toHaveLength(1);
+    await sync(compA1);
+    expect(await notes(s.users.compA2, 'suggestion')).toHaveLength(got.length); // reloads add nothing
   });
 
   it('no notification text contains medical words', async () => {
