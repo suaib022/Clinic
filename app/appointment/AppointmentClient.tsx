@@ -6,6 +6,7 @@ import { toZonedTime } from 'date-fns-tz';
 export default function AppointmentClient({ userPatients, isDashboard }: { userPatients?: any[], isDashboard?: boolean }) {
   const [specialities, setSpecialities] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<any[]>([]);
+  const [doctorsLoading, setDoctorsLoading] = useState(false);
   
   const [selectedSpeciality, setSelectedSpeciality] = useState('');
   const [selectedDoctorId, setSelectedDoctorId] = useState('');
@@ -187,12 +188,16 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
   }, []);
 
   useEffect(() => {
+    setDoctorsLoading(true);
     const url = selectedSpeciality ? `/api/doctors?speciality_id=${selectedSpeciality}` : '/api/doctors';
     fetch(url)
       .then(r => r.json())
       .then(data => {
          if (Array.isArray(data)) setDoctors(data as any);
-      });
+         else setDoctors([]);
+      })
+      .catch(() => setDoctors([]))
+      .finally(() => setDoctorsLoading(false));
   }, [selectedSpeciality]);
   
   useEffect(() => {
@@ -731,9 +736,28 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                   </select>
                </div>
                <div className="col-md-6">
-                  <label className="form-label small mb-1">Select Doctor <span className="text-danger">*</span></label>
-                  <select suppressHydrationWarning className="form-select rounded-0 border-secondary-subtle" value={selectedDoctorId} onChange={e => setSelectedDoctorId(e.target.value)} disabled={doctors.length === 0}>
-                     <option value="">-- Select --</option>
+                  <label className="form-label small mb-1">
+                     Select Doctor <span className="text-danger">*</span>
+                     {selectedSpeciality && !doctorsLoading && (
+                        <span className="text-muted ms-1" style={{ fontSize: '11px' }}>
+                           ({doctors.length} {doctors.length === 1 ? 'doctor' : 'doctors'} available)
+                        </span>
+                     )}
+                  </label>
+                  <select 
+                     suppressHydrationWarning 
+                     className="form-select rounded-0 border-secondary-subtle" 
+                     value={selectedDoctorId} 
+                     onChange={e => setSelectedDoctorId(e.target.value)} 
+                     disabled={doctorsLoading || (doctors.length === 0 && !selectedSpeciality)}
+                  >
+                     <option value="">
+                        {doctorsLoading 
+                           ? '-- Loading Doctors... --' 
+                           : doctors.length === 0 && selectedSpeciality
+                              ? '-- No Doctors Available --'
+                              : '-- Select --'}
+                     </option>
                      {doctors.map((d: any) => (
                          <option key={d.id} value={d.id}>{d.full_name.toUpperCase()}</option>
                      ))}

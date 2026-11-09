@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import {
     X,
     Maximize2,
@@ -91,6 +92,7 @@ export function AdaaptMascot({ size = 52 }: { size?: number }) {
 }
 
 export default function HealthcareChatWidget() {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
     const [mode, setMode] = useState<'text' | 'voice'>('voice');
@@ -423,6 +425,11 @@ export default function HealthcareChatWidget() {
             ]);
         }
     }, [isOpen]);
+
+    // Do not show chatbot widget on printable slip pages and confirmation print views
+    if (pathname && (pathname.startsWith('/appointment/slips') || pathname.includes('/slips/'))) {
+        return null;
+    }
 
     return (
         <>

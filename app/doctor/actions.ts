@@ -22,33 +22,43 @@ export async function cancelDoctorSchedule(input: CancelScheduleInput) {
             return { success: false, error: 'Cancellation reason is required' };
         }
 
-        const { data, error } = await supabase.rpc('doctor_cancel_schedule', {
-            p_start_date: input.startDate,
-            p_end_date: input.endDate,
-            p_reason: input.reason.trim(),
-            p_doctor_id: user.id
-        });
+        const formattedReason = input.reason.trim().startsWith('Schedule Cancelled:')
+            ? input.reason.trim()
+            : `Schedule Cancelled: ${input.reason.trim()}`;
+
+        // Insert pending cancellation request awaiting admin approval
+        const { data, error } = await supabase
+            .from('doctor_leave_requests')
+            .insert({
+                doctor_id: user.id,
+                type: 'full_day',
+                start_date: input.startDate,
+                end_date: input.endDate,
+                reason: formattedReason,
+                status: 'pending'
+            })
+            .select()
+            .single();
 
         if (error) {
-            console.error('Error in doctor_cancel_schedule:', error);
+            console.error('Error submitting cancellation request:', error);
             return { success: false, error: error.message };
         }
 
         revalidatePath('/doctor/schedule');
+        revalidatePath('/doctor/leave');
         revalidatePath('/doctor/appointments');
         revalidatePath('/doctor/all-appointments');
-        revalidatePath('/doctor/dashboard');
-        revalidatePath('/patient/appointments');
-        revalidatePath('/patient/dashboard');
+        revalidatePath('/admin/schedule');
 
         return {
             success: true,
             summary: data,
-            message: `Schedule cancelled successfully. ${data?.cancelled_appointments_count || 0} patient appointment(s) were cancelled and notified.`
+            message: `Schedule cancellation request submitted successfully. It is now pending administrator approval before appointments are cancelled.`
         };
     } catch (err: any) {
         console.error('cancelDoctorSchedule error:', err);
-        return { success: false, error: err.message || 'Failed to cancel schedule' };
+        return { success: false, error: err.message || 'Failed to submit cancellation request' };
     }
 }
 
@@ -63,7 +73,7 @@ export async function getScheduleImpactPreview(startDate: string, endDate: strin
             .eq('doctor_id', user.id)
             .gte('appointment_date', startDate)
             .lte('appointment_date', endDate)
-            .in('status', ['scheduled', 'checked_in', 'hold']);
+            .in('status', ['scheduled', 'checked_in', 'hold', 'in_consultation']);
 
         if (error) {
             return { success: false, error: error.message };

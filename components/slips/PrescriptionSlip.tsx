@@ -91,7 +91,7 @@ export default function PrescriptionSlip({
                     {/* Center Hospital Name & Contact */}
                     <div style={{ textAlign: 'center', flexGrow: 1, padding: '0 10px' }}>
                         <h2 style={{ margin: 0, fontSize: '21px', fontWeight: 'bold', color: '#000000', letterSpacing: '-0.3px' }}>
-                            কুর্মিটোলা মাল্টিক্যার স্পেশালাইজড হাসপাতাল
+                            ক্লিনিক মাল্টিক্যার স্পেশালাইজড হাসপাতাল
                         </h2>
                         <h3 style={{ margin: '2px 0 0 0', fontSize: '17px', fontWeight: 'bold', color: '#000000' }}>
                             Clinic Multicare Specialized Hospital
@@ -100,7 +100,7 @@ export default function PrescriptionSlip({
                             Address: New airport Road, Dhaka Cantonment, Dhaka 1206
                         </p>
                         <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#000000' }}>
-                            Contact: 02-55062388 | Email: kurmitolahospital@hospi.dghs.gov.bd | Hotline: 10606
+                            Contact: 02-55062388 | Email: info@clinic.hospital | Hotline: 10606
                         </p>
                     </div>
 

@@ -19,6 +19,14 @@ interface Props {
     initialLeaves: LeaveRecord[];
 }
 
+function addDays(baseDateStr: string, days: number): string {
+    if (!baseDateStr) return '';
+    const [y, m, d] = baseDateStr.split('-').map(Number);
+    const date = new Date(Date.UTC(y, m - 1, d));
+    date.setUTCDate(date.getUTCDate() + days);
+    return date.toISOString().split('T')[0];
+}
+
 export default function DoctorScheduleManagementClient({ doctorName, todayDate, initialLeaves }: Props) {
     const [scope, setScope] = useState<'today' | 'tomorrow' | '3days' | 'custom'>('today');
     const [startDate, setStartDate] = useState<string>(todayDate);
@@ -40,23 +48,35 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
     const [isCancelling, setIsCancelling] = useState<boolean>(false);
     const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'danger'; text: string } | null>(null);
 
-    // Sync dates when preset scope changes
+    // Handler for selecting cancellation window
+    const handleSelectScope = (selectedScope: 'today' | 'tomorrow' | '3days' | 'custom') => {
+        setScope(selectedScope);
+        if (selectedScope === 'today') {
+            setStartDate(todayDate);
+            setEndDate(todayDate);
+        } else if (selectedScope === 'tomorrow') {
+            const tomStr = addDays(todayDate, 1);
+            setStartDate(tomStr);
+            setEndDate(tomStr);
+        } else if (selectedScope === '3days') {
+            setStartDate(todayDate);
+            setEndDate(addDays(todayDate, 2));
+        }
+    };
+
+    // Keep dates in sync if todayDate or scope changes externally
     useEffect(() => {
-        const today = new Date();
+        if (!todayDate) return;
         if (scope === 'today') {
             setStartDate(todayDate);
             setEndDate(todayDate);
         } else if (scope === 'tomorrow') {
-            const tom = new Date(today);
-            tom.setDate(tom.getDate() + 1);
-            const tomStr = tom.toISOString().split('T')[0];
+            const tomStr = addDays(todayDate, 1);
             setStartDate(tomStr);
             setEndDate(tomStr);
         } else if (scope === '3days') {
-            const end3 = new Date(today);
-            end3.setDate(end3.getDate() + 2);
             setStartDate(todayDate);
-            setEndDate(end3.toISOString().split('T')[0]);
+            setEndDate(addDays(todayDate, 2));
         }
     }, [scope, todayDate]);
 
@@ -110,25 +130,22 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
 
             setActionMessage({
                 type: 'success',
-                text: res.message || 'Schedule cancelled and affected patients notified successfully.'
+                text: res.message || 'Schedule cancellation request submitted successfully. It is now pending administrator approval.'
             });
 
             setShowConfirmModal(false);
 
-            // Add to leaves list optimistically
+            // Add to leaves list optimistically with pending status
             const newLeave: LeaveRecord = {
                 id: 'temp-' + Date.now(),
                 type: 'full_day',
                 start_date: startDate,
                 end_date: endDate,
-                reason: 'Schedule Cancelled: ' + activeReason,
-                status: 'approved',
+                reason: activeReason.startsWith('Schedule Cancelled:') ? activeReason : 'Schedule Cancelled: ' + activeReason,
+                status: 'pending',
                 created_at: new Date().toISOString()
             };
             setLeaves(prev => [newLeave, ...prev]);
-
-            // Refresh impact preview (should now be 0 active appointments)
-            setImpactData({ totalAppointments: 0, paidAppointments: 0, appointments: [] });
         } catch (err: any) {
             setActionMessage({ type: 'danger', text: err.message || 'An unexpected error occurred.' });
         } finally {
@@ -152,43 +169,67 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                 <div className="col-lg-6">
                     <div className="card border-0 shadow-sm rounded-0 p-4 h-100" style={{ borderTop: '4px solid #d9534f' }}>
                         <div className="d-flex align-items-center gap-2 mb-3">
-                            <i className="bi bi-calendar-x-fill text-danger fs-3"></i>
+                            <i className="bi bi-calendar-x text-danger fs-3"></i>
                             <div>
-                                <h5 className="fw-bold mb-0 text-dark">Emergency Schedule Cancellation</h5>
-                                <small className="text-muted">Cancel today's or upcoming bookings & notify patients</small>
+                                <h5 className="fw-bold mb-0 text-dark">Schedule Cancellation Request</h5>
+                                <small className="text-muted">Submit leave or cancellation request (requires Admin approval)</small>
                             </div>
                         </div>
+
+                        <style>{`
+                            .cancellation-window-btn {
+                                background-color: #ffffff !important;
+                                color: #334155 !important;
+                                border: 1px solid #cbd5e1 !important;
+                                font-weight: 500 !important;
+                                padding: 8px 12px !important;
+                                transition: all 0.15s ease-in-out !important;
+                                cursor: pointer !important;
+                            }
+                            .cancellation-window-btn:hover {
+                                background-color: #f8fafc !important;
+                                color: #0D7D72 !important;
+                                border-color: #0D7D72 !important;
+                            }
+                            .cancellation-window-btn.active {
+                                background-color: #0D7D72 !important;
+                                color: #ffffff !important;
+                                border-color: #0D7D72 !important;
+                                font-weight: 700 !important;
+                                box-shadow: 0 2px 4px rgba(13, 125, 114, 0.25) !important;
+                            }
+                        `}</style>
 
                         <div className="mb-3">
                             <label className="form-label fw-bold small text-uppercase text-secondary">
                                 1. Select Cancellation Window
                             </label>
-                            <div className="btn-group w-100 mb-3" role="group">
+                            <div className="btn-group w-100 mb-3 shadow-xs" role="group">
                                 <button
                                     type="button"
-                                    className={`btn btn-sm ${scope === 'today' ? 'btn-danger fw-bold' : 'btn-outline-secondary'}`}
-                                    onClick={() => setScope('today')}
+                                    className={`btn btn-sm cancellation-window-btn ${scope === 'today' ? 'active' : ''}`}
+                                    onClick={() => handleSelectScope('today')}
                                 >
                                     Today Only
                                 </button>
                                 <button
                                     type="button"
-                                    className={`btn btn-sm ${scope === 'tomorrow' ? 'btn-danger fw-bold' : 'btn-outline-secondary'}`}
-                                    onClick={() => setScope('tomorrow')}
+                                    className={`btn btn-sm cancellation-window-btn ${scope === 'tomorrow' ? 'active' : ''}`}
+                                    onClick={() => handleSelectScope('tomorrow')}
                                 >
                                     Tomorrow
                                 </button>
                                 <button
                                     type="button"
-                                    className={`btn btn-sm ${scope === '3days' ? 'btn-danger fw-bold' : 'btn-outline-secondary'}`}
-                                    onClick={() => setScope('3days')}
+                                    className={`btn btn-sm cancellation-window-btn ${scope === '3days' ? 'active' : ''}`}
+                                    onClick={() => handleSelectScope('3days')}
                                 >
                                     Next 3 Days
                                 </button>
                                 <button
                                     type="button"
-                                    className={`btn btn-sm ${scope === 'custom' ? 'btn-danger fw-bold' : 'btn-outline-secondary'}`}
-                                    onClick={() => setScope('custom')}
+                                    className={`btn btn-sm cancellation-window-btn ${scope === 'custom' ? 'active' : ''}`}
+                                    onClick={() => handleSelectScope('custom')}
                                 >
                                     Custom Range
                                 </button>
@@ -203,7 +244,14 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                                         min={todayDate}
                                         value={startDate}
                                         disabled={scope !== 'custom'}
-                                        onChange={(e) => setStartDate(e.target.value)}
+                                        onClick={() => { if (scope !== 'custom') setScope('custom'); }}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            setStartDate(val);
+                                            if (endDate && val > endDate) {
+                                                setEndDate(val);
+                                            }
+                                        }}
                                     />
                                 </div>
                                 <div className="col-6">
@@ -211,9 +259,10 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                                     <input
                                         type="date"
                                         className="form-control form-control-sm"
-                                        min={startDate}
+                                        min={startDate || todayDate}
                                         value={endDate}
                                         disabled={scope !== 'custom'}
+                                        onClick={() => { if (scope !== 'custom') setScope('custom'); }}
                                         onChange={(e) => setEndDate(e.target.value)}
                                     />
                                 </div>
@@ -250,10 +299,10 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                                 <i className="bi bi-info-circle me-1"></i>
                                 {impactData && impactData.totalAppointments > 0 ? (
                                     <span>
-                                        All <strong>{impactData.totalAppointments}</strong> patients will receive automated cancellation notifications with instant refund or rebooking options.
+                                        If approved by Hospital Administration, all <strong>{impactData.totalAppointments}</strong> booked patients will receive automated cancellation notifications with instant refund and rebooking options.
                                     </span>
                                 ) : (
-                                    <span>No active patient bookings found on the selected date(s). Schedule will be blocked from new bookings.</span>
+                                    <span>No active patient bookings found on the selected date(s). Schedule will be blocked from new bookings once approved.</span>
                                 )}
                             </div>
                         </div>
@@ -294,8 +343,8 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                             disabled={!activeReason}
                             onClick={() => setShowConfirmModal(true)}
                         >
-                            <i className="bi bi-x-circle-fill"></i>
-                            Cancel Schedule & Notify Patients
+                            <i className="bi bi-send-check"></i>
+                            Submit Cancellation for Admin Approval
                         </button>
                     </div>
                 </div>
@@ -335,8 +384,20 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                                                     {l.reason}
                                                 </td>
                                                 <td className="py-2 text-end">
-                                                    <span className={`badge ${l.status === 'approved' ? 'bg-success' : l.status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>
-                                                        {l.status.toUpperCase()}
+                                                    <span className={`badge ${l.status === 'approved' ? 'bg-success' : l.status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'} px-2 py-1`}>
+                                                        {l.status === 'pending' ? (
+                                                            <>
+                                                                <i className="bi bi-hourglass-split me-1"></i>PENDING APPROVAL
+                                                            </>
+                                                        ) : l.status === 'approved' ? (
+                                                            <>
+                                                                <i className="bi bi-check-circle me-1"></i>APPROVED
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <i className="bi bi-x-circle me-1"></i>REJECTED
+                                                            </>
+                                                        )}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -360,20 +421,20 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                 <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content border-0 shadow">
-                            <div className="modal-header bg-danger text-white">
+                            <div className="modal-header bg-warning-subtle text-dark border-bottom">
                                 <h5 className="modal-title fw-bold">
-                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>Confirm Schedule Cancellation
+                                    <i className="bi bi-exclamation-triangle-fill text-warning me-2"></i>Submit Cancellation for Approval
                                 </h5>
                                 <button
                                     type="button"
-                                    className="btn-close btn-close-white"
+                                    className="btn-close"
                                     disabled={isCancelling}
                                     onClick={() => setShowConfirmModal(false)}
                                 ></button>
                             </div>
                             <div className="modal-body p-4">
                                 <p className="mb-3">
-                                    You are about to cancel your clinical schedule for:
+                                    You are requesting a schedule cancellation for:
                                 </p>
                                 <div className="p-3 bg-light rounded border mb-3">
                                     <div className="fw-bold fs-6 text-dark">
@@ -384,14 +445,9 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                                     </div>
                                 </div>
 
-                                <div className="alert alert-warning py-2 px-3 small mb-3">
-                                    <i className="bi bi-bell-fill me-1"></i>
-                                    <strong>Immediate Action:</strong> All <strong>{impactData?.totalAppointments || 0}</strong> booked appointments will be marked cancelled. Notifications will be dispatched to each patient immediately.
-                                    {impactData && impactData.paidAppointments > 0 && (
-                                        <div className="mt-1 text-danger fw-bold">
-                                            • {impactData.paidAppointments} paid patient(s) will be granted instant refund & rebooking options.
-                                        </div>
-                                    )}
+                                <div className="alert alert-info py-2 px-3 small mb-3">
+                                    <i className="bi bi-info-circle-fill me-1"></i>
+                                    <strong>Admin Approval Required:</strong> This request will have status <strong>PENDING</strong> until approved by Hospital Administration. Booked patient appointments (total {impactData?.totalAppointments || 0}) remain active until the request is officially approved.
                                 </div>
                             </div>
                             <div className="modal-footer d-flex justify-content-between">
@@ -405,18 +461,18 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn btn-danger fw-bold px-4"
+                                    className="btn btn-warning fw-bold px-4 text-dark"
                                     disabled={isCancelling}
                                     onClick={handleConfirmCancellation}
                                 >
                                     {isCancelling ? (
                                         <>
                                             <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                                            Cancelling...
+                                            Submitting...
                                         </>
                                     ) : (
                                         <>
-                                            <i className="bi bi-check2-circle me-1"></i>Yes, Cancel & Notify Patients
+                                            <i className="bi bi-send-check me-1"></i>Submit for Admin Approval
                                         </>
                                     )}
                                 </button>

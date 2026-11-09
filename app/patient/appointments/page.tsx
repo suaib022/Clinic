@@ -23,6 +23,9 @@ export default async function PatientAppointmentsPage() {
 
     // Fetch appointments for ALL patients in this account
     let appointments: any[] = [];
+    let payments: any[] = [];
+    let docSpecsMap: Record<string, string> = {};
+
     if (patientIds.length > 0) {
         const { data } = await supabase
         .from('appointments')
@@ -41,14 +44,44 @@ export default async function PatientAppointmentsPage() {
             payment_status,
             paid_amount,
             refund_status,
-            doctors:doctor_id (id, full_name),
-            medical_records (id, title, file_path, record_type),
+            doctors:doctor_id (id, full_name, avatar_url),
+            medical_records:medical_records!medical_records_appointment_id_fkey (id, title, file_path, record_type),
             appointment_feedbacks (id, doctor_rating, service_rating, overall_rating, comment, created_at)
         `)
         .in('patient_id', patientIds)
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
+
         appointments = data || [];
+
+        // Fetch payments for these appointments
+        if (appointments.length > 0) {
+            const apptIds = appointments.map((a: any) => a.id);
+            const { data: payData } = await supabase
+                .from('payments')
+                .select('*')
+                .in('appointment_id', apptIds);
+            payments = payData || [];
+
+            // Fetch doctor specialities
+            const doctorIds = Array.from(new Set(appointments.map((a: any) => a.doctor_id).filter(Boolean)));
+            if (doctorIds.length > 0) {
+                const { data: specData } = await supabase
+                    .from('doctor_specialities')
+                    .select('doctor_id, specialities(name)')
+                    .in('doctor_id', doctorIds);
+                if (specData) {
+                    specData.forEach((s: any) => {
+                        const name = s.specialities?.name;
+                        if (name) {
+                            docSpecsMap[s.doctor_id] = docSpecsMap[s.doctor_id] 
+                                ? `${docSpecsMap[s.doctor_id]}, ${name}` 
+                                : name;
+                        }
+                    });
+                }
+            }
+        }
     }
 
     // Fetch active doctors for rebooking modal
@@ -86,6 +119,8 @@ export default async function PatientAppointmentsPage() {
                             initialAppointments={appointments} 
                             patients={patients || []} 
                             availableDoctors={allDoctors || []}
+                            payments={payments}
+                            docSpecsMap={docSpecsMap}
                         />
                     </div>
                 </div>

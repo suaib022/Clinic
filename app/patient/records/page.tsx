@@ -18,7 +18,7 @@ export default async function PatientRecordsPage() {
     const safePatients = patients || [];
     const patientIds = safePatients.length > 0 ? safePatients.map((p: any) => p.id) : [];
 
-    // Fetch visits (completed appointments)
+    // Fetch visits (all appointments for family members)
     let visits: any[] = [];
     if (patientIds.length > 0) {
         const { data, error: visitsErr } = await supabase
@@ -33,7 +33,6 @@ export default async function PatientRecordsPage() {
             doctors:users!appointments_doctor_id_fkey(id, full_name)
         `)
         .in('patient_id', patientIds)
-        .in('status', ['completed', 'prescription_pending'])
         .order('appointment_date', { ascending: false })
         .order('start_time', { ascending: false });
 
@@ -43,7 +42,7 @@ export default async function PatientRecordsPage() {
         }
     }
 
-    // Fetch medical records
+    // Fetch medical records with uploader, doctor, and linked appointment
     let records: any[] = [];
     if (patientIds.length > 0) {
         const { data } = await supabase
@@ -63,11 +62,18 @@ export default async function PatientRecordsPage() {
             file_size,
             file_type,
             uploader:uploaded_by(role, full_name),
-            doctor:doctor_id(full_name)
+            doctor:doctor_id(full_name),
+            appointment:appointments!medical_records_appointment_id_fkey(
+                id, 
+                serial_no, 
+                appointment_date, 
+                start_time, 
+                status,
+                doctors:doctor_id(id, full_name)
+            )
         `)
         .in('patient_id', patientIds)
         .eq('is_deleted', false)
-        .order('document_date', { ascending: false })
         .order('created_at', { ascending: false });
         records = data || [];
     }

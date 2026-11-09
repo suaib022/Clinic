@@ -1,6 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { format, parse } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { getStatusLabel, getStatusBadgeColor } from '@/lib/appointmentStatus';
 import { getAppointmentFeedbackStatus, FeedbackInfo } from '@/lib/feedbackStatus';
 import { 
@@ -8,6 +13,25 @@ import {
     requestAppointmentRefund, 
     rebookCancelledAppointment 
 } from '@/app/patient/actions';
+import PrescriptionSlip from '@/components/slips/PrescriptionSlip';
+import BookingSlip from '@/components/slips/BookingSlip';
+import { 
+    FileText, 
+    Download, 
+    Printer, 
+    Eye, 
+    Calendar, 
+    Clock, 
+    User, 
+    CreditCard, 
+    CheckCircle2, 
+    AlertCircle, 
+    ExternalLink, 
+    Search, 
+    Filter,
+    X,
+    Loader2
+} from 'lucide-react';
 
 export interface AppointmentRow {
     id: string;
@@ -24,14 +48,21 @@ export interface AppointmentRow {
     payment_status?: string | null;
     paid_amount?: number | string | null;
     refund_status?: string | null;
-    doctors?: { id?: string; full_name: string } | null;
+    doctors?: { id?: string; full_name: string; avatar_url?: string } | null;
     medical_records?: Array<{ id: string; title: string; file_path: string; record_type: string }> | null;
     appointment_feedbacks?: FeedbackInfo | FeedbackInfo[] | null;
 }
 
 export interface PatientProfile {
     id: string;
+    uhid?: string;
     full_name: string;
+    gender?: string;
+    dob?: string;
+    mobile_no?: string;
+    email?: string;
+    address?: string;
+    city?: string;
 }
 
 export interface DoctorOption {
@@ -43,7 +74,11 @@ interface Props {
     initialAppointments: AppointmentRow[];
     patients: PatientProfile[];
     availableDoctors?: DoctorOption[];
+    payments?: any[];
+    docSpecsMap?: Record<string, string>;
 }
+
+type TimeTab = 'all' | 'upcoming' | 'today' | 'prev';
 
 const RATING_DESCRIPTIONS: Record<number, string> = {
     1: 'Poor (1/5)',
@@ -90,9 +125,32 @@ function StarRating({
     );
 }
 
-export default function PatientAppointmentsTable({ initialAppointments, patients, availableDoctors = [] }: Props) {
+export default function PatientAppointmentsTable({ 
+    initialAppointments, 
+    patients, 
+    availableDoctors = [],
+    payments = [],
+    docSpecsMap = {}
+}: Props) {
     const [appointments, setAppointments] = useState<AppointmentRow[]>(initialAppointments);
     
+    // Filtering states
+    const [selectedTimeTab, setSelectedTimeTab] = useState<TimeTab>('all');
+    const [selectedPatientId, setSelectedPatientId] = useState<string>('all');
+    const [searchQuery, setSearchQuery] = useState<string>('');
+
+    // Detail modal state
+    const [detailModalAppt, setDetailModalAppt] = useState<AppointmentRow | null>(null);
+
+    // Direct PDF generator states
+    const [generatingPdfKey, setGeneratingPdfKey] = useState<string | null>(null);
+    const [activeSlipTarget, setActiveSlipTarget] = useState<{
+        appt: AppointmentRow;
+        type: 'booking' | 'prescription';
+    } | null>(null);
+
+    const hiddenSlipRef = useRef<HTMLDivElement>(null);
+
     // Feedback submission modal state
     const [activeFeedbackAppt, setActiveFeedbackAppt] = useState<AppointmentRow | null>(null);
     const [doctorRating, setDoctorRating] = useState<number>(5);
@@ -108,12 +166,12 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
         feedback: FeedbackInfo;
     } | null>(null);
 
-    // Refund Modal state (Feature 1)
+    // Refund Modal state
     const [refundModalAppt, setRefundModalAppt] = useState<AppointmentRow | null>(null);
     const [isProcessingRefund, setIsProcessingRefund] = useState<boolean>(false);
     const [refundError, setRefundError] = useState<string | null>(null);
 
-    // Rebook Modal state (Feature 1)
+    // Rebook Modal state
     const [rebookModalAppt, setRebookModalAppt] = useState<AppointmentRow | null>(null);
     const [rebookDoctorId, setRebookDoctorId] = useState<string>('');
     const [rebookDate, setRebookDate] = useState<string>('');
@@ -122,6 +180,165 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
     const [rebookError, setRebookError] = useState<string | null>(null);
 
     const [payingApptId, setPayingApptId] = useState<string | null>(null);
+    const [mounted, setMounted] = useState<boolean>(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Lock body scroll when any modal is open
+    useEffect(() => {
+        const hasOpenModal = !!(detailModalAppt || activeFeedbackAppt || viewFeedbackAppt || refundModalAppt || rebookModalAppt);
+        if (hasOpenModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [detailModalAppt, activeFeedbackAppt, viewFeedbackAppt, refundModalAppt, rebookModalAppt]);
+
+    // Handle Escape key to close modals
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                if (detailModalAppt) setDetailModalAppt(null);
+                if (activeFeedbackAppt && !isSubmitting) setActiveFeedbackAppt(null);
+                if (viewFeedbackAppt) setViewFeedbackAppt(null);
+                if (refundModalAppt && !isProcessingRefund) setRefundModalAppt(null);
+                if (rebookModalAppt && !isProcessingRebook) setRebookModalAppt(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [detailModalAppt, activeFeedbackAppt, isSubmitting, viewFeedbackAppt, refundModalAppt, isProcessingRefund, rebookModalAppt, isProcessingRebook]);
+
+    // Classify time helper
+    const classifyTime = (aptDate: string, startTime: string) => {
+        try {
+            const now = toZonedTime(new Date(), 'Asia/Dhaka');
+            const todayStr = format(now, 'yyyy-MM-dd');
+            const currentTimeStr = format(now, 'HH:mm:ss');
+
+            const isToday = aptDate === todayStr;
+            const isFutureDate = aptDate > todayStr;
+            const isPastDate = aptDate < todayStr;
+
+            // Upcoming: future date OR (today with future/current time)
+            const isUpcoming = isFutureDate || (isToday && (startTime || '23:59:59') >= currentTimeStr);
+            // Previous: past date OR (today with past time)
+            const isPrevious = isPastDate || (isToday && (startTime || '00:00:00') < currentTimeStr);
+
+            return { isToday, isUpcoming, isPrevious };
+        } catch {
+            return { isToday: false, isUpcoming: false, isPrevious: true };
+        }
+    };
+
+    // Calculate counts for tabs
+    const timeCounts = useMemo(() => {
+        let all = 0;
+        let upcoming = 0;
+        let today = 0;
+        let prev = 0;
+
+        const baseList = selectedPatientId === 'all'
+            ? appointments
+            : appointments.filter(a => a.patient_id === selectedPatientId);
+
+        baseList.forEach(a => {
+            all++;
+            const { isToday, isUpcoming, isPrevious } = classifyTime(a.appointment_date, a.start_time);
+            if (isUpcoming) upcoming++;
+            if (isToday) today++;
+            if (isPrevious) prev++;
+        });
+
+        return { all, upcoming, today, prev };
+    }, [appointments, selectedPatientId]);
+
+    // Filter appointments
+    const filteredAppointments = useMemo(() => {
+        return appointments.filter(a => {
+            // Patient filter
+            if (selectedPatientId !== 'all' && a.patient_id !== selectedPatientId) {
+                return false;
+            }
+
+            // Time Tab filter
+            if (selectedTimeTab !== 'all') {
+                const { isToday, isUpcoming, isPrevious } = classifyTime(a.appointment_date, a.start_time);
+                if (selectedTimeTab === 'upcoming' && !isUpcoming) return false;
+                if (selectedTimeTab === 'today' && !isToday) return false;
+                if (selectedTimeTab === 'prev' && !isPrevious) return false;
+            }
+
+            // Text search filter
+            if (searchQuery.trim()) {
+                const q = searchQuery.toLowerCase();
+                const p = patients.find(pat => pat.id === a.patient_id);
+                const docName = a.doctors?.full_name?.toLowerCase() || '';
+                const patName = p?.full_name?.toLowerCase() || '';
+                const uhid = p?.uhid?.toLowerCase() || '';
+                const serial = String(a.serial_no || '');
+                if (!docName.includes(q) && !patName.includes(q) && !uhid.includes(q) && !serial.includes(q)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+    }, [appointments, selectedPatientId, selectedTimeTab, searchQuery, patients]);
+
+    // Download PDF Generator (jsPDF + html2canvas)
+    const handleDownloadSlipPdf = async (apt: AppointmentRow, type: 'booking' | 'prescription') => {
+        const key = `${apt.id}_${type}`;
+        setGeneratingPdfKey(key);
+        setActiveSlipTarget({ appt: apt, type });
+
+        // Wait a tick for hidden render tree to mount
+        await new Promise(r => setTimeout(r, 200));
+
+        try {
+            const containerId = type === 'booking' ? 'hidden-booking-slip' : 'hidden-prescription-slip';
+            const element = document.getElementById(containerId);
+            if (!element) {
+                // Fallback: redirect to dedicated slip route
+                window.open(`/appointment/slips/${type}?appointment_id=${apt.id}`, '_blank');
+                setGeneratingPdfKey(null);
+                setActiveSlipTarget(null);
+                return;
+            }
+
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            const p = patients.find(pat => pat.id === apt.patient_id);
+            const uhid = p?.uhid || 'UHID';
+            const fileName = type === 'booking' 
+                ? `BookingSlip-${uhid}-Serial${apt.serial_no || '22'}.pdf`
+                : `Prescription-${uhid}-Serial${apt.serial_no || '22'}.pdf`;
+
+            pdf.save(fileName);
+        } catch (err) {
+            console.error('PDF generation error:', err);
+            window.open(`/appointment/slips/${type}?appointment_id=${apt.id}`, '_blank');
+        } finally {
+            setGeneratingPdfKey(null);
+            setActiveSlipTarget(null);
+        }
+    };
 
     const handlePayOnline = async (appointmentId: string) => {
         try {
@@ -144,7 +361,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
         }
     };
 
-    // Tomorrow date helper for min rebook date
     const tomorrowStr = React.useMemo(() => {
         const d = new Date();
         d.setDate(d.getDate() + 1);
@@ -233,7 +449,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                 return;
             }
 
-            // Update row optimistically
             setAppointments(prev => prev.map(a => {
                 if (a.id === refundModalAppt.id) {
                     return {
@@ -275,7 +490,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                 return;
             }
 
-            // Update old row to rebooked
             setAppointments(prev => prev.map(a => {
                 if (a.id === rebookModalAppt.id) {
                     return {
@@ -298,6 +512,16 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
 
     return (
         <>
+            <style>{`
+                .appointment-table-row {
+                    cursor: pointer;
+                    transition: background-color 0.15s ease;
+                }
+                .appointment-table-row:hover td {
+                    background-color: #f0fdf4 !important;
+                }
+            `}</style>
+
             {successMessage && (
                 <div className="alert alert-success alert-dismissible fade show mb-4 d-flex align-items-center gap-2 shadow-sm" role="alert">
                     <i className="bi bi-check-circle-fill fs-5"></i>
@@ -306,78 +530,285 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                 </div>
             )}
 
+            {/* Filter Control Bar */}
+            <div className="bg-white p-3 p-md-4 mb-4 shadow-sm border rounded-0">
+                <div className="row g-3 align-items-center">
+                    {/* Time Filtering Pills */}
+                    <div className="col-lg-6 col-md-12">
+                        <div className="d-flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                className={`btn btn-sm px-3 py-1.5 fw-semibold rounded-pill d-inline-flex align-items-center gap-1.5 transition-all ${
+                                    selectedTimeTab === 'all'
+                                        ? 'text-white shadow-sm'
+                                        : 'btn-outline-secondary bg-white text-secondary'
+                                }`}
+                                style={{ backgroundColor: selectedTimeTab === 'all' ? '#0D7D72' : undefined, borderColor: selectedTimeTab === 'all' ? '#0D7D72' : undefined }}
+                                onClick={() => setSelectedTimeTab('all')}
+                            >
+                                <span>All Visits</span>
+                                <span className={`badge rounded-pill ${selectedTimeTab === 'all' ? 'bg-white text-dark' : 'bg-secondary text-white'}`} style={{ fontSize: '11px' }}>
+                                    {timeCounts.all}
+                                </span>
+                            </button>
+
+                            <button
+                                type="button"
+                                className={`btn btn-sm px-3 py-1.5 fw-semibold rounded-pill d-inline-flex align-items-center gap-1.5 transition-all ${
+                                    selectedTimeTab === 'upcoming'
+                                        ? 'text-white shadow-sm'
+                                        : 'btn-outline-secondary bg-white text-secondary'
+                                }`}
+                                style={{ backgroundColor: selectedTimeTab === 'upcoming' ? '#0ab1a9' : undefined, borderColor: selectedTimeTab === 'upcoming' ? '#0ab1a9' : undefined }}
+                                onClick={() => setSelectedTimeTab('upcoming')}
+                            >
+                                <Calendar size={14} />
+                                <span>Upcoming</span>
+                                <span className={`badge rounded-pill ${selectedTimeTab === 'upcoming' ? 'bg-white text-dark' : 'bg-primary text-white'}`} style={{ fontSize: '11px' }}>
+                                    {timeCounts.upcoming}
+                                </span>
+                            </button>
+
+                            <button
+                                type="button"
+                                className={`btn btn-sm px-3 py-1.5 fw-semibold rounded-pill d-inline-flex align-items-center gap-1.5 transition-all ${
+                                    selectedTimeTab === 'today'
+                                        ? 'text-white shadow-sm'
+                                        : 'btn-outline-secondary bg-white text-secondary'
+                                }`}
+                                style={{ backgroundColor: selectedTimeTab === 'today' ? '#0D7D72' : undefined, borderColor: selectedTimeTab === 'today' ? '#0D7D72' : undefined }}
+                                onClick={() => setSelectedTimeTab('today')}
+                            >
+                                <Clock size={14} />
+                                <span>Today</span>
+                                <span className={`badge rounded-pill ${selectedTimeTab === 'today' ? 'bg-white text-dark' : 'bg-success text-white'}`} style={{ fontSize: '11px' }}>
+                                    {timeCounts.today}
+                                </span>
+                            </button>
+
+                            <button
+                                type="button"
+                                className={`btn btn-sm px-3 py-1.5 fw-semibold rounded-pill d-inline-flex align-items-center gap-1.5 transition-all ${
+                                    selectedTimeTab === 'prev'
+                                        ? 'text-white shadow-sm'
+                                        : 'btn-outline-secondary bg-white text-secondary'
+                                }`}
+                                style={{ backgroundColor: selectedTimeTab === 'prev' ? '#5c636a' : undefined, borderColor: selectedTimeTab === 'prev' ? '#5c636a' : undefined }}
+                                onClick={() => setSelectedTimeTab('prev')}
+                            >
+                                <span>Previous</span>
+                                <span className={`badge rounded-pill ${selectedTimeTab === 'prev' ? 'bg-white text-dark' : 'bg-secondary text-white'}`} style={{ fontSize: '11px' }}>
+                                    {timeCounts.prev}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Patient Filter & Keyword Search */}
+                    <div className="col-lg-6 col-md-12">
+                        <div className="row g-2 justify-content-lg-end">
+                            {/* Patient Select */}
+                            <div className="col-sm-6">
+                                <div className="input-group input-group-sm">
+                                    <span className="input-group-text bg-light text-muted border-secondary-subtle">
+                                        <User size={14} />
+                                    </span>
+                                    <select
+                                        className="form-select border-secondary-subtle"
+                                        value={selectedPatientId}
+                                        onChange={(e) => setSelectedPatientId(e.target.value)}
+                                    >
+                                        <option value="all">All Family Members ({patients.length})</option>
+                                        {patients.map(p => (
+                                            <option key={p.id} value={p.id}>
+                                                {p.full_name} ({p.uhid})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Search Box */}
+                            <div className="col-sm-6">
+                                <div className="input-group input-group-sm">
+                                    <span className="input-group-text bg-light text-muted border-secondary-subtle">
+                                        <Search size={14} />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className="form-control border-secondary-subtle"
+                                        placeholder="Doctor, Patient, Serial..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    {searchQuery && (
+                                        <button 
+                                            className="btn btn-outline-secondary border-secondary-subtle" 
+                                            type="button" 
+                                            onClick={() => setSearchQuery('')}
+                                        >
+                                            <X size={13} />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Appointments Table Card */}
             <div className="card border-0 shadow-sm rounded-0">
                 <div className="card-body p-0">
-                    {appointments && appointments.length > 0 ? (
+                    {filteredAppointments && filteredAppointments.length > 0 ? (
                         <div className="table-responsive">
                             <table className="table table-hover mb-0 align-middle">
-                                <thead className="table-light">
+                                <thead className="table-light border-bottom">
                                     <tr>
-                                        <th className="px-4 py-3">Serial No</th>
-                                        <th className="py-3">Patient</th>
-                                        <th className="py-3">Date</th>
-                                        <th className="py-3">Time</th>
-                                        <th className="py-3">Doctor</th>
-                                        <th className="py-3">Prescription</th>
-                                        <th className="py-3">Visit Feedback</th>
-                                        <th className="px-4 py-3 text-end">Status & Action</th>
+                                        <th className="px-4 py-3" style={{ color: '#0D7D72' }}>Serial</th>
+                                        <th className="py-3" style={{ color: '#0D7D72' }}>Patient Details</th>
+                                        <th className="py-3" style={{ color: '#0D7D72' }}>Date & Slot</th>
+                                        <th className="py-3" style={{ color: '#0D7D72' }}>Consulting Doctor</th>
+                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Download Slips</th>
+                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Visit Feedback</th>
+                                        <th className="px-4 py-3 text-end" style={{ color: '#0D7D72' }}>Status & Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {appointments.map((apt) => {
+                                    {filteredAppointments.map((apt) => {
                                         const p = patients.find(pat => pat.id === apt.patient_id);
-                                        const rxRecord = apt.medical_records?.find(
-                                            (m) => m.record_type === 'prescription'
-                                        );
+                                        const payment = payments.find(pay => pay.appointment_id === apt.id);
+                                        const docSpec = docSpecsMap[apt.doctor_id || ''] || 'General Physician';
                                         const fbStatus = getAppointmentFeedbackStatus(apt);
                                         const isCancelledByDoctor = apt.status === 'cancelled' && apt.cancelled_by_role === 'doctor';
+                                        const isGeneratingBooking = generatingPdfKey === `${apt.id}_booking`;
+                                        const isGeneratingRx = generatingPdfKey === `${apt.id}_prescription`;
 
                                         return (
-                                            <tr key={apt.id} className={isCancelledByDoctor ? 'table-danger-subtle' : ''}>
-                                                <td className="px-4 py-3 fw-bold">#{apt.serial_no || '-'}</td>
-                                                <td className="py-3 fw-medium">{p?.full_name}</td>
-                                                <td className="py-3">{apt.appointment_date}</td>
-                                                <td className="py-3">{apt.start_time}</td>
-                                                <td className="py-3">{apt.doctors?.full_name}</td>
-                                                
-                                                {/* Prescription Column */}
-                                                <td className="py-3">
-                                                    {rxRecord ? (
-                                                        <a 
-                                                            href="/patient/records" 
-                                                            className="btn btn-sm btn-outline-primary py-1 px-2 fw-semibold"
-                                                            title="View and download prescription in records vault"
-                                                        >
-                                                            <i className="bi bi-file-earmark-pdf me-1"></i>Prescription
-                                                        </a>
-                                                    ) : apt.status === 'prescription_pending' ? (
-                                                        <span className="badge bg-warning-subtle text-warning-emphasis border border-warning px-2 py-1">
-                                                            <i className="bi bi-hourglass-split me-1"></i>Staff Uploading
+                                            <tr 
+                                                key={apt.id} 
+                                                className={`appointment-table-row ${isCancelledByDoctor ? 'table-danger-subtle' : ''}`}
+                                                onClick={() => setDetailModalAppt(apt)}
+                                                title="Click anywhere to view full appointment details"
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                {/* Serial / Token */}
+                                                <td className="px-4 py-3">
+                                                    <div 
+                                                        className="d-inline-flex flex-column align-items-center justify-content-center bg-light border border-secondary-subtle px-2 py-1 text-center"
+                                                        style={{ minWidth: '48px', cursor: 'pointer' }}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setDetailModalAppt(apt);
+                                                        }}
+                                                        title="Click to view full appointment details"
+                                                    >
+                                                        <span className="small text-muted" style={{ fontSize: '10px', lineHeight: 1 }}>TOKEN</span>
+                                                        <span className="fw-bold fs-6 text-dark" style={{ color: '#0D7D72', lineHeight: 1.2 }}>
+                                                            #{apt.serial_no || '-'}
                                                         </span>
-                                                    ) : (
-                                                        <span className="text-muted small">-</span>
-                                                    )}
+                                                    </div>
+                                                </td>
+
+                                                {/* Patient */}
+                                                <td className="py-3">
+                                                    <div className="fw-bold text-dark">{p?.full_name || 'Patient'}</div>
+                                                    <div className="text-muted small" style={{ fontSize: '12px' }}>
+                                                        <span className="badge bg-light text-secondary border me-1">{p?.uhid || 'UHID'}</span>
+                                                        {p?.gender && <span>{p.gender}</span>}
+                                                    </div>
+                                                </td>
+
+                                                {/* Date & Time */}
+                                                <td className="py-3">
+                                                    <div className="fw-semibold text-dark">
+                                                        <i className="bi bi-calendar3 me-1.5 text-muted"></i>
+                                                        {apt.appointment_date}
+                                                    </div>
+                                                    <div className="text-muted small">
+                                                        <i className="bi bi-clock me-1 text-muted"></i>
+                                                        {apt.start_time}
+                                                    </div>
+                                                </td>
+
+                                                {/* Doctor */}
+                                                <td className="py-3">
+                                                    <div className="fw-semibold text-dark">{apt.doctors?.full_name}</div>
+                                                    <div className="text-muted small text-truncate" style={{ maxWidth: '180px' }} title={docSpec}>
+                                                        {docSpec}
+                                                    </div>
+                                                </td>
+
+                                                {/* Download Slips Column (Booking Slip & Prescription) */}
+                                                <td className="py-3 text-center" onClick={(e) => e.stopPropagation()}>
+                                                    <div className="d-flex flex-column gap-1.5 align-items-center justify-content-center">
+                                                        {/* Booking Slip Download */}
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-outline-dark py-1 px-2.5 d-inline-flex align-items-center gap-1 shadow-xs"
+                                                            style={{ fontSize: '11px' }}
+                                                            title="Download official appointment booking slip PDF"
+                                                            disabled={isGeneratingBooking}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDownloadSlipPdf(apt, 'booking');
+                                                            }}
+                                                        >
+                                                            {isGeneratingBooking ? (
+                                                                <Loader2 size={12} className="animate-spin text-primary" />
+                                                            ) : (
+                                                                <Download size={12} className="text-primary" />
+                                                            )}
+                                                            <span>Booking Slip</span>
+                                                        </button>
+
+                                                        {/* Prescription Slip Download */}
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm py-1 px-2.5 d-inline-flex align-items-center gap-1 text-white shadow-xs"
+                                                            style={{ backgroundColor: '#0D7D72', fontSize: '11px', borderColor: '#0D7D72' }}
+                                                            title="Download hospital prescription ticket PDF (sample-pres replica)"
+                                                            disabled={isGeneratingRx}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDownloadSlipPdf(apt, 'prescription');
+                                                            }}
+                                                        >
+                                                            {isGeneratingRx ? (
+                                                                <Loader2 size={12} className="animate-spin text-white" />
+                                                            ) : (
+                                                                <FileText size={12} />
+                                                            )}
+                                                            <span>Prescription</span>
+                                                        </button>
+                                                    </div>
                                                 </td>
 
                                                 {/* Visit Feedback Column */}
-                                                <td className="py-3">
+                                                <td className="py-3 text-center" onClick={(e) => e.stopPropagation()}>
                                                     {fbStatus.status === 'submitted' && fbStatus.feedback ? (
                                                         <button
                                                             type="button"
                                                             className="btn btn-sm btn-light border py-1 px-2 text-dark d-inline-flex align-items-center gap-1 shadow-xs"
                                                             title="View submitted feedback"
-                                                            onClick={() => setViewFeedbackAppt({ appt: apt, feedback: fbStatus.feedback! })}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setViewFeedbackAppt({ appt: apt, feedback: fbStatus.feedback! });
+                                                            }}
                                                         >
                                                             <i className="bi bi-star-fill text-warning"></i>
                                                             <span className="fw-bold">{fbStatus.feedback.overall_rating.toFixed(1)}</span>
-                                                            <span className="text-muted small">· View Review</span>
+                                                            <span className="text-muted small">· Review</span>
                                                         </button>
                                                     ) : fbStatus.status === 'available' ? (
                                                         <button
                                                             type="button"
                                                             className="btn btn-sm btn-warning py-1 px-2 fw-bold text-dark d-inline-flex align-items-center gap-1 shadow-sm"
                                                             title={`Feedback expires in ${fbStatus.daysLeft} day(s)`}
-                                                            onClick={() => handleOpenFeedback(apt)}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleOpenFeedback(apt);
+                                                            }}
                                                         >
                                                             <i className="bi bi-star me-1"></i>Rate Visit
                                                             <span className="badge bg-dark bg-opacity-75 text-white ms-1" style={{ fontSize: '0.7rem' }}>
@@ -389,83 +820,89 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                                             className="badge bg-light text-muted border px-2 py-1"
                                                             title="The 7-day feedback window for this visit has expired"
                                                         >
-                                                            <i className="bi bi-clock-history me-1"></i>Feedback Expired
+                                                            <i className="bi bi-clock-history me-1"></i>Expired
                                                         </span>
                                                     ) : (
                                                         <span className="text-muted small">-</span>
                                                     )}
                                                 </td>
 
-                                                {/* Status & Doctor Cancellation Actions */}
-                                                <td className="px-4 py-3 text-end">
+                                                {/* Status & Action */}
+                                                <td className="px-4 py-3 text-end" onClick={(e) => e.stopPropagation()}>
                                                     {isCancelledByDoctor ? (
                                                         <div className="d-flex flex-column align-items-end gap-1">
                                                             <span className="badge bg-danger py-1 px-2">
-                                                                <i className="bi bi-calendar-x me-1"></i>Cancelled by Doctor
+                                                                <i className="bi bi-calendar-x me-1"></i>Cancelled
                                                             </span>
-                                                            {apt.cancel_reason && (
-                                                                <small className="text-muted text-end text-truncate d-inline-block" style={{ maxWidth: '200px' }} title={apt.cancel_reason}>
-                                                                    Reason: {apt.cancel_reason}
-                                                                </small>
-                                                            )}
-
-                                                            {/* Refund & Rebook Buttons */}
                                                             {apt.payment_status === 'paid' && apt.refund_status === 'eligible' && (
                                                                 <div className="d-flex gap-1 mt-1">
                                                                     <button
                                                                         type="button"
                                                                         className="btn btn-sm btn-outline-danger py-0 px-2 fw-bold"
                                                                         style={{ fontSize: '0.75rem' }}
-                                                                        onClick={() => { setRefundModalAppt(apt); setRefundError(null); }}
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setRefundModalAppt(apt);
+                                                                            setRefundError(null);
+                                                                        }}
                                                                     >
-                                                                        <i className="bi bi-cash-coin me-1"></i>Refund (BDT {apt.paid_amount})
+                                                                        Refund (BDT {apt.paid_amount})
                                                                     </button>
                                                                     <button
                                                                         type="button"
                                                                         className="btn btn-sm btn-primary py-0 px-2 fw-bold text-white"
                                                                         style={{ fontSize: '0.75rem' }}
-                                                                        onClick={() => handleOpenRebook(apt)}
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleOpenRebook(apt);
+                                                                        }}
                                                                     >
-                                                                        <i className="bi bi-arrow-repeat me-1"></i>Rebook
+                                                                        Rebook
                                                                     </button>
                                                                 </div>
                                                             )}
-
                                                             {apt.refund_status === 'processed' && (
                                                                 <span className="badge bg-success-subtle text-success border border-success mt-1" style={{ fontSize: '0.75rem' }}>
-                                                                    <i className="bi bi-check-circle me-1"></i>Refund Processed (BDT {apt.paid_amount})
+                                                                    Refunded
                                                                 </span>
                                                             )}
-
                                                             {apt.refund_status === 'rebooked' && (
                                                                 <span className="badge bg-primary-subtle text-primary border border-primary mt-1" style={{ fontSize: '0.75rem' }}>
-                                                                    <i className="bi bi-arrow-repeat me-1"></i>Rebooked (Fee Transferred)
+                                                                    Rebooked
                                                                 </span>
-                                                            )}
-
-                                                            {apt.payment_status !== 'paid' && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-sm btn-outline-primary py-0 px-2 mt-1 fw-bold"
-                                                                    style={{ fontSize: '0.75rem' }}
-                                                                    onClick={() => handleOpenRebook(apt)}
-                                                                >
-                                                                    <i className="bi bi-calendar-plus me-1"></i>Rebook Another Day
-                                                                </button>
                                                             )}
                                                         </div>
                                                     ) : (
                                                         <div className="d-flex flex-column align-items-end gap-1">
-                                                            <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
-                                                                {getStatusLabel(apt.status)}
-                                                            </span>
+                                                            <div className="d-flex align-items-center gap-1.5">
+                                                                <span className={`badge ${getStatusBadgeColor(apt.status)}`}>
+                                                                    {getStatusLabel(apt.status)}
+                                                                </span>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-secondary py-0.5 px-2 text-dark d-inline-flex align-items-center gap-1"
+                                                                    style={{ fontSize: '11px' }}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setDetailModalAppt(apt);
+                                                                    }}
+                                                                    title="View full appointment details modal"
+                                                                >
+                                                                    <Eye size={12} />
+                                                                    <span>Details</span>
+                                                                </button>
+                                                            </div>
+
                                                             {apt.status === 'scheduled' && apt.payment_status !== 'paid' && (
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-sm btn-outline-success py-0 px-2 fw-semibold"
                                                                     style={{ fontSize: '0.72rem' }}
                                                                     disabled={payingApptId === apt.id}
-                                                                    onClick={() => handlePayOnline(apt.id)}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handlePayOnline(apt.id);
+                                                                    }}
                                                                 >
                                                                     {payingApptId === apt.id ? (
                                                                         <span>Connecting...</span>
@@ -474,20 +911,11 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                                                     )}
                                                                 </button>
                                                             )}
+
                                                             {apt.payment_status === 'paid' && (
-                                                                <>
-                                                                    <span className="badge bg-success-subtle text-success border border-success" style={{ fontSize: '0.7rem' }}>
-                                                                        <i className="bi bi-check-circle me-1"></i>Paid (BDT {apt.paid_amount || '1,200'})
-                                                                    </span>
-                                                                    <a
-                                                                        href={`/appointment/confirmation?appointment_id=${apt.id}`}
-                                                                        className="btn btn-sm btn-link p-0 text-decoration-none fw-semibold"
-                                                                        style={{ fontSize: '0.74rem', color: '#0D7D72' }}
-                                                                        title="View Booking Slip, Payment Receipt, and Prescription"
-                                                                    >
-                                                                        <i className="bi bi-file-earmark-medical me-1"></i>Slips & Prescription
-                                                                    </a>
-                                                                </>
+                                                                <span className="badge bg-success-subtle text-success border border-success" style={{ fontSize: '0.7rem' }}>
+                                                                    <i className="bi bi-check-circle me-1"></i>Paid (BDT {apt.paid_amount || '1,100'})
+                                                                </span>
                                                             )}
                                                         </div>
                                                     )}
@@ -500,21 +928,303 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                         </div>
                     ) : (
                         <div className="p-5 text-center text-muted">
-                            <i className="bi bi-calendar-x" style={{ fontSize: '3rem' }}></i>
-                            <p className="mt-3 mb-0">You have no appointments yet.</p>
+                            <i className="bi bi-calendar-x" style={{ fontSize: '3rem', color: '#0D7D72' }}></i>
+                            <h5 className="mt-3 mb-1 fw-bold text-dark">No appointments found</h5>
+                            <p className="text-muted small mb-3">
+                                {selectedTimeTab !== 'all' || selectedPatientId !== 'all' || searchQuery 
+                                    ? 'No bookings match your current time, patient, or search filters.'
+                                    : 'You have no appointments scheduled in this account yet.'}
+                            </p>
+                            <a href="/patient/book" className="btn btn-sm text-white px-3" style={{ backgroundColor: '#0D7D72' }}>
+                                Book an Appointment
+                            </a>
                         </div>
                     )}
                 </div>
             </div>
 
+            {/* DETAIL MODAL (Opens on appointment click) */}
+            {mounted && detailModalAppt && createPortal((() => {
+                const p = patients.find(pat => pat.id === detailModalAppt.patient_id);
+                const payment = payments.find(pay => pay.appointment_id === detailModalAppt.id);
+                const docSpec = docSpecsMap[detailModalAppt.doctor_id || ''] || 'General Physician';
+                const isPaid = detailModalAppt.payment_status === 'paid';
+                const isGeneratingBooking = generatingPdfKey === `${detailModalAppt.id}_booking`;
+                const isGeneratingRx = generatingPdfKey === `${detailModalAppt.id}_prescription`;
+
+                return (
+                    <div 
+                        className="modal d-block" 
+                        tabIndex={-1}
+                        role="dialog"
+                        aria-modal="true"
+                        style={{ 
+                            backgroundColor: 'rgba(0, 0, 0, 0.65)', 
+                            zIndex: 99999, 
+                            position: 'fixed', 
+                            top: 0, 
+                            left: 0, 
+                            width: '100vw', 
+                            height: '100vh', 
+                            overflowY: 'auto',
+                            display: 'block'
+                        }}
+                        onClick={(e) => {
+                            if (e.target === e.currentTarget) setDetailModalAppt(null);
+                        }}
+                    >
+                        <div 
+                            className="modal-dialog modal-dialog-centered modal-lg my-4" 
+                            style={{ maxWidth: '820px' }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                                {/* Header */}
+                                <div className="modal-header text-white rounded-0 py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                                    <div className="d-flex align-items-center gap-3">
+                                        <div className="bg-white text-dark fw-bold px-2.5 py-1 text-center" style={{ minWidth: '45px', border: '2px solid #0ab1a9', borderRadius: '4px' }}>
+                                            <div style={{ fontSize: '9px', lineHeight: 1, letterSpacing: '1px' }}>TOKEN</div>
+                                            <div className="fs-5" style={{ color: '#0D7D72', lineHeight: 1.1 }}>#{detailModalAppt.serial_no || '-'}</div>
+                                        </div>
+                                        <div>
+                                            <h5 className="modal-title fw-bold m-0 text-white">Appointment Details</h5>
+                                            <div className="text-white text-opacity-75 small">
+                                                Appointment ID: {detailModalAppt.id}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        type="button" 
+                                        className="btn-close btn-close-white" 
+                                        onClick={() => setDetailModalAppt(null)}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+
+                                {/* Body */}
+                                <div className="modal-body p-4 bg-light">
+                                    <div className="row g-3">
+                                        {/* Status & Time Alert */}
+                                        <div className="col-12">
+                                            <div className="p-3 bg-white border d-flex justify-content-between align-items-center flex-wrap gap-2 rounded">
+                                                <div className="d-flex align-items-center gap-2">
+                                                    <span className="small text-muted fw-bold text-uppercase">Status:</span>
+                                                    <span className={`badge ${getStatusBadgeColor(detailModalAppt.status)} fs-6 py-1 px-2.5`}>
+                                                        {getStatusLabel(detailModalAppt.status)}
+                                                    </span>
+                                                </div>
+                                                <div className="d-flex align-items-center gap-2 small text-muted">
+                                                    <Calendar size={15} className="text-primary" />
+                                                    <strong className="text-dark">{detailModalAppt.appointment_date}</strong>
+                                                    <span>at</span>
+                                                    <Clock size={15} className="text-primary ms-1" />
+                                                    <strong className="text-dark">{detailModalAppt.start_time}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Patient Details Card */}
+                                        <div className="col-md-6">
+                                            <div className="card h-100 border shadow-none rounded">
+                                                <div className="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center gap-2">
+                                                    <User size={15} style={{ color: '#0D7D72' }} />
+                                                    <span className="fw-bold small text-uppercase" style={{ color: '#0D7D72' }}>Patient Information</span>
+                                                </div>
+                                                <div className="card-body p-3">
+                                                    <div className="mb-2">
+                                                        <div className="small text-muted">Full Name</div>
+                                                        <div className="fw-bold text-dark fs-6">{p?.full_name || 'Patient'}</div>
+                                                    </div>
+                                                    <div className="row g-2 mb-2">
+                                                        <div className="col-6">
+                                                            <div className="small text-muted">UHID</div>
+                                                            <div className="fw-bold text-primary">{p?.uhid || 'UHID'}</div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <div className="small text-muted">Gender</div>
+                                                            <div className="fw-semibold text-dark">{p?.gender || 'Male'}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="small text-muted">Phone Number</div>
+                                                        <div className="fw-semibold text-dark">{p?.mobile_no || '+8801XXXXXXXXX'}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Doctor Details Card */}
+                                        <div className="col-md-6">
+                                            <div className="card h-100 border shadow-none rounded">
+                                                <div className="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center gap-2">
+                                                    <i className="bi bi-person-badge fs-6" style={{ color: '#0D7D72' }}></i>
+                                                    <span className="fw-bold small text-uppercase" style={{ color: '#0D7D72' }}>Doctor & Department</span>
+                                                </div>
+                                                <div className="card-body p-3">
+                                                    <div className="mb-2">
+                                                        <div className="small text-muted">Consulting Specialist</div>
+                                                        <div className="fw-bold text-dark fs-6">{detailModalAppt.doctors?.full_name}</div>
+                                                    </div>
+                                                    <div className="mb-2">
+                                                        <div className="small text-muted">Department / Speciality</div>
+                                                        <div className="fw-semibold text-dark">{docSpec}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="small text-muted">Hospital Chamber</div>
+                                                        <div className="fw-semibold text-muted small">
+                                                            LABAID CARDIAC HOSPITAL · Room #304 (Level 3)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Billing & Payment Card */}
+                                        <div className="col-12">
+                                            <div className="card border shadow-none rounded">
+                                                <div className="card-header bg-white py-2 px-3 border-bottom d-flex justify-content-between align-items-center">
+                                                    <div className="d-flex align-items-center gap-2">
+                                                        <CreditCard size={15} style={{ color: '#0D7D72' }} />
+                                                        <span className="fw-bold small text-uppercase" style={{ color: '#0D7D72' }}>Payment & Billing Receipt</span>
+                                                    </div>
+                                                    <span className={`badge ${isPaid ? 'bg-success' : 'bg-warning text-dark'}`}>
+                                                        {isPaid ? 'PAID' : 'PAYMENT DUE'}
+                                                    </span>
+                                                </div>
+                                                <div className="card-body p-3">
+                                                    <div className="row g-3 align-items-center">
+                                                        <div className="col-sm-4">
+                                                            <div className="small text-muted">Consultation Fee</div>
+                                                            <div className="fw-bold fs-5 text-success">
+                                                                BDT {detailModalAppt.paid_amount || '1,100'}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <div className="small text-muted">Payment Channel</div>
+                                                            <div className="fw-semibold text-dark small">
+                                                                {payment?.card_brand || (isPaid ? 'SSLCommerz Gateway' : 'Pay at Counter')}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-sm-4">
+                                                            <div className="small text-muted">Transaction ID</div>
+                                                            <div className="text-muted small text-truncate" style={{ fontFamily: 'monospace' }}>
+                                                                {payment?.tran_id || '-'}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer with Download Buttons */}
+                                <div className="modal-footer bg-white p-3 d-flex justify-content-between flex-wrap gap-2">
+                                    <div className="d-flex gap-2 flex-wrap">
+                                        {/* Download Booking Slip */}
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-dark d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold rounded-2"
+                                            disabled={isGeneratingBooking}
+                                            onClick={() => handleDownloadSlipPdf(detailModalAppt, 'booking')}
+                                        >
+                                            {isGeneratingBooking ? <Loader2 size={15} className="animate-spin text-primary" /> : <Download size={15} className="text-primary" />}
+                                            <span>Download Booking Slip</span>
+                                        </button>
+
+                                        {/* Download Prescription */}
+                                        <button
+                                            type="button"
+                                            className="btn text-white d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold rounded-2"
+                                            style={{ backgroundColor: '#0D7D72' }}
+                                            disabled={isGeneratingRx}
+                                            onClick={() => handleDownloadSlipPdf(detailModalAppt, 'prescription')}
+                                        >
+                                            {isGeneratingRx ? <Loader2 size={15} className="animate-spin text-white" /> : <FileText size={15} />}
+                                            <span>Download Prescription</span>
+                                        </button>
+
+                                        {/* External Printable Slip Link */}
+                                        <a
+                                            href={`/appointment/slips/prescription?appointment_id=${detailModalAppt.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-outline-secondary d-inline-flex align-items-center gap-1.5 px-3 py-2 rounded-2"
+                                            title="Open full-page printable view in a new tab"
+                                        >
+                                            <Printer size={15} />
+                                            <span>Print View</span>
+                                        </a>
+                                    </div>
+
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-secondary px-4 py-2 rounded-2" 
+                                        onClick={() => setDetailModalAppt(null)}
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })(), document.body)}
+
+            {/* Hidden Slips Render Tree for jsPDF + html2canvas generation */}
+            {activeSlipTarget && (
+                <div style={{ position: 'fixed', left: '-9999px', top: '-9999px', width: '794px', zIndex: -1 }}>
+                    {activeSlipTarget.type === 'booking' ? (
+                        <div id="hidden-booking-slip" style={{ width: '680px', backgroundColor: '#ffffff', padding: '16px' }}>
+                            <BookingSlip
+                                appointment={activeSlipTarget.appt}
+                                patient={patients.find(p => p.id === activeSlipTarget.appt.patient_id)}
+                                doctor={activeSlipTarget.appt.doctors}
+                                specialityName={docSpecsMap[activeSlipTarget.appt.doctor_id || ''] || 'Medicine Specialist'}
+                                payment={payments.find(pay => pay.appointment_id === activeSlipTarget.appt.id)}
+                            />
+                        </div>
+                    ) : (
+                        <div id="hidden-prescription-slip" style={{ width: '794px', backgroundColor: '#ffffff', padding: '16px' }}>
+                            <PrescriptionSlip
+                                appointment={activeSlipTarget.appt}
+                                patient={patients.find(p => p.id === activeSlipTarget.appt.patient_id)}
+                                doctor={activeSlipTarget.appt.doctors}
+                                specialityName={docSpecsMap[activeSlipTarget.appt.doctor_id || ''] || 'Medicine Specialist'}
+                                payment={payments.find(pay => pay.appointment_id === activeSlipTarget.appt.id)}
+                            />
+                        </div>
+                    )}
+                </div>
+            )}
+
             {/* Modal 1: Submit Visit Feedback */}
-            {activeFeedbackAppt && (
-                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content border-0 shadow">
+            {mounted && activeFeedbackAppt && createPortal(
+                <div 
+                    className="modal d-block" 
+                    tabIndex={-1}
+                    role="dialog"
+                    aria-modal="true"
+                    style={{ 
+                        backgroundColor: 'rgba(0, 0, 0, 0.65)', 
+                        zIndex: 99999, 
+                        position: 'fixed', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100vw', 
+                        height: '100vh', 
+                        overflowY: 'auto',
+                        display: 'block'
+                    }}
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget && !isSubmitting) setActiveFeedbackAppt(null);
+                    }}
+                >
+                    <div className="modal-dialog modal-dialog-centered my-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
                             <form onSubmit={handleSubmitFeedback}>
-                                <div className="modal-header text-white" style={{ backgroundColor: '#0D7D72' }}>
-                                    <h5 className="modal-title fw-bold">
+                                <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                                    <h5 className="modal-title fw-bold m-0 text-white">
                                         <i className="bi bi-star-half me-2"></i>Rate Your Visit Experience
                                     </h5>
                                     <button 
@@ -522,9 +1232,10 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                         className="btn-close btn-close-white" 
                                         disabled={isSubmitting}
                                         onClick={() => setActiveFeedbackAppt(null)}
+                                        aria-label="Close"
                                     ></button>
                                 </div>
-                                <div className="modal-body p-4">
+                                <div className="modal-body p-4 bg-white">
                                     <div className="bg-light p-3 rounded mb-3 border">
                                         <div className="fw-bold fs-6 text-dark">
                                             Dr. {activeFeedbackAppt.doctors?.full_name || 'Consulting Doctor'}
@@ -589,10 +1300,10 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                         </div>
                                     </div>
                                 </div>
-                                <div className="modal-footer d-flex justify-content-between">
+                                <div className="modal-footer bg-light p-3 d-flex justify-content-between">
                                     <button 
                                         type="button" 
-                                        className="btn btn-outline-secondary" 
+                                        className="btn btn-outline-secondary px-3" 
                                         disabled={isSubmitting}
                                         onClick={() => setActiveFeedbackAppt(null)}
                                     >
@@ -600,7 +1311,7 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                     </button>
                                     <button 
                                         type="submit" 
-                                        className="btn btn-success fw-bold px-4"
+                                        className="btn btn-success fw-bold px-4 text-white"
                                         disabled={isSubmitting}
                                     >
                                         {isSubmitting ? (
@@ -618,25 +1329,46 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* Modal 2: View Submitted Feedback */}
-            {viewFeedbackAppt && (
-                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content border-0 shadow">
-                            <div className="modal-header text-white" style={{ backgroundColor: '#0D7D72' }}>
-                                <h5 className="modal-title fw-bold">
+            {mounted && viewFeedbackAppt && createPortal(
+                <div 
+                    className="modal d-block" 
+                    tabIndex={-1}
+                    role="dialog"
+                    aria-modal="true"
+                    style={{ 
+                        backgroundColor: 'rgba(0, 0, 0, 0.65)', 
+                        zIndex: 99999, 
+                        position: 'fixed', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100vw', 
+                        height: '100vh', 
+                        overflowY: 'auto',
+                        display: 'block'
+                    }}
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setViewFeedbackAppt(null);
+                    }}
+                >
+                    <div className="modal-dialog modal-dialog-centered my-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                            <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                                <h5 className="modal-title fw-bold m-0 text-white">
                                     <i className="bi bi-star-fill text-warning me-2"></i>Your Submitted Feedback
                                 </h5>
                                 <button 
                                     type="button" 
                                     className="btn-close btn-close-white" 
                                     onClick={() => setViewFeedbackAppt(null)}
+                                    aria-label="Close"
                                 ></button>
                             </div>
-                            <div className="modal-body p-4">
+                            <div className="modal-body p-4 bg-white">
                                 <div className="bg-light p-3 rounded mb-3 border">
                                     <div className="fw-bold fs-6 text-dark">
                                         Dr. {viewFeedbackAppt.appt.doctors?.full_name || 'Consulting Doctor'}
@@ -672,7 +1404,7 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                 {viewFeedbackAppt.feedback.comment ? (
                                     <div className="mb-3">
                                         <label className="fw-bold small text-muted text-uppercase mb-1">Your Comments:</label>
-                                        <div className="p-3 bg-white border rounded text-dark fst-italic">
+                                        <div className="p-3 bg-light border rounded text-dark fst-italic">
                                             "{viewFeedbackAppt.feedback.comment}"
                                         </div>
                                     </div>
@@ -684,10 +1416,10 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                     Submitted on: {new Date(viewFeedbackAppt.feedback.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                                 </div>
                             </div>
-                            <div className="modal-footer">
+                            <div className="modal-footer bg-light p-3">
                                 <button 
                                     type="button" 
-                                    className="btn btn-secondary px-4" 
+                                    className="btn btn-secondary px-4 rounded-2" 
                                     onClick={() => setViewFeedbackAppt(null)}
                                 >
                                     Close
@@ -695,16 +1427,36 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
-            {/* Modal 3: Claim Refund Confirmation (Feature 1) */}
-            {refundModalAppt && (
-                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content border-0 shadow">
-                            <div className="modal-header bg-danger text-white">
-                                <h5 className="modal-title fw-bold">
+            {/* Modal 3: Claim Refund Confirmation */}
+            {mounted && refundModalAppt && createPortal(
+                <div 
+                    className="modal d-block" 
+                    tabIndex={-1}
+                    role="dialog"
+                    aria-modal="true"
+                    style={{ 
+                        backgroundColor: 'rgba(0, 0, 0, 0.65)', 
+                        zIndex: 99999, 
+                        position: 'fixed', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100vw', 
+                        height: '100vh', 
+                        overflowY: 'auto',
+                        display: 'block'
+                    }}
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget && !isProcessingRefund) setRefundModalAppt(null);
+                    }}
+                >
+                    <div className="modal-dialog modal-dialog-centered my-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                            <div className="modal-header bg-danger text-white py-3 px-4">
+                                <h5 className="modal-title fw-bold m-0 text-white">
                                     <i className="bi bi-cash-coin me-2"></i>Claim Visit Refund
                                 </h5>
                                 <button 
@@ -712,9 +1464,10 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                     className="btn-close btn-close-white" 
                                     disabled={isProcessingRefund}
                                     onClick={() => setRefundModalAppt(null)}
+                                    aria-label="Close"
                                 ></button>
                             </div>
-                            <div className="modal-body p-4">
+                            <div className="modal-body p-4 bg-white">
                                 <p className="mb-3">
                                     Your appointment with <strong>Dr. {refundModalAppt.doctors?.full_name}</strong> on <strong>{refundModalAppt.appointment_date}</strong> was cancelled by the doctor.
                                 </p>
@@ -745,10 +1498,10 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                     Clicking confirm will immediately initiate a full refund of <strong>BDT {refundModalAppt.paid_amount}</strong> back to your original payment channel.
                                 </div>
                             </div>
-                            <div className="modal-footer d-flex justify-content-between">
+                            <div className="modal-footer bg-light p-3 d-flex justify-content-between">
                                 <button 
                                     type="button" 
-                                    className="btn btn-outline-secondary" 
+                                    className="btn btn-outline-secondary px-3" 
                                     disabled={isProcessingRefund}
                                     onClick={() => setRefundModalAppt(null)}
                                 >
@@ -756,7 +1509,7 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                 </button>
                                 <button 
                                     type="button" 
-                                    className="btn btn-danger fw-bold px-4"
+                                    className="btn btn-danger fw-bold px-4" 
                                     disabled={isProcessingRefund}
                                     onClick={handleProcessRefund}
                                 >
@@ -774,10 +1527,11 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
-            {/* Modal 4: Rebook Cancelled Appointment (Feature 1) */}
+            {/* Modal 4: Rebook Cancelled Appointment */}
             {rebookModalAppt && (
                 <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
                     <div className="modal-dialog modal-dialog-centered">
@@ -801,7 +1555,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                         </div>
                                     )}
 
-                                    {/* Fee Transfer Alert if Paid */}
                                     {rebookModalAppt.payment_status === 'paid' && Number(rebookModalAppt.paid_amount) > 0 && (
                                         <div className="alert alert-success py-2 px-3 small mb-3 d-flex align-items-center gap-2">
                                             <i className="bi bi-check-circle-fill fs-5"></i>
@@ -811,7 +1564,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                         </div>
                                     )}
 
-                                    {/* Doctor Choice */}
                                     <div className="mb-3">
                                         <label className="form-label fw-bold mb-1">Select Doctor <span className="text-danger">*</span></label>
                                         <select
@@ -829,7 +1581,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                         </select>
                                     </div>
 
-                                    {/* New Date */}
                                     <div className="mb-3">
                                         <label className="form-label fw-bold mb-1">New Appointment Date <span className="text-danger">*</span></label>
                                         <input
@@ -844,7 +1595,6 @@ export default function PatientAppointmentsTable({ initialAppointments, patients
                                         <small className="text-muted">Choose an upcoming date when the doctor is available.</small>
                                     </div>
 
-                                    {/* New Time */}
                                     <div className="mb-3">
                                         <label className="form-label fw-bold mb-1">Preferred Time <span className="text-danger">*</span></label>
                                         <input

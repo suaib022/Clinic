@@ -1,50 +1,49 @@
 import React from 'react';
 import Header from "@/components/Header";
+import { createClient } from '@/lib/supabase/server';
+import { requireRole } from '@/lib/auth/requireRole';
+import AdminScheduleRequestsClient from '@/components/admin/AdminScheduleRequestsClient';
 
-export default function AdminSchedulePage() {
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
-      <Header />
-      <main className="container pt-5 mt-5">
-        <h2 className="mb-4">Admin: Manage Doctor Schedules</h2>
-        <div className="card shadow-sm p-4 mb-4">
-          <h4>Leave & Break Requests</h4>
-          <p className="text-muted">Approve or reject doctor requests here.</p>
-          {/* Placeholder for list of requests */}
-          <table className="table table-bordered mt-3">
-             <thead>
-                <tr>
-                   <th>Doctor</th>
-                   <th>Type</th>
-                   <th>Date</th>
-                   <th>Reason</th>
-                   <th>Status</th>
-                   <th>Action</th>
-                </tr>
-             </thead>
-             <tbody>
-                <tr>
-                   <td colSpan={6} className="text-center text-muted">No pending requests</td>
-                </tr>
-             </tbody>
-          </table>
+export default async function AdminSchedulePage() {
+    await requireRole(['admin']);
+    const supabase = await createClient();
+
+    // Fetch all doctor leave & schedule cancellation requests
+    const { data: requests } = await supabase
+        .from('doctor_leave_requests')
+        .select(`
+            id,
+            doctor_id,
+            type,
+            start_date,
+            end_date,
+            reason,
+            status,
+            created_at,
+            doctor:users!doctor_id(full_name, email)
+        `)
+        .order('created_at', { ascending: false });
+
+    return (
+        <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+            <Header />
+            <main className="container pt-5 mt-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 className="mb-1" style={{ color: '#0D7D72' }}>Admin: Doctor Schedule & Leave Management</h2>
+                        <p className="text-muted mb-0">Review pending schedule cancellations and doctor leave applications</p>
+                    </div>
+                </div>
+
+                <div className="card shadow-sm border-0 rounded-0 p-4 mb-4">
+                    <h5 className="fw-bold mb-1">Doctor Leave & Schedule Cancellation Requests</h5>
+                    <p className="text-muted small mb-3">
+                        Approving a schedule cancellation will officially cancel active patient bookings and dispatch refund/rebooking notifications.
+                    </p>
+                    
+                    <AdminScheduleRequestsClient initialRequests={requests || []} />
+                </div>
+            </main>
         </div>
-        
-        <div className="card shadow-sm p-4">
-          <h4>Weekly Schedules</h4>
-          <p className="text-muted">Select a doctor to edit their weekly working days, start/end times, and slot duration.</p>
-          <div className="row g-3">
-             <div className="col-md-4">
-                <select className="form-select">
-                   <option>Select Doctor...</option>
-                </select>
-             </div>
-             <div className="col-md-2">
-                <button className="btn btn-primary w-100">Load Schedule</button>
-             </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+    );
 }
