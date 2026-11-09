@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { todayDhaka } from '@/lib/format';
 import { runEngine, type QueueAppointment, type QueueResult, type Suggestion, type StatusLabel, type Confidence, type Stage } from './engine';
-import { toEngineInput, type RawSnapshot } from './snapshotInput';
+import { toEngineInput, toSyncPayload, type RawSnapshot } from './snapshotInput';
 
 export type Role = 'admin' | 'doctor' | 'compounder' | 'patient';
 
@@ -75,6 +75,18 @@ export async function getQueueSnapshot(supabase: SupabaseClient, doctorId: strin
     lastBroadcast: raw.last_broadcast,
     settings: input.settings,
   };
+}
+
+/**
+ * Sends the engine's current numbers to the database, which decides (once per event, by dedupe key) whether to
+ * tell a patient "your turn is near", "you're next" or "your time moved", and alerts compounders of
+ * warning/urgent suggestions. Called after every staff snapshot load; failures never block the screen.
+ */
+export async function syncEstimates(supabase: SupabaseClient, snap: StaffSnapshot): Promise<void> {
+  if (snap.date !== todayDhaka()) return;
+  const { items, suggestions } = toSyncPayload(snap.result, snap.suggestions);
+  const { error } = await supabase.rpc('dss_sync_estimates', { p_doctor_id: snap.doctor.id, p_items: items, p_suggestions: suggestions });
+  if (error) console.error('[dss] sync estimates failed:', error.message);
 }
 
 /** DSS-42: the only queue data a patient ever receives (their own visit). */

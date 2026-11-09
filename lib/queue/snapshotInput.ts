@@ -1,7 +1,7 @@
 // Maps the JSON returned by the `dss_snapshot_input` RPC to engine input. Pure (no Supabase / Next), unit-tested.
 import {
   DEFAULT_SETTINGS, type DssSettings, type EngineInput, type QueueAppointment, type SessionInfo, type ApptStatus,
-  type PriorityLevel, type VisitType,
+  type PriorityLevel, type VisitType, type QueueResult, type Suggestion,
 } from './engine';
 
 type Ts = string | null | undefined;
@@ -106,4 +106,18 @@ export function toEngineInput(raw: RawSnapshot, now = Date.parse(raw.server_now)
     lastBroadcast: raw.last_broadcast ? { at: Date.parse(raw.last_broadcast.at), minutes: Number(raw.last_broadcast.minutes) } : null,
     dismissed: raw.dismissed ?? [],
   };
+}
+
+/** Payload for `dss_sync_estimates`: the engine's numbers per patient still to be seen, plus suggestions. */
+export function toSyncPayload(result: QueueResult, suggestions: Suggestion[]) {
+  const items = Object.values(result.estimates)
+    .filter((e) => e.stage === 'waiting' || e.stage === 'not_arrived' || e.stage === 'in_room')
+    .map((e) => ({
+      appointment_id: e.appointmentId,
+      eta: e.expectedStartAt ? new Date(e.expectedStartAt).toISOString() : null,
+      label: e.label,
+      ahead: e.patientsAhead,
+      stage: e.stage,
+    }));
+  return { items, suggestions: suggestions.map((x) => ({ key: x.key, severity: x.severity, message: x.message })) };
 }

@@ -10,6 +10,7 @@ import crypto from 'node:crypto';
 import dotenv from 'dotenv';
 import pg from 'pg';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { DSS_TEST_ACCOUNTS } from '../../lib/dev/testAccounts';
 
 dotenv.config({ path: '.env.local', quiet: true });
 
@@ -54,16 +55,7 @@ export async function closeDb() {
   pool = null;
 }
 
-export const ACCOUNTS = {
-  admin: { email: 'dss.admin@clinic.test', name: 'DSS Test Admin', role: 'admin' },
-  doctorA: { email: 'dss.doctor.a@clinic.test', name: 'Dr. DSS Rahman (Test)', role: 'doctor' },
-  doctorB: { email: 'dss.doctor.b@clinic.test', name: 'Dr. DSS Karim (Test)', role: 'doctor' },
-  compA1: { email: 'dss.comp.a1@clinic.test', name: 'DSS Compounder A1', role: 'compounder' },
-  compA2: { email: 'dss.comp.a2@clinic.test', name: 'DSS Compounder A2', role: 'compounder' },
-  compB: { email: 'dss.comp.b@clinic.test', name: 'DSS Compounder B', role: 'compounder' },
-  patient1: { email: 'dss.patient.1@clinic.test', name: 'DSS Patient One', role: 'patient' },
-  patient2: { email: 'dss.patient.2@clinic.test', name: 'DSS Patient Two', role: 'patient' },
-} as const;
+export const ACCOUNTS = DSS_TEST_ACCOUNTS;
 export type AccountKey = keyof typeof ACCOUNTS;
 
 export interface Seed {
@@ -75,7 +67,8 @@ export interface Seed {
 async function ensureAuthUser(email: string, name: string, password: string): Promise<string> {
   const { rows } = await db().query('select id from auth.users where email = $1', [email]);
   if (rows[0]) {
-    await admin.auth.admin.updateUserById(rows[0].id, { password, email_confirm: true });
+    // Re-setting the password would log out open browser sessions; only do it on request.
+    if (process.env.DSS_RESET_PASSWORDS === '1') await admin.auth.admin.updateUserById(rows[0].id, { password, email_confirm: true });
     return rows[0].id;
   }
   const { data, error } = await admin.auth.admin.createUser({

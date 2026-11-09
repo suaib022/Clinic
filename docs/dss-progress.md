@@ -73,3 +73,21 @@ M3 decisions:
 - **The public booking page does not need the estimate endpoint** (only the patient card called it), so it now requires login and nothing is exposed anonymously.
 - The patient endpoint checks ownership through the patient's own session first. Only then does it read the doctor's day with the service role (the RPC strips names and UHIDs for that caller), and only that patient's numbers leave the server. The snapshot RPC itself is **not** callable by patients, so they cannot pull other patients' serials or times from the REST API.
 - The rate limiter is per server instance (in memory), documented with a `shortcut:` comment.
+
+## M4: notifications for every role
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-50 | Single `notifications` table (user, patient, type, title, body, link, dedupe key, read time); old data kept; own-only read/mark | done | migrations/20261110010000, …010100 | DB tests "users read only their own", "mark their own as read, and nothing else" (cannot edit body, cannot insert) |
+| DSS-51 | `notify()` with dedupe key | done | `_dss_notify`, `_dss_notify_patient`, `_dss_notify_compounders`, `_dss_notify_waiting` | DB tests (double tap → 1, repeated syncs → 1) |
+| DSS-52 | Bell with unread count + dropdown on all dashboards; full page with mark read / mark all; Realtime with 20 s fallback | done | components/notifications/*, components/DashboardSidebar.tsx, components/HeaderAuthLinks.tsx, app/notifications | Browser check (patient1): live insert shows without reload, badge updates, mark-all clears both bells |
+| DSS-53 | All B10 notifications, each exactly once | done | `dss_queue_event_notify` trigger + `dss_sync_estimates` | tests/dss/db/notifications.test.ts 13/13 |
+| DSS-54 | Short, plain, no medical data | done | message templates in SQL | DB test scans every generated text for medical words |
+
+M4 decisions and findings:
+- **Dashboards had no header** (each page renders only `DashboardSidebar`, hidden on phones). The bell lives in `DashboardSidebar`: a fixed top-right bell on desktop, plus a new phone top bar with a menu (phones previously had no dashboard navigation at all). Public pages get the bell in `HeaderAuthLinks`.
+- **Realtime fix**: channels must join with the user's token, or RLS hides every event. `lib/realtime.ts` sets it before subscribing and polls whenever the channel is down.
+- **Bug found by test**: broadcasts deduplicated per event *and account*, so a family account received one notice for two booked members. They are now deduplicated per appointment, still once per event.
+- "Near turn", "you're next", "time moved 10+ min" and "label changed" are decided **in the database** (`dss_sync_estimates`), from the engine numbers that staff screens send after each load. It remembers the last time it told the patient, so reloads never repeat a notice. Estimate notifications therefore need a staff screen (compounder or doctor queue page) to be open, as it is during a clinic day. Action notifications (check-in, called, no-show, pause, delay) come from the action itself.
+- The old `patient_notifications` policy let **any doctor or compounder write any patient's notifications**. It is now admin-only, and existing rows are copied and new ones mirrored into `notifications`.
+- Dev-only quick login `/api/dev/login-as?as=<account>` exists only with `DSS_DEV_SEED=1`, a `DSS_TEST_PASSWORD`, and a request to localhost.
