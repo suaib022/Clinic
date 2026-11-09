@@ -110,7 +110,7 @@ export default async function PatientAppointmentsPage() {
                         {todayActiveAppts.length > 0 && (
                             <div className="mb-4">
                                 {todayActiveAppts.map(apt => (
-                                    <PatientLiveQueueCard key={apt.id} appointmentId={apt.id} />
+                                    <PatientLiveQueueCard key={apt.id} appointmentId={apt.id} userId={user.id} />
                                 ))}
                             </div>
                         )}

@@ -1,227 +1,132 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import type { QueueEstimate } from '@/lib/queue/decisionSupport';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import type { MyQueueStatus } from '@/lib/queue/server';
+import { createClient } from '@/lib/supabase/client';
+import { subscribeLive } from '@/lib/realtime';
+import { fmtTime, LABEL_TEXT, LABEL_CLASS } from '@/lib/queue/display';
 
-export default function PatientLiveQueueCard({
-    appointmentId,
-    initialData
-}: {
-    appointmentId: string;
-    initialData?: QueueEstimate | null;
-}) {
-    const [estimate, setEstimate] = useState<QueueEstimate | null>(initialData || null);
-    const [loading, setLoading] = useState(!initialData);
-    const [error, setError] = useState<string | null>(null);
-    const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+const FALLBACK_MS = 15_000; // DSS-84
 
-    const fetchEstimate = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const res = await fetch(`/api/queue/estimate?appointment_id=${appointmentId}`);
-            const data = await res.json();
-            if (data.success) {
-                setEstimate(data);
-                setLastRefreshed(new Date());
-            } else {
-                setError(data.error || 'Failed to fetch queue estimate');
-            }
-        } catch (err: any) {
-            setError(err?.message || 'Error connecting to queue service');
-        } finally {
-            setLoading(false);
-        }
-    };
+/**
+ * DSS-80..86: a patient's own live queue panel. Uses only /api/queue/my-status, which returns nothing
+ * about other patients (their serial, the serial being served, how many are ahead, and this visit's estimate).
+ */
+export default function PatientLiveQueueCard({ appointmentId, userId }: { appointmentId: string; userId?: string }) {
+  const [s, setS] = useState<MyQueueStatus | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const ctl = useRef<AbortController | null>(null);
 
-    useEffect(() => {
-        fetchEstimate();
-        // Poll every 20 seconds for live serial updates
-        const interval = setInterval(fetchEstimate, 20000);
-        return () => clearInterval(interval);
-    }, [appointmentId]);
-
-    if (error) {
-        return (
-            <div className="card border-0 shadow-sm rounded-3 mb-4 p-3 bg-light">
-                <div className="d-flex align-items-center justify-content-between">
-                    <div className="text-danger small">
-                        <i className="bi bi-exclamation-triangle me-1"></i>
-                        Unable to load live queue: {error}
-                    </div>
-                    <button className="btn btn-sm btn-outline-secondary" onClick={fetchEstimate}>
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
+  const load = useCallback(async () => {
+    ctl.current?.abort();
+    const c = new AbortController();
+    ctl.current = c;
+    try {
+      const res = await fetch(`/api/queue/my-status?appointmentId=${appointmentId}`, { signal: c.signal, cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status === 404 ? 'Appointment not found.' : 'Live queue is unavailable right now.');
+      setS(await res.json());
+      setError(null);
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') setError((e as Error).message);
     }
+  }, [appointmentId]);
 
-    if (!estimate && loading) {
-        return (
-            <div className="card border-0 shadow-sm rounded-3 mb-4 p-4 text-center">
-                <div className="spinner-border text-primary mx-auto mb-2" role="status" style={{ width: '2rem', height: '2rem' }}></div>
-                <small className="text-muted">Calculating real-time queue estimation & doctor schedule...</small>
-            </div>
-        );
-    }
+  useEffect(() => {
+    const first = setTimeout(load, 0);
+    // own appointment row and own notifications are visible to the patient (RLS); anything else arrives by polling
+    const stop = subscribeLive(createClient(), `my-queue:${appointmentId}`, [
+      { table: 'appointments', filter: `id=eq.${appointmentId}` },
+      ...(userId ? [{ table: 'notifications', filter: `user_id=eq.${userId}` }] : []),
+    ], () => { void load(); }, { fallbackMs: FALLBACK_MS });
+    const tick = setInterval(load, FALLBACK_MS * 2);
+    return () => { clearTimeout(first); clearInterval(tick); stop(); ctl.current?.abort(); };
+  }, [appointmentId, userId, load]);
 
-    if (!estimate) return null;
-
-    const isCurrent = estimate.status === 'in_consultation';
-    const isCompleted = estimate.status === 'completed';
-
-    // Urgency colors
-    const urgencyBadgeStyle = {
-        immediate: { bg: '#dc3545', text: '#fff', label: 'Arrive / Wait in Lobby Now' },
-        near: { bg: '#fd7e14', text: '#fff', label: 'Heading to Clinic Recommended' },
-        comfortable: { bg: '#198754', text: '#fff', label: 'Comfortable Time at Home' },
-    }[estimate.urgencyLevel] || { bg: '#0D7D72', text: '#fff', label: 'Normal' };
-
+  const box = 'card border-0 shadow-sm rounded-3 mb-4';
+  if (!s) {
     return (
-        <div className="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden" style={{ border: '1.5px solid #0D7D72' }}>
-            {/* Header Ribbon */}
-            <div
-                className="card-header text-white px-4 py-3 d-flex justify-content-between align-items-center"
-                style={{ backgroundColor: '#0D7D72' }}
-            >
-                <div className="d-flex align-items-center gap-2">
-                    <i className="bi bi-broadcast-pin fs-5 text-warning animate-pulse"></i>
-                    <div>
-                        <h5 className="m-0 fw-bold">Live Queue & Smart Arrival Assistant</h5>
-                        <small className="opacity-75">
-                            Real-time Decision Support · Reducing clinic waiting room congestion
-                        </small>
-                    </div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                    <span className="badge bg-white text-dark small px-2 py-1">
-                        Updated {lastRefreshed.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                    <button
-                        className="btn btn-sm btn-outline-light border-0"
-                        onClick={fetchEstimate}
-                        disabled={loading}
-                        title="Refresh live queue"
-                    >
-                        <i className={`bi bi-arrow-clockwise ${loading ? 'spin' : ''}`}></i>
-                    </button>
-                </div>
-            </div>
-
-            <div className="card-body p-4">
-                {/* Doctor Chamber Status Bar */}
-                <div className="p-3 rounded-3 mb-3" style={{ backgroundColor: '#f0fdf9', border: '1px solid #cceee8' }}>
-                    <div className="row align-items-center g-2">
-                        <div className="col-md-7">
-                            <div className="d-flex align-items-center gap-2">
-                                <span className={`badge ${
-                                    estimate.chamberStatus === 'open' ? 'bg-success' :
-                                    estimate.chamberStatus === 'paused' ? 'bg-warning text-dark' : 'bg-secondary'
-                                } px-3 py-2 fw-bold`}>
-                                    {estimate.chamberStatus === 'open' ? 'CHAMBER ACTIVE' :
-                                     estimate.chamberStatus === 'paused' ? 'ON BREAK' : 'NOT STARTED'}
-                                </span>
-                                <div>
-                                    <div className="fw-bold text-dark">Dr. {estimate.doctorName}</div>
-                                    <small className="text-muted">{estimate.specialityName}</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-5 text-md-end">
-                            <small className="text-muted d-block">
-                                Scheduled: <strong>{estimate.scheduledStartTime}</strong>
-                                {estimate.actualStartTime && (
-                                    <> · Started: <strong>{estimate.actualStartTime}</strong></>
-                                )}
-                            </small>
-                            {estimate.delayMinutes > 0 && (
-                                <span className="badge bg-danger-subtle text-danger border border-danger-subtle small fw-semibold mt-1">
-                                    <i className="bi bi-clock-history me-1"></i>
-                                    Delayed by ~{estimate.delayMinutes} mins
-                                    {estimate.delayReason ? ` (${estimate.delayReason})` : ''}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Main Decision Support Estimation Display */}
-                {!isCompleted && !isCurrent ? (
-                    <>
-                        <div className="row g-3 mb-3">
-                            {/* Serial and Queue Position */}
-                            <div className="col-md-4">
-                                <div className="card h-100 border-0 bg-light rounded-3 p-3 text-center">
-                                    <small className="text-muted fw-bold text-uppercase">Your Serial Number</small>
-                                    <div className="display-5 fw-bold text-dark my-1">
-                                        #{estimate.serialNo}
-                                    </div>
-                                    <div className="small text-muted">
-                                        Currently Serving:{' '}
-                                        <strong className="text-primary">
-                                            {estimate.currentlyServingSerial ? `#${estimate.currentlyServingSerial}` : 'Waiting to start'}
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Estimated Wait Time */}
-                            <div className="col-md-4">
-                                <div className="card h-100 border-0 rounded-3 p-3 text-center" style={{ backgroundColor: '#eef8f6' }}>
-                                    <small className="text-muted fw-bold text-uppercase" style={{ color: '#0D7D72' }}>
-                                        Estimated Wait Time
-                                    </small>
-                                    <div className="display-5 fw-bold my-1" style={{ color: '#0D7D72' }}>
-                                        ~{estimate.estimatedWaitMinutes} <span className="fs-6 fw-normal">min</span>
-                                    </div>
-                                    <div className="small text-muted">
-                                        {estimate.patientsAheadTotal} ahead ({estimate.patientsAheadPresent} present in clinic)
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Safe Recommended Arrival Time */}
-                            <div className="col-md-4">
-                                <div className="card h-100 border-0 rounded-3 p-3 text-center" style={{ backgroundColor: '#fff8eb', border: '1px solid #ffeeba' }}>
-                                    <small className="text-warning-emphasis fw-bold text-uppercase">
-                                        Recommended Arrival
-                                    </small>
-                                    <div className="display-5 fw-bold text-warning-emphasis my-1">
-                                        {estimate.recommendedArrivalTime}
-                                    </div>
-                                    <div className="small text-muted">
-                                        Includes {estimate.safetyBufferMinutes}m safe buffer
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Urgency Guidance Banner */}
-                        <div
-                            className="p-3 rounded-3 d-flex align-items-center gap-3 text-white"
-                            style={{ backgroundColor: urgencyBadgeStyle.bg }}
-                        >
-                            <i className="bi bi-info-circle-fill fs-4"></i>
-                            <div>
-                                <div className="fw-bold">{urgencyBadgeStyle.label}</div>
-                                <small>{estimate.recommendationMessage}</small>
-                            </div>
-                        </div>
-                    </>
-                ) : isCurrent ? (
-                    <div className="p-4 rounded-3 text-center bg-primary-subtle text-primary border border-primary-subtle">
-                        <i className="bi bi-door-open-fill display-4 mb-2"></i>
-                        <h4 className="fw-bold">You are currently with the doctor</h4>
-                        <p className="mb-0">Serial #{estimate.serialNo} is currently in consultation.</p>
-                    </div>
-                ) : (
-                    <div className="p-4 rounded-3 text-center bg-success-subtle text-success border border-success-subtle">
-                        <i className="bi bi-check-circle-fill display-4 mb-2"></i>
-                        <h4 className="fw-bold">Consultation Completed</h4>
-                        <p className="mb-0">Thank you for visiting LabAid. Your visit was completed successfully.</p>
-                    </div>
-                )}
-            </div>
+      <div className={box} style={{ minHeight: 120 }} aria-busy={!error}>
+        <div className="card-body d-flex align-items-center justify-content-center gap-2 text-muted">
+          {error ? <><span className="text-danger">{error}</span><button type="button" className="btn btn-sm" onClick={() => void load()}>Retry</button></>
+            : <><span className="spinner-border spinner-border-sm" role="status" />Loading your live queue…</>}
         </div>
+      </div>
     );
+  }
+
+  const head = (
+    <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
+      <div>
+        <div className="small text-muted text-uppercase fw-semibold">Live queue · {s.patientName}</div>
+        <div className="fw-semibold">{s.doctorName} · {s.date}</div>
+      </div>
+      {s.label && <span className={`badge ${LABEL_CLASS[s.label]}`}>{LABEL_TEXT[s.label]}</span>}
+    </div>
+  );
+
+  let body: React.ReactNode;
+  if (s.stage === 'upcoming') {
+    body = <p className="mb-0">Your serial is <strong>{s.serialNo}</strong>, booked for {fmtTime(s.bookedAt)}. The live queue opens on the day of your visit.</p>;
+  } else if (s.stage === 'cancelled' || s.stage === 'no_show') {
+    body = (
+      <>
+        <p className="mb-2">{s.stage === 'no_show' ? 'You were marked absent for this visit.' : 'This appointment is cancelled.'}</p>
+        <Link href="/patient/book" className="btn">Book a new visit</Link>
+      </>
+    );
+  } else if (s.stage === 'done') {
+    body = (
+      <>
+        <p className="mb-2">Your visit is complete. Thank you!</p>
+        <div className="d-flex flex-wrap gap-2">
+          <Link href="/patient/appointments" className="btn btn-sm">Give feedback</Link>
+          <Link href="/patient/records" className="btn btn-sm">My records</Link>
+        </div>
+      </>
+    );
+  } else if (s.stage === 'in_room') {
+    body = <div className="alert alert-success mb-0 fs-5 fw-semibold" role="status"><i className="bi bi-door-open me-2" aria-hidden="true" />Please go to the doctor now.</div>;
+  } else {
+    const waiting = s.stage === 'waiting';
+    body = (
+      <>
+        {!waiting && (
+          <div className="alert alert-info py-2" role="status">
+            Please arrive by <strong>{fmtTime(s.bookedAt)}</strong> and tell the compounder your UHID or serial number.
+          </div>
+        )}
+        {waiting && s.patientsAhead === 0 && <div className="alert alert-warning py-2 fw-semibold" role="status">You are next. Please be ready.</div>}
+        <dl className="row g-2 text-center mb-2">
+          {[
+            ['My serial', s.serialNo],
+            ['Now serving', s.nowServingSerial ?? '—'],
+            ['Ahead of me', s.patientsAhead ?? '—'],
+            ['Estimated wait', s.waitMinLow == null ? (waiting ? '—' : 'After check-in') : s.waitMinHigh === 0 ? 'Any minute' : `${s.waitMinLow}–${s.waitMinHigh} min`],
+          ].map(([k, v]) => (
+            <div key={k} className="col-6 col-md-3">
+              <div className="bg-light rounded-3 py-2 h-100">
+                <dt className="small text-muted fw-normal">{k}</dt>
+                <dd className="fs-4 fw-bold mb-0" style={{ color: '#0D7D72' }}>{v}</dd>
+              </div>
+            </div>
+          ))}
+        </dl>
+        <div className="small">
+          Booked {fmtTime(s.bookedAt)} · Expected {fmtTime(s.expectedStartAt)}
+          {s.confidence === 'low' && <span className="text-muted"> (rough estimate)</span>}
+        </div>
+        {s.reason && <div className="small text-muted mt-1"><i className="bi bi-info-circle me-1" aria-hidden="true" />{s.reason}. Estimates can change.</div>}
+      </>
+    );
+  }
+
+  return (
+    <div className={box} style={{ borderLeft: '4px solid #0D7D72' }} aria-live="polite">
+      <div className="card-body p-3 p-md-4">
+        {head}
+        {body}
+        <div className="small text-muted mt-2 text-end">Updated {fmtTime(s.lastUpdated)}</div>
+      </div>
+    </div>
+  );
 }

@@ -112,3 +112,15 @@ M4 decisions and findings:
 
 Notes: the site theme forces every `.btn` teal with `!important`. Secondary and dangerous actions use scoped `.btn.dss-outline` / `.dss-solid-danger` classes (app/globals.css). Dialogs sit above the site's floating chat widget.
 Dev helper: `npx tsx scripts/dss/demo-day.ts` sets up a realistic day for test doctor A.
+
+## M6: patient live queue
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-80 | Live panel: my serial, now serving, ahead, wait range (rough-estimate note), booked vs expected, label | done | components/queue/PatientLiveQueueCard.tsx | browser (patient1 on demo day) |
+| DSS-81 | One-line reason from engine flags | done | engine `reasonText` | engine tests + browser ("Doctor hasn't started yet") |
+| DSS-82 | Stages: before check-in / waiting / called / done / no-show-cancelled with rebook | done | same | browser, my-status `stage` |
+| DSS-83 | One panel per booked family member, labelled | done | app/patient/dashboard/page.tsx | browser: two panels (Patient One, Family Member) |
+| DSS-84 | Realtime (own appointment + own notifications) + 15 s fallback, last-updated, no flicker | done | same | keeps last data while reloading |
+| DSS-85 | Only `/api/queue/my-status`; test response and page | done | tests/dss/api/endpoints.test.ts | key whitelist + page HTML scan for other patients' names/UHIDs |
+| DSS-86 | Small phones + screen readers | done | `aria-live`, `dl/dt/dd`, 2-column grid on phones | browser |

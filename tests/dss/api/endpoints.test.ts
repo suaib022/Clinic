@@ -58,6 +58,14 @@ describe.skipIf(!BASE)('queue endpoints', () => {
     for (const leak of ['DSS Filler', 'DSS-T-1', 'DSS Patient Two', 'DSS-T-0003', other]) expect(r.text).not.toContain(leak);
   });
 
+  it('DSS-85: the patient pages carry nothing about other patients', async () => {
+    for (const page of ['/patient/dashboard', '/patient/appointments']) {
+      const r = await get(page, 'patient1');
+      expect(r.status).toBe(200);
+      for (const leak of ['DSS Filler', 'DSS-T-1', 'DSS Patient Two']) expect(r.text).not.toContain(leak);
+    }
+  });
+
   it('a family member on the same account is visible to the owner', async () => {
     const r = await get(`/api/queue/my-status?appointmentId=${family}`, 'patient1');
     expect(r.status).toBe(200);
