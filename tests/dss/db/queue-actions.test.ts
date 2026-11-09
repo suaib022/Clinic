@@ -50,6 +50,11 @@ describe('who may call the queue functions', () => {
     const { error } = await patient1.from('appointments').update({ status: 'checked_in' }).eq('id', appt);
     expect(error?.message ?? '').toMatch(/DSS_FORBIDDEN|permission/i);
     expect((await status(appt)).status).toBe('scheduled');
+    // review finding: moving one's own booked time earlier would jump the line
+    const early = await patient1.from('appointments').update({ scheduled_start: new Date(Date.now() - 3600_000).toISOString() }).eq('id', appt);
+    expect(early.error?.message ?? '').toMatch(/DSS_FORBIDDEN/);
+    const other = await compB.from('appointments').update({ visit_type: 'follow_up' }).eq('id', appt);
+    expect(other.error?.message ?? '').toMatch(/DSS_FORBIDDEN/);
   });
 
   it("refuses a compounder of doctor B on doctor A's queue (read and write)", async () => {

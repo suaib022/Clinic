@@ -19,6 +19,7 @@ const LEGACY_LINT_DEBT = new Set<string>([
   'app/patient/dashboard/page.tsx', // DSS changed the live-queue block only; pre-existing lint errors
   'app/patient/appointments/page.tsx', // DSS passed userId to the card only; pre-existing lint errors
   'app/compounder/dashboard/page.tsx', // DSS changed one link; 3 pre-existing lint errors
+  'app/login/LoginForm.tsx', // DSS gated the demo pre-fill behind a dev flag; pre-existing lint errors
 ]);
 const git = (a: string[]) => (spawnSync('git', a, { encoding: 'utf8' }).stdout ?? '').split('\n').filter(Boolean);
 const DSS_PATHS = [...new Set([

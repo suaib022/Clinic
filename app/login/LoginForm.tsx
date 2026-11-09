@@ -32,11 +32,14 @@ export default function LoginForm({ error: initialError, message }: { error?: st
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  // Pre-filled demo logins only in local dev (NEXT_PUBLIC_DEV_QUICK_LOGIN=1); empty fields everywhere else.
+  const quick = process.env.NEXT_PUBLIC_DEV_QUICK_LOGIN === '1';
+  const blank = { identifier: '', pin: '' };
   const [formData, setFormData] = useState<Record<Role, { identifier: string; pin: string }>>({
-    patient: { ...DEFAULT_CREDENTIALS.patient },
-    doctor: { ...DEFAULT_CREDENTIALS.doctor },
-    compounder: { ...DEFAULT_CREDENTIALS.compounder },
-    admin: { ...DEFAULT_CREDENTIALS.admin }
+    patient: quick ? { ...DEFAULT_CREDENTIALS.patient } : { ...blank },
+    doctor: quick ? { ...DEFAULT_CREDENTIALS.doctor } : { ...blank },
+    compounder: quick ? { ...DEFAULT_CREDENTIALS.compounder } : { ...blank },
+    admin: quick ? { ...DEFAULT_CREDENTIALS.admin } : { ...blank }
   });
 
   const handleRoleChange = (newRole: Role) => {

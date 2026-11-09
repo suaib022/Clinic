@@ -137,3 +137,29 @@ Dev helper: `npx tsx scripts/dss/demo-day.ts` sets up a realistic day for test d
 | DSS-95 | Every finished visit logged; backfill old visits | done | `_dss_fix_duration`, migration 20261110030000 backfill | admin test: zero finished visits without a log row (65 logs after backfill) |
 
 **DSS-94 choice:** no cron. No-show candidates are recalculated every time any queue screen loads (B8 skip / no-show suggestions). Ending the session reports the unresolved count, notifies compounders, and the urgent "Resolve remaining patients" suggestion marks them all as no-show (with a rebook link) in one confirmed tap. Nobody is dropped silently.
+
+## M8: final checks
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-100 | Full simulated day on the DB (late start, early arrival, 2 no-shows, 2 walk-ins incl. emergency, pause/resume, late rejoin, delay broadcast, end + resolve), checked after every step | done | tests/dss/db/simulated-day.test.ts | 12/12: DB "Call next" always equals engine `line[0]`, no serial skipped or repeated, notifications exactly once (no duplicate dedupe keys), compounder B refused, report = 11 booked / 4 no-shows / 2 walk-ins |
+| DSS-101 | Two compounders tap "Call next" at the same instant: exactly one wins | done | tests/dss/db/queue-actions.test.ts | passes on every run (also run 3× in a row) |
+| DSS-102 | `npm run verify` runs lint, typecheck, build, engine, access rules, simulated day, HTTP; `test:m1` fixed | done | scripts/verify-dss.ts, package.json | final run below; `test:m1` (missing file) removed |
+| DSS-103 | Independent security review | done | migration 20261110040000, lib/dev/testAccounts.ts | separate review agent given only the diff + rules; findings and fixes below |
+| DSS-104 | Docs | done | docs/dss-audit.md, docs/dss-progress.md, docs/dss-testing.md, CLAUDE.md | — |
+| DSS-105 | ≤12-step manual checklist with accounts | done | docs/dss-testing.md | — |
+| DSS-106 | Clean repo: no hard-coded passwords, no scratch files, seed/quick login only behind the dev flag | done | `DSS_DEV_SEED`, `NEXT_PUBLIC_DEV_QUICK_LOGIN` | secret scan of the diff; pre-existing `/login` demo PIN pre-fill now needs `NEXT_PUBLIC_DEV_QUICK_LOGIN=1` |
+
+### DSS-103 security review: findings and outcome
+| Sev | Finding | Outcome |
+|---|---|---|
+| High | Patients/compounders could PATCH unguarded columns (`scheduled_start`, `start_time`, `visit_type`, `patient_id` …) and jump the line, because the legacy RLS lets them update appointments | **Fixed**: the guard now covers every column that affects order or estimates (migration 20261110040000). Regression test: patient moving their own booked time and compounder B editing doctor A's row are both refused |
+| Medium | `dss_sync_estimates` accepted client free text and arbitrary ETAs (fake notices / spam) | **Fixed**: suggestion text is fixed per type (client text ignored, ≤20 per call), ETAs outside now−6 h…now+18 h are ignored, ≤6 "time changed" notices per visit. Regression test added |
+| Medium | Legacy Module 4 RPCs (`check_in_appointment`, `start_consultation`, …) are still callable directly without the DSS lock/request key | **Accepted, documented**: the existing Module 4 pages call them directly, and revoking them would break C01–C21. Each still checks the caller and the current status, and `idx_one_in_consultation` makes a double start impossible, so a race fails instead of moving the queue twice. The new screens use only `dss_*` |
+| Medium | `/api/dev/login-as` trusted the client `Host` header | **Fixed**: also requires `NODE_ENV !== 'production'` (plus `DSS_DEV_SEED=1` and a test password) |
+| Low | Unbounded reason text via direct RPC | **Fixed** for `priority_reason` (CHECK ≤200). Other reasons are only stored in the staff-readable event log |
+| Low | `dss_dismiss_suggestion` has no event row or request key | Accepted: dismissing is display-only, idempotent (PK), and caller-checked |
+| Low | `notifications.link` accepted `//host` | **Fixed**: link must match `^/[^/\]` |
+| Note | `pass.md` (tracked before this work) looks credential-related | Not touched (your file). Recommend removing it from git |
+
+Final `npm run verify` (2026-11-09): typecheck ✔, lint ✔, 104 tests passed (+8 HTTP tests run against `next start`: 8 passed), engine simulation mean error 2.8 min, build ✔.

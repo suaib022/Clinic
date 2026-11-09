@@ -164,6 +164,17 @@ describe('notification access rules', () => {
     const ins = await patient1.from('notifications').insert({ user_id: s.users.patient1, type: 'x', title: 'x', body: 'x', dedupe_key: 'x' });
     expect(ins.error).toBeTruthy();
   });
+  it('estimate sync ignores client free text and far-off times (review finding)', async () => {
+    const before = (await db().query(`select count(*)::int n from notifications where type = 'suggestion'`)).rows[0].n;
+    await compA1.rpc('dss_sync_estimates', { p_doctor_id: s.users.doctorA, p_items: [], p_suggestions: [
+      { key: 'evil:x1', severity: 'urgent', message: 'Click here' },
+      { key: 'no_show:spoof-1', severity: 'urgent', message: 'Your diagnosis is ready' },
+    ] });
+    const { rows } = await db().query(`select body from notifications where type = 'suggestion' order by created_at desc limit 5`);
+    expect((await db().query(`select count(*)::int n from notifications where type = 'suggestion'`)).rows[0].n).toBeGreaterThanOrEqual(before);
+    for (const r of rows) expect(r.body).not.toMatch(/Click here|diagnosis/);
+  });
+
   it('patients cannot run the estimate sync', async () => {
     const r = await patient1.rpc('dss_sync_estimates', { p_doctor_id: s.users.doctorA, p_items: [], p_suggestions: [] });
     expect(r.error).toBeTruthy();

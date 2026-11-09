@@ -14,5 +14,6 @@ export type DssTestAccount = keyof typeof DSS_TEST_ACCOUNTS;
 /** Quick login is available only with DSS_DEV_SEED=1, a test password, and a request to localhost. */
 export function devLoginEnabled(host: string | null): boolean {
   const local = !!host && /^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(host);
-  return process.env.DSS_DEV_SEED === '1' && !!process.env.DSS_TEST_PASSWORD && local;
+  // NODE_ENV guard: the Host header is client-controlled, so the env flags alone must never enable this in production.
+  return process.env.NODE_ENV !== 'production' && process.env.DSS_DEV_SEED === '1' && !!process.env.DSS_TEST_PASSWORD && local;
 }
