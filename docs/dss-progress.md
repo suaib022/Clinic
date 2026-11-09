@@ -124,3 +124,16 @@ Dev helper: `npx tsx scripts/dss/demo-day.ts` sets up a realistic day for test d
 | DSS-84 | Realtime (own appointment + own notifications) + 15 s fallback, last-updated, no flicker | done | same | keeps last data while reloading |
 | DSS-85 | Only `/api/queue/my-status`; test response and page | done | tests/dss/api/endpoints.test.ts | key whitelist + page HTML scan for other patients' names/UHIDs |
 | DSS-86 | Small phones + screen readers | done | `aria-live`, `dl/dt/dd`, 2-column grid on phones | browser |
+
+## M7: doctor screen, admin settings, board, reports
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-90 | `/doctor/queue`: now serving, remaining, delay, Start / Pause / Resume / End; ending leaves "resolve remaining" for the compounder | done | app/doctor/queue/page.tsx (QueueConsole `mode="doctor"`, read-only list, no walk-in/suggestions) | DB tests (doctor pause/resume); sidebar link |
+| DSS-91 | Doctor can Call next and Done (same functions, same checks) | done | lib/queue/actions.ts → dss_call_next / dss_end_consult | `dss_can_manage` allows the doctor for their own id only (DB test "doctor A own snapshot only") |
+| DSS-92 | Admin settings page (validated, change log) + read-only live clinic board | done | app/admin/queue-settings, app/admin/queue-board, `dss_update_settings` | tests/dss/db/admin.test.ts; browser |
+| DSS-93 | Reports by doctor / department / date range | done | `dss_report`, app/admin/queue-reports | admin test; browser (real doctors listed) |
+| DSS-94 | End-of-day cleanup without a scheduled job | done | engine suggestions + `dss_session_end` / `dss_resolve_remaining` | engine tests ("resolve remaining"), DB tests |
+| DSS-95 | Every finished visit logged; backfill old visits | done | `_dss_fix_duration`, migration 20261110030000 backfill | admin test: zero finished visits without a log row (65 logs after backfill) |
+
+**DSS-94 choice:** no cron. No-show candidates are recalculated every time any queue screen loads (B8 skip / no-show suggestions). Ending the session reports the unresolved count, notifies compounders, and the urgent "Resolve remaining patients" suggestion marks them all as no-show (with a rebook link) in one confirmed tap. Nobody is dropped silently.
