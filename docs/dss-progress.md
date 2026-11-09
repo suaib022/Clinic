@@ -57,3 +57,19 @@ Engine decisions:
 - Not-arrived patients get a hypothetical "if you check in now" start (for "please arrive by"), labelled *Not arrived* and with low confidence. They are never counted for others.
 - While **paused**, estimates assume the doctor resumes now and say "Doctor is on a short break". On resume they are recalculated, because the pause is subtracted from the visit in progress.
 - "Doctor delay" = expected start minus booked time of the first on-time patient in line (or the lateness of the visit in the room, or the minutes past the session start if not started).
+
+## M3: one safe source of queue data
+
+| ID | Requirement | Status | Files | Verified by |
+|---|---|---|---|---|
+| DSS-40 | `getQueueSnapshot(doctorId, date)` gathering appointments, session + pauses, history, slot, benchmark, settings | done | `dss_snapshot_input` RPC, lib/queue/server.ts, lib/queue/snapshotInput.ts | mapper unit tests; HTTP test "compounders only for assigned doctors" |
+| DSS-41 | `GET /api/queue/snapshot` for staff | done | app/api/queue/snapshot/route.ts | HTTP tests (401/403/200, admin any doctor, doctor own only) |
+| DSS-42 | `GET /api/queue/my-status` for patients (self + family) | done | app/api/queue/my-status/route.ts | HTTP tests: exact key whitelist, family member visible to owner, other patient 404 |
+| DSS-43 | Close the public `/api/queue/estimate` | done | app/api/queue/estimate/route.ts, lib/queue/decisionSupport.ts (deprecated wrapper) | HTTP test: logged-out 401 on GET and POST; patient UHID lookup 400; other doctor 404 |
+| DSS-44 | Rate limits + zod validation | done | lib/queue/rateLimit.ts | unit test; HTTP "validates input" |
+| DSS-45 | Tests: 401, cross-patient, unassigned compounder, no names/UHIDs leak | done | tests/dss/api/endpoints.test.ts | 7/7 pass against `next start` (run by verify) |
+
+M3 decisions:
+- **The public booking page does not need the estimate endpoint** (only the patient card called it), so it now requires login and nothing is exposed anonymously.
+- The patient endpoint checks ownership through the patient's own session first. Only then does it read the doctor's day with the service role (the RPC strips names and UHIDs for that caller), and only that patient's numbers leave the server. The snapshot RPC itself is **not** callable by patients, so they cannot pull other patients' serials or times from the REST API.
+- The rate limiter is per server instance (in memory), documented with a `shortcut:` comment.

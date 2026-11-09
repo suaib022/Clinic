@@ -225,3 +225,18 @@ export async function setTimes(apptId: string, fields: Record<string, Date | nul
     c.release();
   }
 }
+
+/** Cookie header for a signed-in test account, exactly as @supabase/ssr would set it in a browser. */
+export async function authCookie(k: AccountKey): Promise<string> {
+  const { createServerClient } = await import('@supabase/ssr');
+  const jar = new Map<string, string>();
+  const client = createServerClient(url, anonKey, {
+    cookies: {
+      getAll: () => [...jar].map(([name, value]) => ({ name, value })),
+      setAll: (list) => list.forEach(({ name, value }) => (value ? jar.set(name, value) : jar.delete(name))),
+    },
+  });
+  const { error } = await client.auth.signInWithPassword({ email: ACCOUNTS[k].email, password: testPassword() });
+  if (error) throw new Error(`authCookie ${k}: ${error.message}`);
+  return [...jar].map(([n, v]) => `${n}=${v}`).join('; ');
+}

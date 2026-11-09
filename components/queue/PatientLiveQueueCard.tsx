@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { QueueEstimate } from '@/lib/queue/decisionSupport';
+import type { QueueEstimate } from '@/lib/queue/decisionSupport';
 
 export default function PatientLiveQueueCard({
     appointmentId,
