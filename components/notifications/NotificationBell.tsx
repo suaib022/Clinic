@@ -21,28 +21,6 @@ function getNotificationMeta(type: string): NotificationMeta {
         bg: '#fef3c7',
         badgeText: 'Queue Suggestion',
       };
-    case 'doctor_cancellation':
-      return {
-        icon: 'bi-calendar-x-fill',
-        color: '#dc2626',
-        bg: '#fee2e2',
-        badgeText: 'Cancelled',
-      };
-    case 'called':
-      return {
-        icon: 'bi-megaphone-fill',
-        color: '#059669',
-        bg: '#d1fae5',
-        badgeText: 'Chamber Call',
-      };
-    case 'next':
-    case 'near_turn':
-      return {
-        icon: 'bi-hourglass-split',
-        color: '#2563eb',
-        bg: '#dbeafe',
-        badgeText: 'Queue Turn',
-      };
     case 'doctor_delay':
       return {
         icon: 'bi-clock-history',
@@ -78,6 +56,35 @@ function getNotificationMeta(type: string): NotificationMeta {
         bg: '#ccfbf1',
         badgeText: 'Checked In',
       };
+    case 'doctor_cancellation':
+      return {
+        icon: 'bi-calendar-x-fill',
+        color: '#dc2626',
+        bg: '#fee2e2',
+        badgeText: 'Cancelled',
+      };
+    case 'called':
+      return {
+        icon: 'bi-megaphone-fill',
+        color: '#059669',
+        bg: '#d1fae5',
+        badgeText: 'Chamber Call',
+      };
+    case 'next':
+    case 'near_turn':
+      return {
+        icon: 'bi-hourglass-split',
+        color: '#2563eb',
+        bg: '#dbeafe',
+        badgeText: 'Queue Turn',
+      };
+    case 'session_started':
+      return {
+        icon: 'bi-door-open-fill',
+        color: '#0D7D72',
+        bg: '#ccfbf1',
+        badgeText: 'Session Started',
+      };
     case 'eta_changed':
       return {
         icon: 'bi-clock-history',
@@ -96,7 +103,7 @@ function getNotificationMeta(type: string): NotificationMeta {
 }
 
 /**
- * Modern Notification Bell & Dropdown Bar
+ * Modern Notification Bell & Dropdown Bar (Large Sizing)
  * Designed with category iconography, unread filters, and smooth micro-interactions.
  */
 export default function NotificationBell({ userId }: { userId: string }) {
@@ -144,7 +151,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
 
   return (
     <div ref={ref} className="position-relative dss-notification-wrapper">
-      {/* The Bell Trigger Button */}
+      {/* The Bell Trigger Button (Large 46x46) */}
       <button
         type="button"
         className="btn dss-bell-btn d-flex align-items-center justify-content-center position-relative p-0"
@@ -153,19 +160,20 @@ export default function NotificationBell({ userId }: { userId: string }) {
         aria-haspopup="true"
         onClick={() => setOpen((o) => !o)}
         style={{
-          width: 38,
-          height: 38,
+          width: 46,
+          height: 46,
           borderRadius: '50%',
-          backgroundColor: open ? '#e6f4f2' : '#f8fafc',
-          border: '1px solid',
-          borderColor: open ? '#0D7D72' : '#e2e8f0',
+          backgroundColor: open ? '#e6f4f2' : '#ffffff',
+          border: '1.5px solid',
+          borderColor: open ? '#0D7D72' : '#cbd5e1',
           color: '#0D7D72',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.06)',
           transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         <i
           className={`bi ${unread > 0 ? 'bi-bell-fill' : 'bi-bell'}`}
-          style={{ fontSize: '18px', transition: 'transform 0.2s ease' }}
+          style={{ fontSize: '21px', transition: 'transform 0.2s ease' }}
           aria-hidden="true"
         />
 
@@ -175,15 +183,15 @@ export default function NotificationBell({ userId }: { userId: string }) {
             style={{
               top: -3,
               right: -3,
-              minWidth: 18,
-              height: 18,
-              padding: '0 4px',
-              fontSize: '10px',
+              minWidth: 20,
+              height: 20,
+              padding: '0 5px',
+              fontSize: '11px',
               lineHeight: 1,
               borderRadius: '999px',
               backgroundColor: '#dc2626',
               border: '2px solid #ffffff',
-              boxShadow: '0 2px 5px rgba(220, 38, 38, 0.45)',
+              boxShadow: '0 2px 6px rgba(220, 38, 38, 0.45)',
             }}
           >
             {unread > 99 ? '99+' : unread}
@@ -191,19 +199,19 @@ export default function NotificationBell({ userId }: { userId: string }) {
         )}
       </button>
 
-      {/* Dropdown Panel ("The Notification Bar") */}
+      {/* Large Dropdown Panel (The Notification Bar) */}
       {open && (
         <div
           role="dialog"
           aria-label="Notifications"
           className="dss-notification-panel card border-0 position-absolute end-0 shadow-lg"
           style={{
-            top: 'calc(100% + 10px)',
-            width: 'min(400px, calc(100vw - 28px))',
+            top: 'calc(100% + 12px)',
+            width: 'min(500px, calc(100vw - 24px))',
             zIndex: 1060,
-            borderRadius: '16px',
+            borderRadius: '18px',
             backgroundColor: '#ffffff',
-            boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06)',
+            boxShadow: '0 24px 50px -10px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.08)',
             transformOrigin: 'top right',
             animation: 'dssDropdownFade 0.2s ease-out forwards',
             overflow: 'hidden',
@@ -211,21 +219,21 @@ export default function NotificationBell({ userId }: { userId: string }) {
         >
           {/* Header */}
           <div
-            className="px-3 py-3 border-bottom d-flex align-items-center justify-content-between"
+            className="px-4 py-3.5 border-bottom d-flex align-items-center justify-content-between"
             style={{ backgroundColor: '#ffffff', borderColor: '#f1f5f9' }}
           >
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center gap-2.5">
               <div
                 className="rounded-circle d-flex align-items-center justify-content-center"
-                style={{ width: 32, height: 32, backgroundColor: '#e6f7f5', color: '#0D7D72' }}
+                style={{ width: 38, height: 38, backgroundColor: '#e6f7f5', color: '#0D7D72' }}
               >
-                <i className="bi bi-bell-fill fs-6" />
+                <i className="bi bi-bell-fill fs-5" />
               </div>
               <div>
-                <h6 className="m-0 fw-bold text-dark" style={{ fontSize: '15px' }}>
+                <h6 className="m-0 fw-bold text-dark" style={{ fontSize: '16.5px' }}>
                   Notifications
                 </h6>
-                <span className="text-muted" style={{ fontSize: '11px' }}>
+                <span className="text-muted" style={{ fontSize: '12px' }}>
                   {unread > 0 ? `${unread} unread update${unread > 1 ? 's' : ''}` : 'All caught up'}
                 </span>
               </div>
@@ -235,10 +243,10 @@ export default function NotificationBell({ userId }: { userId: string }) {
               <button
                 type="button"
                 className="btn btn-sm btn-link text-decoration-none fw-semibold p-1"
-                style={{ color: '#0D7D72', fontSize: '12px' }}
+                style={{ color: '#0D7D72', fontSize: '13px' }}
                 onClick={markAllRead}
               >
-                <i className="bi bi-check2-all me-1" />
+                <i className="bi bi-check2-all me-1 fs-6" />
                 Mark all read
               </button>
             )}
@@ -246,14 +254,14 @@ export default function NotificationBell({ userId }: { userId: string }) {
 
           {/* Quick Filter Tabs */}
           <div
-            className="d-flex px-3 pt-2 pb-2 border-bottom gap-2"
+            className="d-flex px-4 pt-2.5 pb-2.5 border-bottom gap-2.5"
             style={{ backgroundColor: '#fbfcfd', borderColor: '#f1f5f9' }}
           >
             <button
               type="button"
-              className={`btn btn-sm px-3 py-1 rounded-pill transition-all ${tab === 'all' ? 'fw-semibold text-white' : 'text-muted'}`}
+              className={`btn px-3.5 py-1.5 rounded-pill transition-all ${tab === 'all' ? 'fw-bold text-white shadow-xs' : 'text-muted fw-semibold'}`}
               style={{
-                fontSize: '12px',
+                fontSize: '13px',
                 backgroundColor: tab === 'all' ? '#0D7D72' : 'transparent',
                 border: 'none',
               }}
@@ -263,9 +271,9 @@ export default function NotificationBell({ userId }: { userId: string }) {
             </button>
             <button
               type="button"
-              className={`btn btn-sm px-3 py-1 rounded-pill transition-all ${tab === 'unread' ? 'fw-semibold text-white' : 'text-muted'}`}
+              className={`btn px-3.5 py-1.5 rounded-pill transition-all ${tab === 'unread' ? 'fw-bold text-white shadow-xs' : 'text-muted fw-semibold'}`}
               style={{
-                fontSize: '12px',
+                fontSize: '13px',
                 backgroundColor: tab === 'unread' ? '#0D7D72' : 'transparent',
                 border: 'none',
               }}
@@ -273,11 +281,12 @@ export default function NotificationBell({ userId }: { userId: string }) {
             >
               Unread {unread > 0 && (
                 <span
-                  className="badge rounded-pill ms-1"
+                  className="badge rounded-pill ms-1.5"
                   style={{
-                    fontSize: '10px',
-                    backgroundColor: tab === 'unread' ? 'rgba(255,255,255,0.25)' : '#dc2626',
+                    fontSize: '11px',
+                    backgroundColor: tab === 'unread' ? 'rgba(255,255,255,0.28)' : '#dc2626',
                     color: '#ffffff',
+                    padding: '2px 7px',
                   }}
                 >
                   {unread}
@@ -286,38 +295,38 @@ export default function NotificationBell({ userId }: { userId: string }) {
             </button>
           </div>
 
-          {/* Scrollable Notification List */}
-          <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+          {/* Scrollable Notification Bars List */}
+          <div style={{ maxHeight: '460px', overflowY: 'auto' }}>
             {loading && (
               <div className="py-5 text-center text-muted small">
                 <div
                   className="spinner-border spinner-border-sm mb-2"
                   role="status"
-                  style={{ color: '#0D7D72', width: 22, height: 22 }}
+                  style={{ color: '#0D7D72', width: 24, height: 24 }}
                 />
-                <div>Loading updates…</div>
+                <div style={{ fontSize: '14px' }}>Loading updates…</div>
               </div>
             )}
 
             {!loading && error && (
-              <div className="p-3 text-center text-danger small">
-                <i className="bi bi-exclamation-triangle-fill me-1" />
-                {error}
+              <div className="p-4 text-center text-danger small">
+                <i className="bi bi-exclamation-triangle-fill me-1 fs-6" />
+                <span style={{ fontSize: '13px' }}>{error}</span>
               </div>
             )}
 
             {!loading && !error && displayedItems.length === 0 && (
-              <div className="py-5 px-3 text-center">
+              <div className="py-5 px-4 text-center">
                 <div
                   className="rounded-circle d-inline-flex align-items-center justify-content-center mb-2"
-                  style={{ width: 48, height: 48, backgroundColor: '#f0fdf4', color: '#10b981' }}
+                  style={{ width: 54, height: 54, backgroundColor: '#f0fdf4', color: '#10b981' }}
                 >
-                  <i className="bi bi-check2-circle fs-3" />
+                  <i className="bi bi-check2-circle fs-2" />
                 </div>
-                <div className="fw-semibold text-dark" style={{ fontSize: '14px' }}>
+                <div className="fw-bold text-dark" style={{ fontSize: '15px' }}>
                   {tab === 'unread' ? 'No unread notifications' : 'No notifications yet'}
                 </div>
-                <p className="text-muted small m-0 mt-1" style={{ fontSize: '12px' }}>
+                <p className="text-muted m-0 mt-1" style={{ fontSize: '13px' }}>
                   {tab === 'unread' ? 'You have reviewed all live updates.' : 'Queue and clinic alerts will appear here.'}
                 </p>
               </div>
@@ -331,7 +340,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
                 <div
                   key={n.id}
                   onClick={() => openItem(n)}
-                  className="px-3 py-2.5 border-bottom d-flex align-items-start gap-2.5 position-relative dss-notif-item"
+                  className="px-4 py-3.5 border-bottom d-flex align-items-start gap-3 position-relative dss-notif-item"
                   style={{
                     backgroundColor: isUnread ? '#f0fdf9' : '#ffffff',
                     cursor: 'pointer',
@@ -339,42 +348,42 @@ export default function NotificationBell({ userId }: { userId: string }) {
                     transition: 'background-color 0.15s ease',
                   }}
                 >
-                  {/* Unread Indicator Bar / Dot */}
+                  {/* Unread Accent Bar */}
                   {isUnread && (
                     <span
-                      className="position-absolute rounded-pill"
+                      className="position-absolute"
                       style={{
                         top: 0,
                         bottom: 0,
                         left: 0,
-                        width: '3.5px',
+                        width: '5px',
                         backgroundColor: '#0D7D72',
                       }}
                     />
                   )}
 
-                  {/* Category Icon */}
+                  {/* Category Icon Circle */}
                   <div
-                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 mt-1"
+                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 mt-0.5"
                     style={{
-                      width: 34,
-                      height: 34,
+                      width: 42,
+                      height: 42,
                       backgroundColor: meta.bg,
                       color: meta.color,
                     }}
                   >
-                    <i className={`bi ${meta.icon}`} style={{ fontSize: '14px' }} />
+                    <i className={`bi ${meta.icon}`} style={{ fontSize: '18px' }} />
                   </div>
 
                   {/* Body Text */}
                   <div className="flex-grow-1 min-w-0">
-                    <div className="d-flex align-items-baseline justify-content-between gap-2 mb-0.5">
+                    <div className="d-flex align-items-baseline justify-content-between gap-2 mb-1">
                       <span
                         className="text-truncate"
                         style={{
-                          fontSize: '13px',
-                          fontWeight: isUnread ? 600 : 500,
-                          color: isUnread ? '#0f172a' : '#475569',
+                          fontSize: '15px',
+                          fontWeight: isUnread ? 700 : 600,
+                          color: isUnread ? '#0f172a' : '#334155',
                         }}
                         title={n.title}
                       >
@@ -382,18 +391,18 @@ export default function NotificationBell({ userId }: { userId: string }) {
                       </span>
                       <span
                         className="text-muted text-nowrap flex-shrink-0"
-                        style={{ fontSize: '11px' }}
+                        style={{ fontSize: '12px' }}
                       >
                         {timeAgo(n.created_at)}
                       </span>
                     </div>
 
                     <p
-                      className="m-0 mb-1.5"
+                      className="m-0 mb-2"
                       style={{
-                        fontSize: '12px',
-                        lineHeight: 1.45,
-                        color: isUnread ? '#334155' : '#64748b',
+                        fontSize: '13.5px',
+                        lineHeight: 1.55,
+                        color: isUnread ? '#1e293b' : '#64748b',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
@@ -407,8 +416,8 @@ export default function NotificationBell({ userId }: { userId: string }) {
                       <span
                         className="badge rounded-pill"
                         style={{
-                          fontSize: '10px',
-                          padding: '2px 8px',
+                          fontSize: '11px',
+                          padding: '3px 9px',
                           backgroundColor: meta.bg,
                           color: meta.color,
                           fontWeight: 600,
@@ -420,16 +429,16 @@ export default function NotificationBell({ userId }: { userId: string }) {
                       {isUnread && (
                         <button
                           type="button"
-                          className="btn btn-link p-0 text-muted small text-decoration-none dss-mark-read-btn"
-                          style={{ fontSize: '11px' }}
+                          className="btn btn-link p-0 text-muted text-decoration-none dss-mark-read-btn d-inline-flex align-items-center gap-0.5"
+                          style={{ fontSize: '12px' }}
                           onClick={(e) => {
                             e.stopPropagation();
                             markRead(n.id);
                           }}
                           title="Mark as read"
                         >
-                          <i className="bi bi-check me-0.5" />
-                          Mark read
+                          <i className="bi bi-check fs-6" />
+                          <span>Mark read</span>
                         </button>
                       )}
                     </div>
@@ -441,26 +450,26 @@ export default function NotificationBell({ userId }: { userId: string }) {
 
           {/* Footer Bar */}
           <div
-            className="px-3 py-2.5 border-top d-flex align-items-center justify-content-between"
+            className="px-4 py-3 border-top d-flex align-items-center justify-content-between"
             style={{ backgroundColor: '#fbfcfd', borderColor: '#f1f5f9' }}
           >
             <Link
               href="/notifications"
-              className="w-100 btn btn-sm d-flex align-items-center justify-content-center gap-1.5 fw-semibold"
+              className="w-100 btn d-flex align-items-center justify-content-center gap-2 fw-semibold"
               style={{
                 backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
+                border: '1.5px solid #cbd5e1',
                 color: '#0D7D72',
-                borderRadius: '8px',
-                fontSize: '12px',
-                padding: '6px 14px',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                borderRadius: '10px',
+                fontSize: '14px',
+                padding: '9px 16px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 transition: 'all 0.15s ease',
               }}
               onClick={() => setOpen(false)}
             >
-              <span>See all notifications</span>
-              <i className="bi bi-arrow-right" />
+              <span>See all notifications in center</span>
+              <i className="bi bi-arrow-right fs-6" />
             </Link>
           </div>
         </div>
@@ -497,7 +506,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
             box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45);
           }
           70% {
-            box-shadow: 0 0 0 5px rgba(220, 38, 38, 0);
+            box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
           }
           100% {
             box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);

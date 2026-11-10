@@ -17,9 +17,9 @@ export default async function NotificationsPage() {
       <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
         <DashboardSidebar role={role} />
         <div className="flex-grow-1 p-3 p-md-5">
-          <div className="container-fluid" style={{ maxWidth: 820 }}>
-            <h2 className="mb-4 pb-3" style={{ color: '#0D7D72', borderBottom: '3px solid #0D7D72' }}>
-              <i className="bi bi-bell me-2" aria-hidden="true"></i>Notifications
+          <div className="container-fluid" style={{ maxWidth: 1100 }}>
+            <h2 className="mb-4 pb-3 fw-bold" style={{ color: '#0D7D72', borderBottom: '3px solid #0D7D72', fontSize: '28px' }}>
+              <i className="bi bi-bell-fill me-2" aria-hidden="true"></i>Notifications Center
             </h2>
             <NotificationsList userId={user.id} />
           </div>

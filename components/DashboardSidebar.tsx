@@ -137,28 +137,28 @@ export default function DashboardSidebar({ role }: { role: Role }) {
             {user && (
                 <div
                     className="d-none d-md-flex align-items-center position-fixed"
-                    style={{ top: 16, right: 28, zIndex: 1040 }}
+                    style={{ top: 16, right: 32, zIndex: 1040 }}
                 >
                     <div
-                        className="d-flex align-items-center gap-3 bg-white px-3 py-1.5 rounded-pill shadow-sm border"
+                        className="d-flex align-items-center gap-3 bg-white px-3.5 py-2 rounded-pill shadow-sm border"
                         style={{
-                            borderColor: '#e2e8f0',
-                            backgroundColor: 'rgba(255, 255, 255, 0.96)',
-                            backdropFilter: 'blur(8px)',
-                            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.05)',
+                            borderColor: '#cbd5e1',
+                            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                            backdropFilter: 'blur(10px)',
+                            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
                         }}
                     >
                         {/* Live Queue Sync indicator */}
-                        <div className="d-flex align-items-center gap-1.5 pe-2 border-end" style={{ fontSize: '12px' }}>
+                        <div className="d-flex align-items-center gap-2 pe-2.5 border-end" style={{ fontSize: '13px' }}>
                             <span
                                 className="d-inline-block rounded-circle bg-success"
                                 style={{
-                                    width: 8,
-                                    height: 8,
-                                    boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.25)',
+                                    width: 10,
+                                    height: 10,
+                                    boxShadow: '0 0 0 2.5px rgba(16, 185, 129, 0.28)',
                                 }}
                             />
-                            <span className="fw-semibold text-secondary" style={{ fontSize: '11px', letterSpacing: '0.4px' }}>
+                            <span className="fw-bold text-secondary" style={{ fontSize: '11.5px', letterSpacing: '0.5px' }}>
                                 LIVE
                             </span>
                         </div>
@@ -167,14 +167,14 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                         <NotificationBell userId={user.id} />
 
                         {/* User Role / Avatar Pill */}
-                        <div className="d-flex align-items-center gap-2 ps-1 border-start">
+                        <div className="d-flex align-items-center gap-2.5 ps-1.5 border-start">
                             <div
                                 className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-xs"
-                                style={{ width: 28, height: 28, backgroundColor: '#0D7D72', fontSize: '12px' }}
+                                style={{ width: 32, height: 32, backgroundColor: '#0D7D72', fontSize: '13px' }}
                             >
                                 {role.charAt(0).toUpperCase()}
                             </div>
-                            <span className="fw-semibold text-dark text-capitalize" style={{ fontSize: '13px' }}>
+                            <span className="fw-bold text-dark text-capitalize" style={{ fontSize: '13.5px' }}>
                                 {role}
                             </span>
                         </div>
