@@ -2,6 +2,7 @@
 import React, { useState, useTransition, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { StatusBadge, VisitSourceBadge, PriorityFlag } from '@/components/appointments/StatusBadge';
+import VisitDetailModal from '@/components/appointments/VisitDetailModal';
 import { getAvailableActions } from '@/lib/appointmentActions';
 import { formatTime, formatDate, formatTimeOnly } from '@/lib/format';
 import {
@@ -84,6 +85,7 @@ export default function BookingsClient({
     const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [priorityModal, setPriorityModal] = useState<string | null>(null);
     const [priorityReason, setPriorityReason] = useState('');
+    const [detailAppt, setDetailAppt] = useState<Appointment | null>(null);
     const [lastUpdated, setLastUpdated] = useState(new Date());
 
     // Chamber delay modal state
@@ -266,13 +268,19 @@ export default function BookingsClient({
                         ? 'opacity-50'
                         : ''
                 }`}
-                style={
-                    isCurrentlyInside
+                style={{
+                    cursor: 'pointer',
+                    ...(isCurrentlyInside
                         ? { border: '2px solid #0D7D72', backgroundColor: '#f0fdf9' }
                         : isConsultationDone
                         ? { border: '2px solid #10b981', backgroundColor: '#f0fdf4' }
-                        : {}
-                }
+                        : {})
+                }}
+                onClick={(e) => {
+                    if ((e.target as HTMLElement).closest('button, a, input, label, select, textarea')) return;
+                    setDetailAppt(a);
+                }}
+                title="Click to view visit details"
             >
                 <div className="card-body p-3">
                     <div className="row align-items-center g-2">
@@ -495,7 +503,7 @@ export default function BookingsClient({
             <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
                 <div>
                     <h2 className="m-0" style={{ color: '#0D7D72' }}>
-                        <i className="bi bi-calendar-check me-2"></i>Chamber & Queue Management
+                        <i className="bi bi-calendar-check me-2"></i>Appointments & Chamber Queue
                     </h2>
                     <small className="text-muted">
                         Assigned to: <strong>Dr. {doctorName || 'Doctor'}</strong> ({specialityName || 'General'})
@@ -997,6 +1005,13 @@ export default function BookingsClient({
                     </div>
                 </div>
             )}
+            {/* Visit Details Modal */}
+            <VisitDetailModal
+                appt={detailAppt}
+                onClose={() => setDetailAppt(null)}
+                doctorName={doctorName}
+                specialityName={specialityName}
+            />
         </div>
     );
 }

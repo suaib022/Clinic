@@ -207,7 +207,7 @@ export default async function CompounderDashboard() {
                                             <i className="bi bi-broadcast"></i> Live Queue Console
                                         </Link>
                                         <Link href="/compounder/bookings" className="btn btn-outline-primary d-flex align-items-center gap-2 py-3">
-                                            <i className="bi bi-calendar-check"></i> Today&apos;s Bookings
+                                            <i className="bi bi-calendar-check"></i> Today&apos;s Appointments
                                         </Link>
                                         <Link href="/compounder/walk-in" className="btn btn-outline-success d-flex align-items-center gap-2 py-3">
                                             <i className="bi bi-person-plus"></i> Add Walk-in

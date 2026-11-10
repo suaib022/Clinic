@@ -50,7 +50,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
     compounder: [
         { href: '/compounder/dashboard', label: 'Dashboard', icon: 'bi-grid' },
         { href: '/compounder/queue', label: 'Live Queue', icon: 'bi-broadcast' },
-        { href: '/compounder/bookings', label: 'Bookings', icon: 'bi-calendar-check' },
+        { href: '/compounder/bookings', label: 'Appointments', icon: 'bi-calendar-check' },
         { href: '/compounder/walk-in', label: 'Add Walk-in', icon: 'bi-person-plus' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
     ],

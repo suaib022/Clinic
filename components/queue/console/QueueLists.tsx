@@ -76,10 +76,6 @@ export function SuggestionsPanel({ suggestions, busy, onConfirm, onDismiss }: {
               <strong>{suggestions.length} suggestion{suggestions.length > 1 ? 's' : ''}</strong> hidden. Click to expand.
             </span>
           </div>
-          <span className="btn btn-sm btn-link p-0 text-decoration-none fw-semibold" style={{ color: '#0D7D72', fontSize: '12px' }}>
-            <span>Show suggestions</span>
-            <i className="bi bi-chevron-down ms-1" />
-          </span>
         </div>
       ) : (
         <div id="dss-suggestions-content" className="d-flex flex-column gap-2">
@@ -111,7 +107,10 @@ function stageBadge(e: PatientEstimate | undefined, a: QueueAppointment) {
   return e?.label ? <span className={`badge ${LABEL_CLASS[e.label]}`}>{LABEL_TEXT[e.label]}</span> : null;
 }
 
-export function NextUp({ snap, busy, canCall, onCall }: { snap: StaffSnapshot; busy: boolean; canCall: boolean; onCall: () => void }) {
+export function NextUp({ snap, busy, canCall, onCall, onSelectAppt }: {
+  snap: StaffSnapshot; busy: boolean; canCall: boolean; onCall: () => void;
+  onSelectAppt?: (a: QueueAppointment) => void;
+}) {
   const byId = new Map(snap.appointments.map((a) => [a.id, a]));
   const waiting = snap.result.line.map((id) => byId.get(id)!).filter(Boolean);
   const notArrived = snap.appointments.filter((a) => a.status === 'scheduled' && !a.skippedAt).sort((a, b) => a.bookedAt - b.bookedAt);
@@ -128,7 +127,15 @@ export function NextUp({ snap, busy, canCall, onCall }: { snap: StaffSnapshot; b
             const arrived = a.status === 'checked_in';
             return (
               <div key={a.id} className="col-12 col-md-4">
-                <div className="bg-white rounded-3 shadow-sm p-3 h-100 d-flex justify-content-between align-items-center gap-2">
+                <div
+                  className="bg-white rounded-3 shadow-sm p-3 h-100 d-flex justify-content-between align-items-center gap-2"
+                  style={{ cursor: 'pointer' }}
+                  onClick={(ev) => {
+                    if ((ev.target as HTMLElement).closest('button, a, input, label')) return;
+                    onSelectAppt?.(a);
+                  }}
+                  title="Click to view visit details"
+                >
                   <div style={{ minWidth: 0 }}>
                     <div className="fw-bold">#{a.serialNo} <span className="fw-normal text-truncate">{a.patientName}</span></div>
                     <div className="small">
@@ -151,8 +158,9 @@ export function NextUp({ snap, busy, canCall, onCall }: { snap: StaffSnapshot; b
   );
 }
 
-export function WaitingList({ snap, busy, onRow, readOnly = false }: {
+export function WaitingList({ snap, busy, onRow, onSelectAppt, readOnly = false }: {
   snap: StaffSnapshot; busy: boolean; readOnly?: boolean; onRow: (a: QueueAppointment, action: RowAction) => void;
+  onSelectAppt?: (a: QueueAppointment) => void;
 }) {
   const [q, setQ] = useState('');
   const [showDone, setShowDone] = useState(false);
@@ -183,7 +191,16 @@ export function WaitingList({ snap, busy, onRow, readOnly = false }: {
           const e = snap.result.estimates[a.id];
           const waiting = a.status === 'scheduled' || a.status === 'checked_in';
           return (
-            <li key={a.id} className="list-group-item py-3">
+            <li
+              key={a.id}
+              className="list-group-item py-3 transition-all"
+              style={{ cursor: 'pointer' }}
+              onClick={(ev) => {
+                if ((ev.target as HTMLElement).closest('button, a, input, label')) return;
+                onSelectAppt?.(a);
+              }}
+              title="Click to view visit details"
+            >
               <div className="d-flex flex-wrap gap-2 align-items-center">
                 <div className="fw-bold fs-5" style={{ width: 56 }}>#{a.serialNo}</div>
                 <div className="flex-grow-1" style={{ minWidth: 160 }}>
