@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/components/AuthProvider'
 import LogoutButton from '@/components/LogoutButton'
+import NotificationBell from '@/components/notifications/NotificationBell'
 
 export default function HeaderAuthLinks() {
   const { user, isLoading } = useAuth()
@@ -21,6 +22,9 @@ export default function HeaderAuthLinks() {
       <li className="d-xl-none"><a href="/dashboard">Dashboard</a></li>
       <li className="d-none d-xl-block ms-2">
          <a href="/dashboard" className="btn text-white px-4 py-2" style={{ backgroundColor: '#0ab1a9', borderRadius: '50px', fontSize: '14px', fontWeight: '500' }}>Dashboard</a>
+      </li>
+      <li className="ms-2 d-flex align-items-center">
+        <NotificationBell userId={user.id} />
       </li>
       <li className="ms-2">
         <LogoutButton />

@@ -24,7 +24,7 @@ export default async function PatientDashboard() {
 
     // Fetch quick stats & unreviewed visits within last 7 days
     let appointmentCount = 0;
-    let todayAppt: { id: string } | null = null;
+    let todayAppts: { id: string }[] = [];
     let unreviewedVisit: any = null;
     let recentDoctorCancellation: any = null;
 
@@ -41,12 +41,10 @@ export default async function PatientDashboard() {
             .in('patient_id', patientIds)
             .eq('appointment_date', today)
             .neq('status', 'cancelled')
-            .order('serial_no', { ascending: true })
-            .limit(1);
+            .order('serial_no', { ascending: true });
 
-        if (todayList && todayList.length > 0) {
-            todayAppt = todayList[0];
-        }
+        // DSS-83: one live panel per family member booked today
+        todayAppts = todayList ?? [];
 
         // Check for completed visits within last 7 days awaiting feedback
         const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -149,9 +147,9 @@ export default async function PatientDashboard() {
                         )}
 
                         {/* Today's Live Queue Widget */}
-                        {todayAppt && (
+                        {todayAppts.length > 0 && (
                             <div className="mb-4">
-                                <PatientLiveQueueCard appointmentId={todayAppt.id} />
+                                {todayAppts.map((a) => <PatientLiveQueueCard key={a.id} appointmentId={a.id} userId={user.id} />)}
                             </div>
                         )}
                         
