@@ -154,7 +154,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
       {/* The Bell Trigger Button (Large 46x46) */}
       <button
         type="button"
-        className="btn dss-bell-btn d-flex align-items-center justify-content-center position-relative p-0"
+        className={`dss-bell-btn d-flex align-items-center justify-content-center position-relative ${open ? 'is-open' : ''}`}
         aria-label={`Notifications, ${unread} unread`}
         aria-expanded={open}
         aria-haspopup="true"
@@ -163,11 +163,8 @@ export default function NotificationBell({ userId }: { userId: string }) {
           width: 46,
           height: 46,
           borderRadius: '50%',
-          backgroundColor: open ? '#e6f4f2' : '#ffffff',
-          border: '1.5px solid',
-          borderColor: open ? '#0D7D72' : '#cbd5e1',
-          color: '#0D7D72',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.06)',
+          cursor: 'pointer',
+          outline: 'none',
           transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
@@ -476,13 +473,36 @@ export default function NotificationBell({ userId }: { userId: string }) {
       )}
 
       <style jsx>{`
+        .dss-bell-btn {
+          background-color: #ffffff !important;
+          border: 1.5px solid #cbd5e1 !important;
+          color: #0D7D72 !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .dss-bell-btn i {
+          color: #0D7D72 !important;
+        }
         .dss-bell-btn:hover {
-          background-color: #e6f4f2 !important;
+          background-color: #0D7D72 !important;
           border-color: #0D7D72 !important;
-          transform: translateY(-1px);
+          color: #ffffff !important;
+          box-shadow: 0 6px 18px rgba(13, 125, 114, 0.35) !important;
+          transform: translateY(-2px) scale(1.04) !important;
+        }
+        .dss-bell-btn:hover i {
+          color: #ffffff !important;
+        }
+        .dss-bell-btn.is-open {
+          background-color: #0D7D72 !important;
+          border-color: #0D7D72 !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px rgba(13, 125, 114, 0.3) !important;
+        }
+        .dss-bell-btn.is-open i {
+          color: #ffffff !important;
         }
         .dss-bell-btn:active {
-          transform: scale(0.96);
+          transform: scale(0.95);
         }
         .dss-notif-item:hover {
           background-color: #eef7f6 !important;

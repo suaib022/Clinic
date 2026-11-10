@@ -93,7 +93,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                     <i className="bi bi-shield-check" style={{ color: '#0D7D72', fontSize: '18px' }} />
                     <strong style={{ color: '#0D7D72', fontSize: '15px' }}>{ROLE_TITLES[role]}</strong>
                 </div>
-                {user ? <NotificationBell userId={user.id} /> : <span style={{ width: 38 }} />}
+                {user ? <NotificationBell userId={user.id} /> : <span style={{ width: 46 }} />}
                 {menuOpen && (
                     <nav
                         className="position-absolute start-0 end-0 bg-white shadow border-top"
@@ -133,52 +133,13 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                 )}
             </div>
 
-            {/* Desktop: Top Dashboard Notification & Status Bar */}
+            {/* Desktop: Standalone Notification Icon in top-right */}
             {user && (
                 <div
-                    className="d-none d-md-flex align-items-center position-fixed"
-                    style={{ top: 16, right: 32, zIndex: 1040 }}
+                    className="d-none d-md-block position-fixed"
+                    style={{ top: 20, right: 32, zIndex: 1040 }}
                 >
-                    <div
-                        className="d-flex align-items-center gap-3 bg-white px-3.5 py-2 rounded-pill shadow-sm border"
-                        style={{
-                            borderColor: '#cbd5e1',
-                            backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                            backdropFilter: 'blur(10px)',
-                            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-                        }}
-                    >
-                        {/* Live Queue Sync indicator */}
-                        <div className="d-flex align-items-center gap-2 pe-2.5 border-end" style={{ fontSize: '13px' }}>
-                            <span
-                                className="d-inline-block rounded-circle bg-success"
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    boxShadow: '0 0 0 2.5px rgba(16, 185, 129, 0.28)',
-                                }}
-                            />
-                            <span className="fw-bold text-secondary" style={{ fontSize: '11.5px', letterSpacing: '0.5px' }}>
-                                LIVE
-                            </span>
-                        </div>
-
-                        {/* Notification Bell with Dropdown Panel */}
-                        <NotificationBell userId={user.id} />
-
-                        {/* User Role / Avatar Pill */}
-                        <div className="d-flex align-items-center gap-2.5 ps-1.5 border-start">
-                            <div
-                                className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-xs"
-                                style={{ width: 32, height: 32, backgroundColor: '#0D7D72', fontSize: '13px' }}
-                            >
-                                {role.charAt(0).toUpperCase()}
-                            </div>
-                            <span className="fw-bold text-dark text-capitalize" style={{ fontSize: '13.5px' }}>
-                                {role}
-                            </span>
-                        </div>
-                    </div>
+                    <NotificationBell userId={user.id} />
                 </div>
             )}
 
