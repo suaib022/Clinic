@@ -52,7 +52,6 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/compounder/queue', label: 'Live Queue', icon: 'bi-broadcast' },
         { href: '/compounder/bookings', label: 'Bookings', icon: 'bi-calendar-check' },
         { href: '/compounder/walk-in', label: 'Add Walk-in', icon: 'bi-person-plus' },
-        { href: '/compounder/upload', label: 'Upload Documents', icon: 'bi-file-arrow-up' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
     ],
 };

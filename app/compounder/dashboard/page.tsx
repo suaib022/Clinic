@@ -203,14 +203,14 @@ export default async function CompounderDashboard() {
                                         <h5 className="m-0 fw-bold"><i className="bi bi-lightning me-2"></i>Quick Actions</h5>
                                     </div>
                                     <div className="card-body px-4 d-grid gap-2">
+                                        <Link href="/compounder/queue" className="btn btn-outline-info d-flex align-items-center gap-2 py-3">
+                                            <i className="bi bi-broadcast"></i> Live Queue Console
+                                        </Link>
                                         <Link href="/compounder/bookings" className="btn btn-outline-primary d-flex align-items-center gap-2 py-3">
                                             <i className="bi bi-calendar-check"></i> Today&apos;s Bookings
                                         </Link>
                                         <Link href="/compounder/walk-in" className="btn btn-outline-success d-flex align-items-center gap-2 py-3">
                                             <i className="bi bi-person-plus"></i> Add Walk-in
-                                        </Link>
-                                        <Link href="/compounder/upload" className="btn btn-outline-secondary d-flex align-items-center gap-2 py-3">
-                                            <i className="bi bi-file-arrow-up"></i> Upload Document
                                         </Link>
                                     </div>
                                 </div>

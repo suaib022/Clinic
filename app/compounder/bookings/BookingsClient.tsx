@@ -20,7 +20,6 @@ import {
     resumeChamberSession,
     endChamberSession
 } from '../actions';
-import Link from 'next/link';
 
 interface Appointment {
     id: string;
@@ -452,13 +451,6 @@ export default function BookingsClient({
                                 >
                                     <i className="bi bi-trash me-1"></i>Retract Walk-in
                                 </button>
-                            )}
-
-                            {/* Upload button */}
-                            {a.status !== 'cancelled' && (
-                                <Link href={`/compounder/upload?patient=${a.patient?.uhid}`} className="btn btn-sm btn-outline-secondary ms-auto">
-                                    <i className="bi bi-file-arrow-up me-1"></i>Upload
-                                </Link>
                             )}
                         </div>
                     )}
