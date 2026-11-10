@@ -193,12 +193,21 @@ export default function BookingsClient({
         setDelayModalOpen(false);
     };
 
+    const consultationDoneAppts = useMemo(() => {
+        return todayAppts.filter(
+            a => a.status === 'prescription_pending' || a.status === 'completed' || Boolean(a.consult_ended_at && a.status !== 'in_consultation')
+        );
+    }, [todayAppts]);
+    const consultationDoneCount = consultationDoneAppts.length;
+
     const filteredAppts = useMemo(() => {
         let list: Appointment[] = [];
         if (tab === 'today') {
             const active = todayAppts.filter(a => a.status !== 'cancelled');
             const cancelled = todayAppts.filter(a => a.status === 'cancelled');
             list = [...active, ...cancelled];
+        } else if (tab === 'done') {
+            list = consultationDoneAppts;
         } else if (tab === 'upcoming') {
             list = upcomingAppts;
         } else {
@@ -219,7 +228,7 @@ export default function BookingsClient({
         }
 
         return list;
-    }, [tab, todayAppts, upcomingAppts, previousAppts, statusFilter, search]);
+    }, [tab, todayAppts, consultationDoneAppts, upcomingAppts, previousAppts, statusFilter, search]);
 
     // Live Queue DSS Counters for Today
     const currentInConsult = todayAppts.find(a => a.status === 'in_consultation');
@@ -231,8 +240,9 @@ export default function BookingsClient({
     const chamberStatus = doctorSession?.status || 'not_started';
 
     const renderRow = (a: Appointment, showActions: boolean) => {
+        const isTodayRow = tab === 'today' || tab === 'done';
         const actions = showActions ? getAvailableActions('compounder', a.status as any, {
-            isToday: tab === 'today',
+            isToday: isTodayRow,
             visitSource: a.visit_source as any,
             checkedInAt: a.checked_in_at,
             createdByUserId: a.created_by_user_id,
@@ -243,6 +253,7 @@ export default function BookingsClient({
         }) : null;
 
         const isCurrentlyInside = a.status === 'in_consultation';
+        const isConsultationDone = a.status === 'prescription_pending' || a.status === 'completed' || Boolean(a.consult_ended_at && a.status !== 'in_consultation');
 
         return (
             <div
@@ -250,11 +261,19 @@ export default function BookingsClient({
                 className={`card border-0 shadow-sm rounded-3 mb-2 transition-all ${
                     isCurrentlyInside
                         ? 'border-2 border-primary bg-primary-subtle'
+                        : isConsultationDone
+                        ? 'border-2 border-success bg-success-subtle'
                         : a.status === 'cancelled'
                         ? 'opacity-50'
                         : ''
                 }`}
-                style={isCurrentlyInside ? { border: '2px solid #0D7D72', backgroundColor: '#f0fdf9' } : {}}
+                style={
+                    isCurrentlyInside
+                        ? { border: '2px solid #0D7D72', backgroundColor: '#f0fdf9' }
+                        : isConsultationDone
+                        ? { border: '2px solid #10b981', backgroundColor: '#f0fdf4' }
+                        : {}
+                }
             >
                 <div className="card-body p-3">
                     <div className="row align-items-center g-2">
@@ -264,8 +283,17 @@ export default function BookingsClient({
                                 className={`badge rounded-pill px-3 py-2 fw-bold fs-6 ${
                                     isCurrentlyInside
                                         ? 'bg-success text-white'
+                                        : isConsultationDone
+                                        ? 'bg-success text-white'
                                         : 'bg-light text-dark border'
                                 }`}
+                                style={
+                                    isCurrentlyInside
+                                        ? { backgroundColor: '#0D7D72' }
+                                        : isConsultationDone
+                                        ? { backgroundColor: '#059669' }
+                                        : {}
+                                }
                             >
                                 {a.serial_no ? `#${a.serial_no}` : 'N/A'}
                             </span>
@@ -281,6 +309,18 @@ export default function BookingsClient({
                                 {isCurrentlyInside && (
                                     <span className="badge bg-primary text-white animate-pulse" style={{ fontSize: '0.75rem' }}>
                                         <i className="bi bi-person-walking me-1"></i>IN CHAMBER
+                                    </span>
+                                )}
+                                {isConsultationDone && (
+                                    <span
+                                        className="badge text-white"
+                                        style={{
+                                            fontSize: '0.75rem',
+                                            backgroundColor: a.status === 'completed' ? '#198754' : '#059669',
+                                        }}
+                                    >
+                                        <i className="bi bi-check-circle-fill me-1"></i>
+                                        {a.status === 'completed' ? 'VISIT COMPLETED' : 'CONSULTATION DONE'}
                                     </span>
                                 )}
                             </div>
@@ -315,6 +355,13 @@ export default function BookingsClient({
                             <div className="col-auto">
                                 <small className="text-primary fw-semibold">
                                     <i className="bi bi-stopwatch me-1"></i>Entered {formatTimeOnly(a.consult_started_at)}
+                                </small>
+                            </div>
+                        )}
+                        {a.consult_ended_at && (
+                            <div className="col-auto">
+                                <small className="text-success fw-semibold">
+                                    <i className="bi bi-check2-circle me-1"></i>Consulted {formatTimeOnly(a.consult_ended_at)}
                                 </small>
                             </div>
                         )}
@@ -616,7 +663,7 @@ export default function BookingsClient({
             )}
 
             {/* Prescription Pending Callout Banner */}
-            {tab === 'today' && prescriptionPendingCount > 0 && (
+            {(tab === 'today' || tab === 'done') && prescriptionPendingCount > 0 && (
                 <div className="alert alert-warning border-warning d-flex flex-wrap align-items-center justify-content-between mb-3 shadow-sm py-2 px-3 gap-2">
                     <div className="d-flex align-items-center gap-2">
                         <i className="bi bi-file-earmark-medical-fill fs-4 text-warning"></i>
@@ -650,6 +697,7 @@ export default function BookingsClient({
             <ul className="nav nav-tabs mb-3">
                 {[
                     { key: 'today', label: `Today's Queue (${todayAppts.length})` },
+                    { key: 'done', label: `Consultation Done (${consultationDoneCount})` },
                     { key: 'upcoming', label: `Upcoming (${upcomingAppts.length})` },
                     { key: 'previous', label: `Previous (${previousAppts.length})` },
                 ].map((t) => (
@@ -687,7 +735,7 @@ export default function BookingsClient({
                         <option value="checked_in">Present (Waiting)</option>
                         <option value="in_consultation">In Consultation</option>
                         <option value="prescription_pending">Prescription Pending ({prescriptionPendingCount})</option>
-                        <option value="completed">Completed</option>
+                        <option value="completed">Completed ({completedCount})</option>
                         <option value="no_show">No Show</option>
                         <option value="cancelled">Cancelled</option>
                     </select>
@@ -698,10 +746,12 @@ export default function BookingsClient({
             {filteredAppts.length === 0 ? (
                 <div className="card border-0 shadow-sm rounded-3 p-5 text-center text-muted">
                     <i className="bi bi-inbox fs-1"></i>
-                    <p className="mt-2 mb-0">No appointments found.</p>
+                    <p className="mt-2 mb-0">
+                        {tab === 'done' ? 'No patients have completed consultation yet today.' : 'No appointments found.'}
+                    </p>
                 </div>
             ) : (
-                filteredAppts.map((a) => renderRow(a, tab === 'today'))
+                filteredAppts.map((a) => renderRow(a, tab === 'today' || tab === 'done'))
             )}
 
             {/* Priority Reason Modal */}
