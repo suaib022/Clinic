@@ -186,6 +186,10 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
   const skippedAt = isQueue ? appt.skippedAt : null;
   const expectedStartAt = appt.expectedStartAt || null;
 
+  const consultDurationMin = consultStartedAt && consultEndedAt
+    ? Math.max(1, Math.round((new Date(consultEndedAt).getTime() - new Date(consultStartedAt).getTime()) / 60000))
+    : null;
+
   return (
     <div
       className="modal fade show d-block"
@@ -319,106 +323,161 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
               </div>
             )}
 
-            {/* Grid: Timing & Lifecycle Timeline */}
+            {/* Grid: Schedule & Encounter Journey Stepper */}
             <div className="row g-3">
-              {/* Timing Card */}
-              <div className="col-md-6">
+              {/* Schedule & Timing Card */}
+              <div className="col-md-5">
                 <div className="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white">
-                  <h6 className="fw-bold text-muted text-uppercase small mb-3">
-                    <i className="bi bi-calendar3 me-1.5" style={{ color: '#0D7D72' }} />
-                    Schedule & Timing
-                  </h6>
+                  <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                    <h6 className="fw-bold text-muted text-uppercase small m-0">
+                      <i className="bi bi-calendar-event me-1.5" style={{ color: '#0D7D72' }} />
+                      Schedule & Details
+                    </h6>
+                    <span className="badge bg-light text-secondary border font-monospace" style={{ fontSize: '0.75rem' }}>
+                      #{serialNo}
+                    </span>
+                  </div>
 
                   <div className="d-flex flex-column gap-2 small">
-                    <div className="d-flex justify-content-between py-1 border-bottom">
+                    <div className="d-flex justify-content-between py-1.5 border-bottom">
                       <span className="text-muted">Appointment Date:</span>
                       <strong className="text-dark">
                         {apptDate ? formatDateDisplay(apptDate) : formatDateDisplay(new Date())}
                       </strong>
                     </div>
 
-                    <div className="d-flex justify-content-between py-1 border-bottom">
-                      <span className="text-muted">Allocated Time Slot:</span>
+                    <div className="d-flex justify-content-between py-1.5 border-bottom">
+                      <span className="text-muted">Time Slot:</span>
                       <strong className="text-dark">
                         {startTime ? formatTimeDisplay(startTime) : '—'}
-                        {endTime ? ` - ${formatTimeDisplay(endTime)}` : ''}
+                        {endTime ? ` – ${formatTimeDisplay(endTime)}` : ''}
                       </strong>
                     </div>
 
-                    <div className="d-flex justify-content-between py-1 border-bottom">
+                    <div className="d-flex justify-content-between py-1.5 border-bottom">
                       <span className="text-muted">Visit Type:</span>
-                      <span className="badge bg-light text-dark border">{visitType}</span>
+                      <span className="badge bg-light text-dark border px-2 py-1">{visitType}</span>
                     </div>
 
-                    <div className="d-flex justify-content-between py-1">
-                      <span className="text-muted">Source:</span>
-                      <span className="fw-semibold text-capitalize">{visitSource.replace('_', ' ')}</span>
+                    <div className="d-flex justify-content-between py-1.5 border-bottom">
+                      <span className="text-muted">Booking Source:</span>
+                      <span className="fw-semibold text-capitalize text-dark">{visitSource.replace('_', ' ')}</span>
+                    </div>
+
+                    <div className="d-flex justify-content-between py-1.5">
+                      <span className="text-muted">Live Queue Status:</span>
+                      <StatusBadge status={status} />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Lifecycle & Status Card */}
-              <div className="col-md-6">
+              {/* Queue Journey Stepper Card */}
+              <div className="col-md-7">
                 <div className="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white">
-                  <h6 className="fw-bold text-muted text-uppercase small mb-3">
-                    <i className="bi bi-stopwatch me-1.5" style={{ color: '#0D7D72' }} />
-                    Queue & Visit Progress
-                  </h6>
-
-                  <div className="d-flex flex-column gap-2 small">
-                    <div className="d-flex justify-content-between py-1 border-bottom">
-                      <span className="text-muted">Check-in Status:</span>
-                      {checkedInAt ? (
-                        <span className="text-success fw-semibold">
-                          <i className="bi bi-check-circle-fill me-1" />
-                          Present at {formatTimeDisplay(checkedInAt)}
-                        </span>
-                      ) : (
-                        <span className="text-muted">
-                          <i className="bi bi-hourglass me-1" />
-                          Not arrived yet
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="d-flex justify-content-between py-1 border-bottom">
-                      <span className="text-muted">Chamber Entry:</span>
-                      {consultStartedAt ? (
-                        <span className="text-primary fw-semibold">
-                          <i className="bi bi-door-open-fill me-1" />
-                          {formatTimeDisplay(consultStartedAt)}
-                        </span>
-                      ) : (
-                        <span className="text-muted">Not entered</span>
-                      )}
-                    </div>
-
-                    <div className="d-flex justify-content-between py-1 border-bottom">
-                      <span className="text-muted">Consultation Ended:</span>
-                      {consultEndedAt ? (
-                        <span className="text-success fw-semibold">
-                          <i className="bi bi-check2-circle me-1" />
-                          {formatTimeDisplay(consultEndedAt)}
-                        </span>
-                      ) : (
-                        <span className="text-muted">In queue / in room</span>
-                      )}
-                    </div>
-
-                    {expectedStartAt != null && (
-                      <div className="d-flex justify-content-between py-1 border-bottom">
-                        <span className="text-muted">Estimated Call:</span>
-                        <strong className="text-primary">~{formatTimeDisplay(expectedStartAt)}</strong>
-                      </div>
+                  <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                    <h6 className="fw-bold text-muted text-uppercase small m-0">
+                      <i className="bi bi-diagram-3-fill me-1.5" style={{ color: '#0D7D72' }} />
+                      Encounter Journey
+                    </h6>
+                    {consultDurationMin && (
+                      <span className="badge bg-success bg-opacity-10 text-success border border-success-subtle rounded-pill">
+                        <i className="bi bi-stopwatch me-1" />
+                        {consultDurationMin}m consultation
+                      </span>
                     )}
+                  </div>
 
-                    {bookedAt && (
-                      <div className="d-flex justify-content-between py-1">
-                        <span className="text-muted">Booked At:</span>
-                        <span className="text-muted">{formatTimeDisplay(bookedAt)}</span>
+                  <div className="d-flex flex-column gap-2.5 small">
+                    {/* Step 1: Booking */}
+                    <div className="d-flex align-items-start gap-2.5">
+                      <div className="rounded-circle d-flex align-items-center justify-content-center bg-light text-primary border flex-shrink-0" style={{ width: 28, height: 28 }}>
+                        <i className="bi bi-calendar-check" style={{ fontSize: '0.8rem' }} />
                       </div>
-                    )}
+                      <div className="flex-grow-1">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className="fw-semibold text-dark">Appointment Booked</span>
+                          <span className="text-muted">{bookedAt ? formatTimeDisplay(bookedAt) : 'Confirmed'}</span>
+                        </div>
+                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          Registered via {visitSource.replace('_', ' ')}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 2: Arrival / Check-in */}
+                    <div className="d-flex align-items-start gap-2.5">
+                      <div className={`rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 ${checkedInAt ? 'bg-success text-white' : 'bg-light text-muted border'}`} style={{ width: 28, height: 28 }}>
+                        <i className={`bi ${checkedInAt ? 'bi-check2' : 'bi-person-check'}`} style={{ fontSize: '0.85rem' }} />
+                      </div>
+                      <div className="flex-grow-1">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className={`fw-semibold ${checkedInAt ? 'text-success' : 'text-muted'}`}>Patient Arrival</span>
+                          {checkedInAt ? (
+                            <span className="badge bg-success-subtle text-success border border-success-subtle">{formatTimeDisplay(checkedInAt)}</span>
+                          ) : (
+                            <span className="text-muted">Not arrived</span>
+                          )}
+                        </div>
+                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          {checkedInAt ? 'Checked in & present in waiting room' : 'Awaiting arrival at clinic desk'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 3: Chamber Consultation */}
+                    <div className="d-flex align-items-start gap-2.5">
+                      <div className={`rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 ${consultEndedAt ? 'bg-success text-white' : consultStartedAt ? 'bg-primary text-white' : 'bg-light text-muted border'}`} style={{ width: 28, height: 28 }}>
+                        <i className={`bi ${consultEndedAt ? 'bi-check-all' : consultStartedAt ? 'bi-door-open-fill' : 'bi-door-closed'}`} style={{ fontSize: '0.85rem' }} />
+                      </div>
+                      <div className="flex-grow-1">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className={`fw-semibold ${consultEndedAt ? 'text-success' : consultStartedAt ? 'text-primary' : 'text-muted'}`}>Doctor Consultation</span>
+                          {consultEndedAt ? (
+                            <span className="badge bg-success-subtle text-success border border-success-subtle">{formatTimeDisplay(consultEndedAt)}</span>
+                          ) : consultStartedAt ? (
+                            <span className="badge bg-primary-subtle text-primary border border-primary-subtle">In Chamber ({formatTimeDisplay(consultStartedAt)})</span>
+                          ) : (
+                            <span className="text-muted">In Queue</span>
+                          )}
+                        </div>
+                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          {consultStartedAt && consultEndedAt 
+                            ? `In chamber: ${formatTimeDisplay(consultStartedAt)} – ${formatTimeDisplay(consultEndedAt)} (${consultDurationMin} min)`
+                            : consultStartedAt 
+                            ? `Patient entered chamber at ${formatTimeDisplay(consultStartedAt)}`
+                            : expectedStartAt 
+                            ? `Estimated call time: ~${formatTimeDisplay(expectedStartAt)}` 
+                            : 'Pending consultation call'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 4: Prescription & Records */}
+                    <div className="d-flex align-items-start gap-2.5">
+                      <div className={`rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 ${documents.length > 0 ? 'bg-success text-white' : status === 'prescription_pending' ? 'bg-warning text-dark' : 'bg-light text-muted border'}`} style={{ width: 28, height: 28 }}>
+                        <i className={`bi ${documents.length > 0 ? 'bi-file-earmark-check-fill' : status === 'prescription_pending' ? 'bi-file-earmark-medical-fill' : 'bi-file-earmark'}`} style={{ fontSize: '0.85rem' }} />
+                      </div>
+                      <div className="flex-grow-1">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className={`fw-semibold ${documents.length > 0 ? 'text-success' : status === 'prescription_pending' ? 'text-warning-emphasis' : 'text-muted'}`}>Prescription & Vault</span>
+                          {documents.length > 0 ? (
+                            <span className="badge bg-success text-white">{documents.length} File{documents.length > 1 ? 's' : ''}</span>
+                          ) : status === 'prescription_pending' ? (
+                            <span className="badge bg-warning text-dark border border-warning">Rx Pending</span>
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
+                        </div>
+                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          {documents.length > 0
+                            ? `${documents.length} document(s) uploaded to Medical Records Vault`
+                            : status === 'prescription_pending'
+                            ? 'Consultation finished; awaiting prescription upload to complete visit'
+                            : 'Will be available upon visit completion'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

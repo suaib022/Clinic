@@ -74,7 +74,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
     // Fetch Doctor Session Today
     const { data: sessions } = await supabase
         .from('doctor_sessions')
-        .select('id, status, started_at, scheduled_start, delay_minutes, delay_reason')
+        .select('id, status, started_at, scheduled_start, delay_minutes, delay_reason, ended_at, created_at')
         .eq('doctor_id', doctorId)
         .eq('session_date', today)
         .order('created_at', { ascending: false })
