@@ -42,12 +42,40 @@ function getNotificationMeta(type: string): NotificationMeta {
         bg: '#dbeafe',
         badgeText: 'Queue Turn',
       };
-    case 'session_started':
+    case 'doctor_delay':
       return {
-        icon: 'bi-door-open-fill',
+        icon: 'bi-clock-history',
+        color: '#b45309',
+        bg: '#fef3c7',
+        badgeText: 'Doctor Delay',
+      };
+    case 'session_paused':
+      return {
+        icon: 'bi-pause-circle-fill',
+        color: '#b45309',
+        bg: '#fef3c7',
+        badgeText: 'Doctor Break',
+      };
+    case 'session_resumed':
+      return {
+        icon: 'bi-play-circle-fill',
+        color: '#059669',
+        bg: '#d1fae5',
+        badgeText: 'Queue Resumed',
+      };
+    case 'no_show':
+      return {
+        icon: 'bi-person-x-fill',
+        color: '#dc2626',
+        bg: '#fee2e2',
+        badgeText: 'Marked Absent',
+      };
+    case 'checked_in':
+      return {
+        icon: 'bi-check-circle-fill',
         color: '#0D7D72',
         bg: '#ccfbf1',
-        badgeText: 'Session Started',
+        badgeText: 'Checked In',
       };
     case 'eta_changed':
       return {
