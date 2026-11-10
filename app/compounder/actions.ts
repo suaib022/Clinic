@@ -136,6 +136,12 @@ export async function uploadVisitPrescription(formData: FormData) {
 
         // 3. Create medical_records entry
         const doctorName = (appt.doctor as any)?.full_name || 'Consultant';
+        const docTitle = notes.trim()
+            ? (notes.length > 60 ? `${notes.slice(0, 60)}...` : notes)
+            : (appt.status === 'completed'
+                ? `Medical Document - Dr. ${doctorName} (${appt.appointment_date})`
+                : `Prescription - Dr. ${doctorName} (${appt.appointment_date})`);
+
         const { data: record, error: recordErr } = await supabaseAdmin
             .from('medical_records')
             .insert({
@@ -144,8 +150,10 @@ export async function uploadVisitPrescription(formData: FormData) {
                 appointment_id: appt.id,
                 uploaded_by: user.id,
                 record_type: 'prescription',
-                title: `Prescription - Dr. ${doctorName} (${appt.appointment_date})`,
-                description: notes.trim() || `Prescription uploaded for Serial #${appt.serial_no}`,
+                title: docTitle,
+                description: notes.trim() || (appt.status === 'completed'
+                    ? `Additional document uploaded for Serial #${appt.serial_no}`
+                    : `Prescription uploaded for Serial #${appt.serial_no}`),
                 file_path: fileName,
                 document_date: appt.appointment_date,
                 file_size: file.size,
@@ -176,10 +184,13 @@ export async function uploadVisitPrescription(formData: FormData) {
         revalidatePath('/patient/appointments');
         revalidatePath('/patient/dashboard');
 
+        const isCompletedAlready = appt.status === 'completed';
         return { 
             success: true, 
             recordId: record.id,
-            message: `Prescription uploaded successfully. Serial #${appt.serial_no} is now marked Complete.` 
+            message: isCompletedAlready
+                ? `Document uploaded successfully for Serial #${appt.serial_no}.`
+                : `Prescription uploaded successfully. Serial #${appt.serial_no} is now marked Complete.` 
         };
     } catch (err: any) {
         return { success: false, error: err.message || 'Prescription upload failed' };
