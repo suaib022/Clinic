@@ -13,13 +13,76 @@ const SEVERITY_ICON = { urgent: 'bi-exclamation-octagon-fill text-danger', warni
 export function SuggestionsPanel({ suggestions, busy, onConfirm, onDismiss }: {
   suggestions: Suggestion[]; busy: boolean; onConfirm: (s: Suggestion) => void; onDismiss: (s: Suggestion) => void;
 }) {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <div role="region" aria-label="Suggestions" className="mb-3" aria-live="polite">
-      <h6 className="fw-bold text-muted text-uppercase small mb-2"><i className="bi bi-stars me-1" />Suggestions</h6>
+      <div className="d-flex align-items-center justify-content-between mb-2">
+        <div className="d-flex align-items-center gap-2">
+          <h6 className="fw-bold text-muted text-uppercase small m-0">
+            <i className="bi bi-stars me-1 text-warning" />Suggestions
+          </h6>
+          {suggestions.length > 0 && (
+            <span
+              className="badge rounded-pill"
+              style={{
+                fontSize: '11px',
+                backgroundColor: '#fef3c7',
+                color: '#b45309',
+                padding: '2px 8px',
+                fontWeight: 600,
+              }}
+            >
+              {suggestions.length}
+            </span>
+          )}
+        </div>
+
+        {suggestions.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-sm d-inline-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill border bg-white text-secondary shadow-xs hover-bg-light transition-all"
+            onClick={() => setCollapsed((c) => !c)}
+            aria-expanded={!collapsed}
+            aria-controls="dss-suggestions-content"
+            title={collapsed ? 'Expand suggestions' : 'Collapse suggestions'}
+            style={{ fontSize: '12px', fontWeight: 600 }}
+          >
+            <span>{collapsed ? 'Show' : 'Hide'}</span>
+            <i className={`bi ${collapsed ? 'bi-chevron-down' : 'bi-chevron-up'} fs-6 transition-transform`} />
+          </button>
+        )}
+      </div>
+
       {suggestions.length === 0 ? (
         <div className="bg-white rounded-3 shadow-sm p-3 text-muted small">No suggestions right now. The queue looks fine.</div>
+      ) : collapsed ? (
+        <div
+          onClick={() => setCollapsed(false)}
+          className="bg-white rounded-3 shadow-sm px-3 py-2.5 d-flex align-items-center justify-content-between border cursor-pointer transition-all hover-bg-light"
+          style={{ borderColor: '#e2e8f0', cursor: 'pointer' }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setCollapsed(false);
+            }
+          }}
+        >
+          <div className="d-flex align-items-center gap-2 small text-muted">
+            <i className="bi bi-lightbulb-fill text-warning fs-6" />
+            <span>
+              <strong>{suggestions.length} suggestion{suggestions.length > 1 ? 's' : ''}</strong> hidden. Click to expand.
+            </span>
+          </div>
+          <span className="btn btn-sm btn-link p-0 text-decoration-none fw-semibold" style={{ color: '#0D7D72', fontSize: '12px' }}>
+            <span>Show suggestions</span>
+            <i className="bi bi-chevron-down ms-1" />
+          </span>
+        </div>
       ) : (
-        <div className="d-flex flex-column gap-2">
+        <div id="dss-suggestions-content" className="d-flex flex-column gap-2">
           {suggestions.map((s) => (
             <div key={s.key} className={`bg-white rounded-3 shadow-sm p-3 border-start border-4 ${SEVERITY_CLASS[s.severity]}`}>
               <div className="d-flex gap-2 align-items-start">
