@@ -197,6 +197,88 @@ export async function uploadVisitPrescription(formData: FormData) {
     }
 }
 
+export async function getAppointmentDocuments(appointmentId: string) {
+    await requireRole(['compounder', 'doctor', 'admin']);
+    if (!appointmentId) return { success: false, error: 'Appointment ID required', documents: [] };
+
+    try {
+        const { data: records, error } = await supabaseAdmin
+            .from('medical_records')
+            .select('id, title, description, record_type, file_path, file_size, file_type, created_at, document_date')
+            .eq('appointment_id', appointmentId)
+            .eq('is_deleted', false)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            return { success: false, error: error.message, documents: [] };
+        }
+
+        let docs = records || [];
+
+        // Also check if appointment has a prescription_record_id not included in docs
+        const { data: appt } = await supabaseAdmin
+            .from('appointments')
+            .select('prescription_record_id')
+            .eq('id', appointmentId)
+            .single();
+
+        if (appt?.prescription_record_id && !docs.some(d => d.id === appt.prescription_record_id)) {
+            const { data: rxDoc } = await supabaseAdmin
+                .from('medical_records')
+                .select('id, title, description, record_type, file_path, file_size, file_type, created_at, document_date')
+                .eq('id', appt.prescription_record_id)
+                .eq('is_deleted', false)
+                .single();
+            if (rxDoc) {
+                docs = [rxDoc, ...docs];
+            }
+        }
+
+        return { success: true, documents: docs };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to fetch documents', documents: [] };
+    }
+}
+
+export async function getDocumentSignedUrl(filePath: string) {
+    await requireRole(['compounder', 'doctor', 'admin']);
+    if (!filePath) return { success: false, error: 'File path required' };
+
+    try {
+        const { data, error } = await supabaseAdmin.storage
+            .from('medical_documents')
+            .createSignedUrl(filePath, 3600);
+
+        if (error || !data?.signedUrl) {
+            return { success: false, error: error?.message || 'Failed to generate access URL' };
+        }
+
+        return { success: true, url: data.signedUrl };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to generate access URL' };
+    }
+}
+
+export async function getDocumentDownloadUrl(filePath: string, fileName?: string) {
+    await requireRole(['compounder', 'doctor', 'admin']);
+    if (!filePath) return { success: false, error: 'File path required' };
+
+    try {
+        const cleanName = fileName ? fileName.replace(/[^a-zA-Z0-9._-]/g, '_') : undefined;
+        const { data, error } = await supabaseAdmin.storage
+            .from('medical_documents')
+            .createSignedUrl(filePath, 3600, cleanName ? { download: cleanName } : { download: true });
+
+        if (error || !data?.signedUrl) {
+            return { success: false, error: error?.message || 'Failed to generate download URL' };
+        }
+
+        return { success: true, url: data.signedUrl };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to generate download URL' };
+    }
+}
+
 // ──── CHAMBER SESSION ACTIONS ────
 
 export async function startChamberSession(scheduledStart?: string, delayReason?: string, delayMinutes?: number) {

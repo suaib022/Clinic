@@ -19,7 +19,8 @@ import {
     recordChamberDelay,
     pauseChamberSession,
     resumeChamberSession,
-    endChamberSession
+    endChamberSession,
+    getDocumentSignedUrl
 } from '../actions';
 
 interface Appointment {
@@ -37,6 +38,17 @@ interface Appointment {
     scheduled_start: string | null;
     consult_started_at: string | null;
     consult_ended_at: string | null;
+    prescription_record_id?: string | null;
+    medical_records?: Array<{
+        id: string;
+        title: string;
+        description?: string | null;
+        file_path: string;
+        file_size?: number | null;
+        file_type?: string | null;
+        created_at?: string;
+        record_type?: string;
+    }> | null;
     created_by_user_id: string | null;
     status_changed_by: string | null;
     created_at: string;
@@ -86,6 +98,7 @@ export default function BookingsClient({
     const [priorityModal, setPriorityModal] = useState<string | null>(null);
     const [priorityReason, setPriorityReason] = useState('');
     const [detailAppt, setDetailAppt] = useState<Appointment | null>(null);
+    const [openingDocId, setOpeningDocId] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState(new Date());
 
     // Chamber delay modal state
@@ -255,6 +268,8 @@ export default function BookingsClient({
 
         const isCurrentlyInside = a.status === 'in_consultation';
         const isConsultationDone = a.status === 'prescription_pending' || a.status === 'completed' || Boolean(a.consult_ended_at && a.status !== 'in_consultation');
+        const apptDocs = (a.medical_records && a.medical_records.length > 0) ? a.medical_records : [];
+        const hasDocs = apptDocs.length > 0 || Boolean(a.prescription_record_id);
 
         return (
             <div
@@ -437,6 +452,47 @@ export default function BookingsClient({
                                         <i className="bi bi-check2-circle me-1"></i>Complete Visit
                                     </button>
                                 </>
+                            )}
+
+                            {/* View Document(s) for Consultation Done / Completed Visits */}
+                            {hasDocs && (
+                                <button
+                                    className="btn btn-sm btn-outline-success fw-semibold px-3 shadow-sm d-inline-flex align-items-center gap-1.5"
+                                    disabled={isPending || openingDocId === a.id}
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        if (apptDocs.length === 1 && apptDocs[0].file_path) {
+                                            setOpeningDocId(a.id);
+                                            try {
+                                                const res = await getDocumentSignedUrl(apptDocs[0].file_path);
+                                                if (res.success && res.url) {
+                                                    window.open(res.url, '_blank', 'noopener,noreferrer');
+                                                } else {
+                                                    setDetailAppt(a);
+                                                }
+                                            } catch {
+                                                setDetailAppt(a);
+                                            } finally {
+                                                setOpeningDocId(null);
+                                            }
+                                        } else {
+                                            setDetailAppt(a);
+                                        }
+                                    }}
+                                    title={apptDocs.length === 1 ? `View ${apptDocs[0].title || 'Prescription'}` : 'View uploaded documents for this visit'}
+                                >
+                                    {openingDocId === a.id ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm text-success" role="status" />
+                                            <span>Opening...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <i className="bi bi-file-earmark-check-fill text-success" />
+                                            <span>View Document{apptDocs.length > 1 ? `s (${apptDocs.length})` : ''}</span>
+                                        </>
+                                    )}
+                                </button>
                             )}
 
                             {/* Completed -> Upload Further Documents */}
@@ -1078,6 +1134,12 @@ export default function BookingsClient({
                 onClose={() => setDetailAppt(null)}
                 doctorName={doctorName}
                 specialityName={specialityName}
+                onOpenUpload={(appt) => {
+                    setDetailAppt(null);
+                    setPrescriptionModalAppt(appt);
+                    setPrescriptionFile(null);
+                    setPrescriptionNotes('');
+                }}
             />
         </div>
     );

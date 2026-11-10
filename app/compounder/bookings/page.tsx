@@ -38,13 +38,14 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         );
     }
 
-    // Explicit field list for compounder (C13) - including consultation timestamps for queue DSS
+    // Explicit field list for compounder (C13) - including consultation timestamps for queue DSS and uploaded documents
     const selectFields = `
         id, serial_no, appointment_date, start_time, end_time, status, visit_type,
         visit_source, is_priority, priority_reason, checked_in_at, scheduled_start,
-        consult_started_at, consult_ended_at,
+        consult_started_at, consult_ended_at, prescription_record_id,
         created_by_user_id, status_changed_by, created_at,
-        patient:patients!inner(full_name, uhid, mobile:mobile_no, gender)
+        patient:patients!inner(full_name, uhid, mobile:mobile_no, gender),
+        medical_records:medical_records!medical_records_appointment_id_fkey(id, title, description, file_path, file_size, file_type, created_at, record_type)
     `;
 
     // Fetch Doctor Info

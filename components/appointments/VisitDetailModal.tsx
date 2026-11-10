@@ -1,13 +1,38 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBadge, VisitSourceBadge, PriorityFlag } from './StatusBadge';
+import {
+  getAppointmentDocuments,
+  getDocumentSignedUrl,
+  getDocumentDownloadUrl,
+} from '@/app/compounder/actions';
+
+export interface DocumentItem {
+  id: string;
+  title: string;
+  description?: string | null;
+  file_path: string;
+  file_size?: number | null;
+  file_type?: string | null;
+  created_at?: string;
+  record_type?: string;
+  document_date?: string;
+}
 
 export interface VisitDetailModalProps {
   appt: any | null;
   onClose: () => void;
   doctorName?: string;
   specialityName?: string;
+  onOpenUpload?: (appt: any) => void;
+}
+
+function formatBytes(bytes?: number | null): string {
+  if (!bytes || isNaN(bytes)) return '';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function formatTimeDisplay(val: Date | number | string | null | undefined): string {
@@ -43,7 +68,12 @@ function formatDateDisplay(val: Date | number | string | null | undefined): stri
   }
 }
 
-export default function VisitDetailModal({ appt, onClose, doctorName, specialityName }: VisitDetailModalProps) {
+export default function VisitDetailModal({ appt, onClose, doctorName, specialityName, onOpenUpload }: VisitDetailModalProps) {
+  const [documents, setDocuments] = useState<DocumentItem[]>([]);
+  const [loadingDocs, setLoadingDocs] = useState<boolean>(false);
+  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -51,6 +81,85 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
+
+  useEffect(() => {
+    if (!appt?.id) {
+      setDocuments([]);
+      return;
+    }
+
+    if (Array.isArray(appt.medical_records) && appt.medical_records.length > 0) {
+      setDocuments(appt.medical_records);
+    }
+
+    let isMounted = true;
+    setLoadingDocs(true);
+    setActionError(null);
+
+    getAppointmentDocuments(appt.id)
+      .then((res) => {
+        if (!isMounted) return;
+        if (res.success && res.documents) {
+          setDocuments(res.documents);
+        } else if (res.error) {
+          console.warn('Could not load appointment documents:', res.error);
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching appointment documents:', err);
+      })
+      .finally(() => {
+        if (isMounted) setLoadingDocs(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [appt?.id, appt?.medical_records]);
+
+  const handleView = async (doc: DocumentItem) => {
+    setActionLoadingId(`view-${doc.id}`);
+    setActionError(null);
+    try {
+      const res = await getDocumentSignedUrl(doc.file_path);
+      if (res.success && res.url) {
+        window.open(res.url, '_blank', 'noopener,noreferrer');
+      } else {
+        setActionError(res.error || 'Failed to open document');
+      }
+    } catch (err: any) {
+      setActionError(err.message || 'Error opening document');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleDownload = async (doc: DocumentItem) => {
+    setActionLoadingId(`dl-${doc.id}`);
+    setActionError(null);
+    try {
+      const extMatch = doc.file_path.match(/\.([^.]+)$/);
+      let fileName = doc.title || 'document';
+      if (extMatch && !fileName.endsWith(extMatch[0])) {
+        fileName += extMatch[0];
+      }
+      const res = await getDocumentDownloadUrl(doc.file_path, fileName);
+      if (res.success && res.url) {
+        const link = document.createElement('a');
+        link.href = res.url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        setActionError(res.error || 'Failed to download document');
+      }
+    } catch (err: any) {
+      setActionError(err.message || 'Error downloading document');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
 
   if (!appt) return null;
 
@@ -324,6 +433,156 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
                 </div>
               </div>
             )}
+
+            {/* Action error banner if view/download fails */}
+            {actionError && (
+              <div className="alert alert-danger border-danger mt-3 mb-0 py-2 px-3 small d-flex align-items-center justify-content-between">
+                <span>{actionError}</span>
+                <button type="button" className="btn-close btn-sm" onClick={() => setActionError(null)} />
+              </div>
+            )}
+
+            {/* Uploaded Documents & Prescriptions Section */}
+            <div className="card border-0 shadow-sm rounded-3 mt-3 p-3 bg-white">
+              <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 pb-2 border-bottom">
+                <div className="d-flex align-items-center gap-2">
+                  <i className="bi bi-file-earmark-medical-fill fs-5" style={{ color: '#0D7D72' }} />
+                  <h6 className="fw-bold text-dark m-0" style={{ fontSize: '0.95rem' }}>
+                    Uploaded Documents & Prescriptions
+                  </h6>
+                  <span className="badge rounded-pill bg-light text-dark border ms-1" style={{ fontSize: '0.75rem' }}>
+                    {documents.length}
+                  </span>
+                </div>
+                {onOpenUpload && (
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-success fw-semibold d-inline-flex align-items-center gap-1 shadow-xs"
+                    style={{ fontSize: '0.8rem' }}
+                    onClick={() => onOpenUpload(appt)}
+                  >
+                    <i className="bi bi-cloud-arrow-up-fill" />
+                    {documents.length > 0 ? 'Upload Another Document' : 'Upload Document'}
+                  </button>
+                )}
+              </div>
+
+              {loadingDocs && documents.length === 0 ? (
+                <div className="text-center py-4 text-muted small">
+                  <span className="spinner-border spinner-border-sm me-2 text-success" role="status" />
+                  Loading attached documents...
+                </div>
+              ) : documents.length === 0 ? (
+                <div className="text-center py-4 px-3 rounded-3 bg-light border border-dashed">
+                  <i className="bi bi-file-earmark-text text-muted fs-2 d-block mb-1" />
+                  <p className="text-muted small mb-2">No prescriptions or documents uploaded for this visit yet.</p>
+                  {onOpenUpload && (status === 'prescription_pending' || status === 'completed') && (
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-success fw-bold px-3 shadow-xs"
+                      onClick={() => onOpenUpload(appt)}
+                    >
+                      <i className="bi bi-upload me-1.5" />
+                      Upload Prescription / Document Now
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="d-flex flex-column gap-2.5">
+                  {documents.map((doc) => {
+                    const isPdf = doc.file_type?.includes('pdf') || doc.file_path?.toLowerCase().endsWith('.pdf');
+                    const isImage = doc.file_type?.includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(doc.file_path);
+                    const isViewing = actionLoadingId === `view-${doc.id}`;
+                    const isDownloading = actionLoadingId === `dl-${doc.id}`;
+
+                    return (
+                      <div
+                        key={doc.id}
+                        className="d-flex align-items-center justify-content-between p-2.5 rounded-3 border bg-light bg-opacity-50 hover-shadow-sm transition-all flex-wrap gap-2"
+                      >
+                        <div className="d-flex align-items-center gap-3" style={{ minWidth: 220, flex: 1 }}>
+                          <div
+                            className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 shadow-xs"
+                            style={{
+                              width: 44,
+                              height: 44,
+                              backgroundColor: isPdf ? '#fee2e2' : isImage ? '#e0f2fe' : '#e2e8f0',
+                              color: isPdf ? '#dc2626' : isImage ? '#0284c7' : '#475569',
+                            }}
+                          >
+                            <i className={`bi fs-4 ${isPdf ? 'bi-file-earmark-pdf-fill' : isImage ? 'bi-file-earmark-image-fill' : 'bi-file-earmark-text-fill'}`} />
+                          </div>
+                          <div className="overflow-hidden">
+                            <div className="fw-semibold text-dark text-truncate" style={{ fontSize: '0.9rem', maxWidth: 440 }} title={doc.title}>
+                              {doc.title || 'Attached Document'}
+                            </div>
+                            <div className="text-muted d-flex align-items-center gap-2 flex-wrap mt-0.5" style={{ fontSize: '0.78rem' }}>
+                              <span className="badge bg-white text-secondary border px-1.5 py-0.5 text-uppercase" style={{ fontSize: '0.7rem' }}>
+                                {doc.record_type ? doc.record_type.replace('_', ' ') : 'Document'}
+                              </span>
+                              {doc.file_size ? <span>{formatBytes(doc.file_size)}</span> : null}
+                              {doc.created_at && (
+                                <>
+                                  <span>•</span>
+                                  <span>{formatDateDisplay(doc.created_at)}</span>
+                                </>
+                              )}
+                            </div>
+                            {doc.description && doc.description !== doc.title && (
+                              <div className="text-muted small text-truncate mt-1" style={{ fontSize: '0.78rem', maxWidth: 440 }}>
+                                <i className="bi bi-chat-left-text me-1 text-secondary" />
+                                {doc.description}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="d-flex align-items-center gap-2 ms-auto">
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-primary fw-semibold d-inline-flex align-items-center gap-1 shadow-xs"
+                            disabled={Boolean(actionLoadingId)}
+                            onClick={() => handleView(doc)}
+                            title="Open and view document in a new browser tab"
+                          >
+                            {isViewing ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm" role="status" />
+                                <span>Opening...</span>
+                              </>
+                            ) : (
+                              <>
+                                <i className="bi bi-eye-fill text-primary" />
+                                <span>View</span>
+                              </>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-1 shadow-xs"
+                            disabled={Boolean(actionLoadingId)}
+                            onClick={() => handleDownload(doc)}
+                            title="Download document to device"
+                          >
+                            {isDownloading ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm" role="status" />
+                                <span>Downloading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <i className="bi bi-download" />
+                                <span>Download</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Footer */}
@@ -331,14 +590,26 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
             <span className="small text-muted">
               Appt ID: <code className="text-muted" style={{ fontSize: '0.75rem' }}>{appt.id?.slice(0, 8)}...</code>
             </span>
-            <button
-              type="button"
-              className="btn px-4 fw-semibold text-white"
-              style={{ backgroundColor: '#0D7D72' }}
-              onClick={onClose}
-            >
-              Close
-            </button>
+            <div className="d-flex align-items-center gap-2">
+              {onOpenUpload && (status === 'prescription_pending' || status === 'completed') && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-success fw-semibold d-inline-flex align-items-center gap-1"
+                  onClick={() => onOpenUpload(appt)}
+                >
+                  <i className="bi bi-upload" />
+                  {documents.length > 0 ? 'Upload More' : 'Upload Document'}
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn px-4 fw-semibold text-white"
+                style={{ backgroundColor: '#0D7D72' }}
+                onClick={onClose}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </div>
