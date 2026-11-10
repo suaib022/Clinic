@@ -652,39 +652,106 @@ export default function BookingsClient({
                         </div>
 
                         {/* DSS Live Serial Indicators Bar */}
-                        <div className="row g-2 mt-3 pt-3 border-top">
+                        <div className="row g-2 mt-3 pt-3 border-top align-items-stretch">
                             <div className="col-6 col-md">
-                                <div className="p-2 rounded bg-light text-center border">
-                                    <small className="text-muted d-block">Serving Inside</small>
-                                    <strong className="fs-5 text-primary">
-                                        {currentInConsult ? `#${currentInConsult.serial_no} (${(currentInConsult.patient as any)?.full_name})` : 'Room Empty'}
-                                    </strong>
+                                <div
+                                    className="card h-100 border-0 shadow-xs rounded-3 p-2.5 text-center d-flex flex-column justify-content-center"
+                                    style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}
+                                >
+                                    <div className="d-flex align-items-center justify-content-center gap-1 text-muted small fw-semibold text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
+                                        <i className="bi bi-door-open-fill text-primary" />
+                                        <span>Serving Inside</span>
+                                    </div>
+                                    <div className="mt-1">
+                                        {currentInConsult ? (
+                                            <>
+                                                <div className="fs-5 fw-bold text-primary lh-1">#{currentInConsult.serial_no}</div>
+                                                <div className="small text-muted text-truncate mt-1" style={{ fontSize: '12px' }} title={(currentInConsult.patient as any)?.full_name}>
+                                                    {(currentInConsult.patient as any)?.full_name}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="fs-5 fw-bold text-muted lh-1">Empty</div>
+                                                <div className="small text-muted mt-1" style={{ fontSize: '12px' }}>Chamber ready</div>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="col-6 col-md">
-                                <div className="p-2 rounded bg-light text-center border">
-                                    <small className="text-muted d-block">Present & Waiting</small>
-                                    <strong className="fs-5 text-info">{waitingPresentCount} Patients</strong>
+                                <div
+                                    className="card h-100 border-0 shadow-xs rounded-3 p-2.5 text-center d-flex flex-column justify-content-center"
+                                    style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}
+                                >
+                                    <div className="d-flex align-items-center justify-content-center gap-1 text-muted small fw-semibold text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
+                                        <i className="bi bi-people-fill text-info" />
+                                        <span>Present & Waiting</span>
+                                    </div>
+                                    <div className="mt-1">
+                                        <div className="fs-5 fw-bold text-dark lh-1">{waitingPresentCount}</div>
+                                        <div className="small text-muted mt-1" style={{ fontSize: '12px' }}>
+                                            {waitingPresentCount === 1 ? 'Patient in queue' : 'Patients in queue'}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="col-6 col-md">
-                                <div className={`p-2 rounded text-center border ${prescriptionPendingCount > 0 ? 'bg-warning-subtle border-warning' : 'bg-light'}`}>
-                                    <small className="text-muted d-block">Rx Pending</small>
-                                    <strong className={`fs-5 ${prescriptionPendingCount > 0 ? 'text-warning-emphasis' : 'text-secondary'}`}>
-                                        {prescriptionPendingCount} Patients
-                                    </strong>
+                                <div
+                                    className="card h-100 border-0 shadow-xs rounded-3 p-2.5 text-center d-flex flex-column justify-content-center"
+                                    style={{
+                                        backgroundColor: prescriptionPendingCount > 0 ? '#fefce8' : '#f8fafc',
+                                        border: prescriptionPendingCount > 0 ? '1px solid #fde047' : '1px solid #e2e8f0'
+                                    }}
+                                >
+                                    <div className="d-flex align-items-center justify-content-center gap-1 text-muted small fw-semibold text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
+                                        <i className="bi bi-file-earmark-medical-fill text-warning" />
+                                        <span>Rx Pending</span>
+                                    </div>
+                                    <div className="mt-1">
+                                        <div className={`fs-5 fw-bold lh-1 ${prescriptionPendingCount > 0 ? 'text-warning-emphasis' : 'text-dark'}`}>
+                                            {prescriptionPendingCount}
+                                        </div>
+                                        <div className="small text-muted mt-1" style={{ fontSize: '12px' }}>
+                                            {prescriptionPendingCount === 1 ? 'Needs prescription' : 'Need prescription'}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="col-6 col-md">
-                                <div className="p-2 rounded bg-light text-center border">
-                                    <small className="text-muted d-block">Visits Completed</small>
-                                    <strong className="fs-5 text-success">{completedCount} Patients</strong>
+                                <div
+                                    className="card h-100 border-0 shadow-xs rounded-3 p-2.5 text-center d-flex flex-column justify-content-center"
+                                    style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}
+                                >
+                                    <div className="d-flex align-items-center justify-content-center gap-1 text-muted small fw-semibold text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
+                                        <i className="bi bi-check-circle-fill text-success" />
+                                        <span>Visits Completed</span>
+                                    </div>
+                                    <div className="mt-1">
+                                        <div className="fs-5 fw-bold text-success lh-1">{completedCount}</div>
+                                        <div className="small text-muted mt-1" style={{ fontSize: '12px' }}>
+                                            {completedCount === 1 ? 'Visit completed' : 'Visits completed'}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="col-6 col-md">
-                                <div className="p-2 rounded bg-light text-center border">
-                                    <small className="text-muted d-block">Benchmark</small>
-                                    <strong className="fs-5 text-dark">~{benchmarkMinutes || 10}m</strong>
+                                <div
+                                    className="card h-100 border-0 shadow-xs rounded-3 p-2.5 text-center d-flex flex-column justify-content-center"
+                                    style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}
+                                >
+                                    <div className="d-flex align-items-center justify-content-center gap-1 text-muted small fw-semibold text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
+                                        <i className="bi bi-stopwatch-fill text-secondary" />
+                                        <span>Benchmark</span>
+                                    </div>
+                                    <div className="mt-1">
+                                        <div className="fs-5 fw-bold text-dark lh-1">~{benchmarkMinutes || 10}m</div>
+                                        <div className="small text-muted mt-1" style={{ fontSize: '12px' }}>Avg visit target</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
