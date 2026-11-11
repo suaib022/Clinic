@@ -165,7 +165,7 @@ export default function TriageReviewClient({ initialIntakes }: TriageReviewClien
             {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
                 <div>
-                    <h2 className="fw-bold mb-1" style={{ color: '#0D7D72' }}>
+                    <h2 className="fw-bold mb-1" style={{ color: '#1B2978' }}>
                         <Bot className="me-2 d-inline" size={28} />
                         Aura Clinical Triage & Intake Portal
                     </h2>
@@ -184,7 +184,7 @@ export default function TriageReviewClient({ initialIntakes }: TriageReviewClien
                                 <span className="text-muted small text-uppercase fw-semibold">Total Intakes</span>
                                 <h3 className="fw-bold mt-1 mb-0 text-dark">{metrics.total}</h3>
                             </div>
-                            <div className="p-3 rounded-circle bg-teal-50 text-teal-800" style={{ backgroundColor: '#e6f5f3', color: '#0D7D72' }}>
+                            <div className="p-3 rounded-circle bg-teal-50 text-teal-800" style={{ backgroundColor: '#e6f5f3', color: '#1B2978' }}>
                                 <Activity size={24} />
                             </div>
                         </div>
@@ -328,7 +328,7 @@ export default function TriageReviewClient({ initialIntakes }: TriageReviewClien
                                         </td>
                                         <td>
                                             {intake.has_file_attachment ? (
-                                                <span className="badge bg-teal-50 text-teal-800 border border-teal-200 d-inline-flex align-items-center gap-1" style={{ color: '#0D7D72' }}>
+                                                <span className="badge bg-teal-50 text-teal-800 border border-teal-200 d-inline-flex align-items-center gap-1" style={{ color: '#1B2978' }}>
                                                     <Paperclip size={12} />
                                                     <span>Reports Attached</span>
                                                 </span>
@@ -352,7 +352,7 @@ export default function TriageReviewClient({ initialIntakes }: TriageReviewClien
                                                     handleOpenDrawer(intake);
                                                 }}
                                                 className="btn btn-sm btn-outline-primary py-1 px-2.5 d-inline-flex align-items-center gap-1 font-semibold"
-                                                style={{ borderColor: '#0D7D72', color: '#0D7D72' }}
+                                                style={{ borderColor: '#1B2978', color: '#1B2978' }}
                                             >
                                                 <span>Review</span>
                                                 <ChevronRight size={14} />
@@ -376,7 +376,7 @@ export default function TriageReviewClient({ initialIntakes }: TriageReviewClien
                         {/* Drawer Header */}
                         <div
                             className="p-4 text-white flex items-center justify-between"
-                            style={{ backgroundColor: '#0D7D72' }}
+                            style={{ backgroundColor: '#1B2978' }}
                         >
                             <div>
                                 <div className="flex items-center gap-2">
@@ -471,7 +471,7 @@ export default function TriageReviewClient({ initialIntakes }: TriageReviewClien
                                         type="button"
                                         onClick={() => handleUpdateStatus(selectedIntake.status)}
                                         className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1.5"
-                                        style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}
+                                        style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}
                                     >
                                         <Save size={14} />
                                         <span>Save Notes</span>

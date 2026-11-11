@@ -85,18 +85,18 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
             <div
                 style={{
                     backgroundColor: '#ffffff',
-                    border: '2px solid #000000',
+                    border: '2px solid #0E1954',
                     borderRadius: '12px',
-                    boxShadow: '2px 2px 0px #000000',
+                    boxShadow: '2px 2px 0px #0E1954',
                     padding: '14px',
                     margin: '8px 0',
-                    color: '#000000'
+                    color: '#0E1954'
                 }}
             >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', marginBottom: '10px', borderBottom: '1.5px solid #000000' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', marginBottom: '10px', borderBottom: '1.5px solid #0E1954' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ backgroundColor: '#fed7aa', padding: '4px', borderRadius: '6px', border: '1px solid #000000', display: 'flex' }}>
-                            <Calendar size={16} color="#000000" />
+                        <span style={{ backgroundColor: '#F7C6EE', padding: '4px', borderRadius: '6px', border: '1px solid #0E1954', display: 'flex' }}>
+                            <Calendar size={16} color="#0E1954" />
                         </span>
                         <span style={{ fontWeight: 700, fontSize: '13.5px' }}>Appointment Confirmed</span>
                     </div>
@@ -105,7 +105,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         onClick={() => handleCopy(data.bookingId)}
                         style={{
                             background: '#ffffff',
-                            border: '1.5px solid #000000',
+                            border: '1.5px solid #0E1954',
                             borderRadius: '6px',
                             padding: '3px 8px',
                             cursor: 'pointer',
@@ -114,7 +114,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             gap: '4px',
                             fontSize: '11px',
                             fontWeight: 700,
-                            boxShadow: '1px 1px 0px #000000'
+                            boxShadow: '1px 1px 0px #0E1954'
                         }}
                         title="Copy Reference"
                     >
@@ -125,20 +125,20 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
 
                 <div style={{ marginBottom: '10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                        <Stethoscope size={15} color="#000000" />
+                        <Stethoscope size={15} color="#0E1954" />
                         <span style={{ fontWeight: 700, fontSize: '13px' }}>{data.doctorName}</span>
-                        <span style={{ fontSize: '10.5px', fontWeight: 600, backgroundColor: '#f1f5f9', border: '1px solid #000000', padding: '1px 6px', borderRadius: '4px' }}>
+                        <span style={{ fontSize: '10.5px', fontWeight: 600, backgroundColor: '#EDF4FA', border: '1px solid #0E1954', padding: '1px 6px', borderRadius: '4px' }}>
                             {data.specialty}
                         </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#475569' }}>
-                        {data.isTelehealth ? <Video size={14} color="#000000" /> : <MapPin size={14} color="#000000" />}
+                        {data.isTelehealth ? <Video size={14} color="#0E1954" /> : <MapPin size={14} color="#0E1954" />}
                         <span>{data.roomOrLink}</span>
                     </div>
                 </div>
 
                 {/* Milestone Checklist */}
-                <div style={{ backgroundColor: '#f8fafc', padding: '8px 10px', borderRadius: '8px', border: '1px solid #000000', marginBottom: '10px' }}>
+                <div style={{ backgroundColor: '#F5F9FC', padding: '8px 10px', borderRadius: '8px', border: '1px solid #0E1954', marginBottom: '10px' }}>
                     <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: '#64748b', display: 'block', marginBottom: '4px' }}>
                         Verification Status
                     </span>
@@ -164,10 +164,10 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         type="button"
                         onClick={() => handleDownloadICS(data)}
                         style={{
-                            backgroundColor: '#f59e0b',
-                            border: '1.5px solid #000000',
+                            backgroundColor: '#F28BDD',
+                            border: '1.5px solid #0E1954',
                             borderRadius: '6px',
-                            color: '#000000',
+                            color: '#0E1954',
                             fontWeight: 700,
                             fontSize: '12px',
                             padding: '6px 12px',
@@ -177,7 +177,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             gap: '6px',
                             flexGrow: 1,
                             cursor: 'pointer',
-                            boxShadow: '1.5px 1.5px 0px #000000'
+                            boxShadow: '1.5px 1.5px 0px #0E1954'
                         }}
                     >
                         <Calendar size={13} />
@@ -188,9 +188,9 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         onClick={() => handleCopy(data.bookingId)}
                         style={{
                             backgroundColor: '#ffffff',
-                            border: '1.5px solid #000000',
+                            border: '1.5px solid #0E1954',
                             borderRadius: '6px',
-                            color: '#000000',
+                            color: '#0E1954',
                             fontWeight: 700,
                             fontSize: '12px',
                             padding: '6px 12px',
@@ -198,7 +198,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             alignItems: 'center',
                             gap: '5px',
                             cursor: 'pointer',
-                            boxShadow: '1.5px 1.5px 0px #000000'
+                            boxShadow: '1.5px 1.5px 0px #0E1954'
                         }}
                     >
                         {copied ? <Check size={13} color="#16a34a" /> : <Copy size={13} />}
@@ -219,20 +219,20 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
             <div
                 style={{
                     backgroundColor: isUrgent ? '#fef2f2' : '#ffffff',
-                    border: '2px solid #000000',
+                    border: '2px solid #0E1954',
                     borderRadius: '12px',
-                    boxShadow: '2px 2px 0px #000000',
+                    boxShadow: '2px 2px 0px #0E1954',
                     padding: '14px',
                     margin: '8px 0',
-                    color: '#000000'
+                    color: '#0E1954'
                 }}
             >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', marginBottom: '10px', borderBottom: '1.5px solid #000000' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', marginBottom: '10px', borderBottom: '1.5px solid #0E1954' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {isUrgent ? (
                             <ShieldAlert size={18} color="#dc2626" />
                         ) : (
-                            <AlertTriangle size={18} color={isModerate ? '#d97706' : '#16a34a'} />
+                            <AlertTriangle size={18} color={isModerate ? '#E46BC9' : '#16a34a'} />
                         )}
                         <span style={{ fontWeight: 700, fontSize: '13.5px' }}>Clinical Triage Intake</span>
                     </div>
@@ -242,10 +242,10 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             fontWeight: 700,
                             padding: '2px 8px',
                             borderRadius: '6px',
-                            border: '1.5px solid #000000',
-                            backgroundColor: isUrgent ? '#ef4444' : isModerate ? '#f59e0b' : '#22c55e',
-                            color: isUrgent ? '#ffffff' : '#000000',
-                            boxShadow: '1px 1px 0px #000000'
+                            border: '1.5px solid #0E1954',
+                            backgroundColor: isUrgent ? '#ef4444' : isModerate ? '#F28BDD' : '#22c55e',
+                            color: isUrgent ? '#ffffff' : '#0E1954',
+                            boxShadow: '1px 1px 0px #0E1954'
                         }}
                     >
                         {data.urgency}
@@ -255,13 +255,13 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                 <div style={{ marginBottom: '10px', fontSize: '12px' }}>
                     <div style={{ color: '#475569', marginBottom: '4px' }}>
                         Reference ID:
-                        <span style={{ fontWeight: 700, color: '#000000', marginLeft: '6px', fontFamily: 'monospace' }}>{data.referenceId}</span>
+                        <span style={{ fontWeight: 700, color: '#0E1954', marginLeft: '6px', fontFamily: 'monospace' }}>{data.referenceId}</span>
                     </div>
                     <div style={{ color: '#475569', marginBottom: '6px' }}>
-                        Assigned Protocol: <strong style={{ color: '#000000' }}>{data.protocol}</strong>
+                        Assigned Protocol: <strong style={{ color: '#0E1954' }}>{data.protocol}</strong>
                     </div>
                     {data.summary && (
-                        <p style={{ margin: 0, backgroundColor: '#f8fafc', padding: '8px 10px', borderRadius: '6px', border: '1px solid #000000', color: '#334155', fontSize: '12px', lineHeight: 1.4 }}>
+                        <p style={{ margin: 0, backgroundColor: '#F5F9FC', padding: '8px 10px', borderRadius: '6px', border: '1px solid #0E1954', color: '#334155', fontSize: '12px', lineHeight: 1.4 }}>
                             {data.summary}
                         </p>
                     )}
@@ -280,9 +280,9 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         onClick={() => handleCopy(data.referenceId)}
                         style={{
                             backgroundColor: '#ffffff',
-                            border: '1.5px solid #000000',
+                            border: '1.5px solid #0E1954',
                             borderRadius: '6px',
-                            color: '#000000',
+                            color: '#0E1954',
                             fontWeight: 700,
                             fontSize: '11.5px',
                             padding: '4px 10px',
@@ -290,7 +290,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '4px',
-                            boxShadow: '1.5px 1.5px 0px #000000'
+                            boxShadow: '1.5px 1.5px 0px #0E1954'
                         }}
                     >
                         {copied ? <Check size={12} color="#16a34a" /> : <Copy size={12} />}
@@ -308,20 +308,20 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
             <div
                 style={{
                     backgroundColor: '#ffffff',
-                    border: '2px solid #000000',
+                    border: '2px solid #0E1954',
                     borderRadius: '12px',
-                    boxShadow: '2px 2px 0px #000000',
+                    boxShadow: '2px 2px 0px #0E1954',
                     padding: '14px',
                     margin: '8px 0',
-                    color: '#000000'
+                    color: '#0E1954'
                 }}
             >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', marginBottom: '10px', borderBottom: '1.5px solid #000000' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px', marginBottom: '10px', borderBottom: '1.5px solid #0E1954' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Pill size={16} color="#000000" />
+                        <Pill size={16} color="#0E1954" />
                         <span style={{ fontWeight: 700, fontSize: '13.5px' }}>Prescription Refill</span>
                     </div>
-                    <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '11px', backgroundColor: '#f1f5f9', border: '1px solid #000000', padding: '2px 6px', borderRadius: '4px' }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '11px', backgroundColor: '#EDF4FA', border: '1px solid #0E1954', padding: '2px 6px', borderRadius: '4px' }}>
                         {data.refillId}
                     </span>
                 </div>
@@ -336,7 +336,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         <div><span style={{ color: '#64748b' }}>Ready:</span> <strong style={{ color: '#16a34a' }}>{data.estimatedReady}</strong></div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#475569', marginTop: '4px' }}>
-                        <Building2 size={13} color="#000000" />
+                        <Building2 size={13} color="#0E1954" />
                         <span>Pharmacy: {data.pharmacy}</span>
                     </div>
                 </div>
@@ -347,9 +347,9 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         onClick={() => handleCopy(data.refillId)}
                         style={{
                             backgroundColor: '#ffffff',
-                            border: '1.5px solid #000000',
+                            border: '1.5px solid #0E1954',
                             borderRadius: '6px',
-                            color: '#000000',
+                            color: '#0E1954',
                             fontWeight: 700,
                             fontSize: '11.5px',
                             padding: '4px 10px',
@@ -357,7 +357,7 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '4px',
-                            boxShadow: '1.5px 1.5px 0px #000000'
+                            boxShadow: '1.5px 1.5px 0px #0E1954'
                         }}
                     >
                         {copied ? <Check size={12} color="#16a34a" /> : <Copy size={12} />}
@@ -375,12 +375,12 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
             <div
                 style={{
                     backgroundColor: '#ffffff',
-                    border: '2px solid #000000',
+                    border: '2px solid #0E1954',
                     borderRadius: '12px',
-                    boxShadow: '2px 2px 0px #000000',
+                    boxShadow: '2px 2px 0px #0E1954',
                     padding: '12px 14px',
                     margin: '8px 0',
-                    color: '#000000'
+                    color: '#0E1954'
                 }}
             >
                 <p style={{ margin: '0 0 8px 0', fontSize: '12.5px', fontWeight: 600 }}>
@@ -394,18 +394,18 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                             onActionSelect?.(data.primaryAction.actionKey);
                         }}
                         style={{
-                            backgroundColor: selectedAction === data.primaryAction.actionKey ? '#f59e0b' : '#ffffff',
-                            border: '2px solid #000000',
+                            backgroundColor: selectedAction === data.primaryAction.actionKey ? '#F28BDD' : '#ffffff',
+                            border: '2px solid #0E1954',
                             borderRadius: '6px',
                             padding: '6px 12px',
                             fontSize: '12px',
                             fontWeight: 700,
-                            color: '#000000',
+                            color: '#0E1954',
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '6px',
-                            boxShadow: '1.5px 1.5px 0px #000000'
+                            boxShadow: '1.5px 1.5px 0px #0E1954'
                         }}
                     >
                         <FileText size={14} />
@@ -420,17 +420,17 @@ export default function ConfirmationCard({ card, onActionSelect }: ConfirmationC
                         }}
                         style={{
                             backgroundColor: '#ffffff',
-                            border: '2px solid #000000',
+                            border: '2px solid #0E1954',
                             borderRadius: '6px',
                             padding: '6px 12px',
                             fontSize: '12px',
                             fontWeight: 700,
-                            color: '#000000',
+                            color: '#0E1954',
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '6px',
-                            boxShadow: '1.5px 1.5px 0px #000000'
+                            boxShadow: '1.5px 1.5px 0px #0E1954'
                         }}
                     >
                         <MessageSquare size={14} />
