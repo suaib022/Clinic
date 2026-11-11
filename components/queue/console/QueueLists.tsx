@@ -13,13 +13,72 @@ const SEVERITY_ICON = { urgent: 'bi-exclamation-octagon-fill text-danger', warni
 export function SuggestionsPanel({ suggestions, busy, onConfirm, onDismiss }: {
   suggestions: Suggestion[]; busy: boolean; onConfirm: (s: Suggestion) => void; onDismiss: (s: Suggestion) => void;
 }) {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <div role="region" aria-label="Suggestions" className="mb-3" aria-live="polite">
-      <h6 className="fw-bold text-muted text-uppercase small mb-2"><i className="bi bi-stars me-1" />Suggestions</h6>
+      <div className="d-flex align-items-center justify-content-between mb-2">
+        <div className="d-flex align-items-center gap-2">
+          <h6 className="fw-bold text-muted text-uppercase small m-0">
+            <i className="bi bi-stars me-1 text-warning" />Suggestions
+          </h6>
+          {suggestions.length > 0 && (
+            <span
+              className="badge rounded-pill"
+              style={{
+                fontSize: '11px',
+                backgroundColor: '#fef3c7',
+                color: '#b45309',
+                padding: '2px 8px',
+                fontWeight: 600,
+              }}
+            >
+              {suggestions.length}
+            </span>
+          )}
+        </div>
+
+        {suggestions.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-sm d-inline-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill border bg-white text-secondary shadow-xs hover-bg-light transition-all"
+            onClick={() => setCollapsed((c) => !c)}
+            aria-expanded={!collapsed}
+            aria-controls="dss-suggestions-content"
+            title={collapsed ? 'Expand suggestions' : 'Collapse suggestions'}
+            style={{ fontSize: '12px', fontWeight: 600 }}
+          >
+            <span>{collapsed ? 'Show' : 'Hide'}</span>
+            <i className={`bi ${collapsed ? 'bi-chevron-down' : 'bi-chevron-up'} fs-6 transition-transform`} />
+          </button>
+        )}
+      </div>
+
       {suggestions.length === 0 ? (
         <div className="bg-white rounded-3 shadow-sm p-3 text-muted small">No suggestions right now. The queue looks fine.</div>
+      ) : collapsed ? (
+        <div
+          onClick={() => setCollapsed(false)}
+          className="bg-white rounded-3 shadow-sm px-3 py-2.5 d-flex align-items-center justify-content-between border cursor-pointer transition-all hover-bg-light"
+          style={{ borderColor: '#e2e8f0', cursor: 'pointer' }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setCollapsed(false);
+            }
+          }}
+        >
+          <div className="d-flex align-items-center gap-2 small text-muted">
+            <i className="bi bi-lightbulb-fill text-warning fs-6" />
+            <span>
+              <strong>{suggestions.length} suggestion{suggestions.length > 1 ? 's' : ''}</strong> hidden. Click to expand.
+            </span>
+          </div>
+        </div>
       ) : (
-        <div className="d-flex flex-column gap-2">
+        <div id="dss-suggestions-content" className="d-flex flex-column gap-2">
           {suggestions.map((s) => (
             <div key={s.key} className={`bg-white rounded-3 shadow-sm p-3 border-start border-4 ${SEVERITY_CLASS[s.severity]}`}>
               <div className="d-flex gap-2 align-items-start">
@@ -48,7 +107,10 @@ function stageBadge(e: PatientEstimate | undefined, a: QueueAppointment) {
   return e?.label ? <span className={`badge ${LABEL_CLASS[e.label]}`}>{LABEL_TEXT[e.label]}</span> : null;
 }
 
-export function NextUp({ snap, busy, canCall, onCall }: { snap: StaffSnapshot; busy: boolean; canCall: boolean; onCall: () => void }) {
+export function NextUp({ snap, busy, canCall, onCall, onSelectAppt }: {
+  snap: StaffSnapshot; busy: boolean; canCall: boolean; onCall: () => void;
+  onSelectAppt?: (a: QueueAppointment) => void;
+}) {
   const byId = new Map(snap.appointments.map((a) => [a.id, a]));
   const waiting = snap.result.line.map((id) => byId.get(id)!).filter(Boolean);
   const notArrived = snap.appointments.filter((a) => a.status === 'scheduled' && !a.skippedAt).sort((a, b) => a.bookedAt - b.bookedAt);
@@ -65,7 +127,15 @@ export function NextUp({ snap, busy, canCall, onCall }: { snap: StaffSnapshot; b
             const arrived = a.status === 'checked_in';
             return (
               <div key={a.id} className="col-12 col-md-4">
-                <div className="bg-white rounded-3 shadow-sm p-3 h-100 d-flex justify-content-between align-items-center gap-2">
+                <div
+                  className="bg-white rounded-3 shadow-sm p-3 h-100 d-flex justify-content-between align-items-center gap-2"
+                  style={{ cursor: 'pointer' }}
+                  onClick={(ev) => {
+                    if ((ev.target as HTMLElement).closest('button, a, input, label')) return;
+                    onSelectAppt?.(a);
+                  }}
+                  title="Click to view visit details"
+                >
                   <div style={{ minWidth: 0 }}>
                     <div className="fw-bold">#{a.serialNo} <span className="fw-normal text-truncate">{a.patientName}</span></div>
                     <div className="small">
@@ -88,8 +158,9 @@ export function NextUp({ snap, busy, canCall, onCall }: { snap: StaffSnapshot; b
   );
 }
 
-export function WaitingList({ snap, busy, onRow, readOnly = false }: {
+export function WaitingList({ snap, busy, onRow, onSelectAppt, readOnly = false }: {
   snap: StaffSnapshot; busy: boolean; readOnly?: boolean; onRow: (a: QueueAppointment, action: RowAction) => void;
+  onSelectAppt?: (a: QueueAppointment) => void;
 }) {
   const [q, setQ] = useState('');
   const [showDone, setShowDone] = useState(false);
@@ -120,7 +191,16 @@ export function WaitingList({ snap, busy, onRow, readOnly = false }: {
           const e = snap.result.estimates[a.id];
           const waiting = a.status === 'scheduled' || a.status === 'checked_in';
           return (
-            <li key={a.id} className="list-group-item py-3">
+            <li
+              key={a.id}
+              className="list-group-item py-3 transition-all"
+              style={{ cursor: 'pointer' }}
+              onClick={(ev) => {
+                if ((ev.target as HTMLElement).closest('button, a, input, label')) return;
+                onSelectAppt?.(a);
+              }}
+              title="Click to view visit details"
+            >
               <div className="d-flex flex-wrap gap-2 align-items-center">
                 <div className="fw-bold fs-5" style={{ width: 56 }}>#{a.serialNo}</div>
                 <div className="flex-grow-1" style={{ minWidth: 160 }}>

@@ -1,6 +1,6 @@
 # Decision Support System (DSS) - Test Patients Credentials
 
-All patients are scheduled for appointments today (**November 9, 2026**) with **Professor (Dr.) Md. Shahidullah (Sabuj)** (`doc-532373@staff.clinic.local` / `DOC-532373`).
+All patients are scheduled for appointments today (**November 10, 2026**) with **Professor (Dr.) Md. Shahidullah (Sabuj)** (`doc-532373@staff.clinic.local` / `DOC-532373`).
 
 - **Login URL:** `/patient/login`
 - **Universal PIN / Password:** `123456`

@@ -10,6 +10,7 @@ import ConfirmDialog, { type ConfirmRequest } from './console/ConfirmDialog';
 import { SessionBanner, DaySummary, NowServing } from './console/Panels';
 import { SuggestionsPanel, NextUp, WaitingList, type RowAction } from './console/QueueLists';
 import WalkInPanel from './console/WalkInPanel';
+import VisitDetailModal from '@/components/appointments/VisitDetailModal';
 
 type Draft<T> = T extends unknown ? Omit<T, 'requestKey'> : never;
 type ActionDraft = Draft<QueueActionInput>;
@@ -30,6 +31,7 @@ export default function QueueConsole({ mode, doctors, doctorId, initial }: Queue
   const busyRef = useRef(false); // blocks a second tap before React re-renders
   const [toast, setToast] = useState<{ kind: 'ok' | 'warn' | 'err'; text: string } | null>(null);
   const [confirmReq, setConfirmReq] = useState<(ConfirmRequest & { id: number }) | null>(null);
+  const [detailAppt, setDetailAppt] = useState<QueueAppointment | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const say = useCallback((kind: 'ok' | 'warn' | 'err', text: string) => {
@@ -173,17 +175,23 @@ export default function QueueConsole({ mode, doctors, doctorId, initial }: Queue
       <NowServing snap={snap} receivedAt={lastUpdated} busy={busy} canCall={canCall} onCallNext={() => void callNext()}
         onDone={() => current && void run({ kind: 'end_consult', appointmentId: current })} />
       <UndoBar snap={snap} receivedAt={lastUpdated} busy={busy} onUndo={() => void run({ kind: 'undo', doctorId })} />
+      <NextUp snap={snap} busy={busy} canCall={canCall} onCall={() => void callNext()} onSelectAppt={setDetailAppt} />
       {mode === 'compounder' && (
         <SuggestionsPanel suggestions={snap.suggestions} busy={busy} onConfirm={(s) => void onSuggestion(s)}
           onDismiss={(s) => void run({ kind: 'dismiss', doctorId, suggestionKey: s.key })} />
       )}
-      <NextUp snap={snap} busy={busy} canCall={canCall} onCall={() => void callNext()} />
       {mode === 'compounder' && (
         <div id="dss-walkin">
           <WalkInPanel snap={snap} busy={busy} onAdd={async (p) => !!(await run({ kind: 'walk_in', doctorId, ...p }))?.ok} />
         </div>
       )}
-      <WaitingList snap={snap} busy={busy} readOnly={mode === 'doctor'} onRow={onRow} />
+      <WaitingList snap={snap} busy={busy} readOnly={mode === 'doctor'} onRow={onRow} onSelectAppt={setDetailAppt} />
+
+      <VisitDetailModal
+        appt={detailAppt ? { ...detailAppt, expectedStartAt: snap.result.estimates[detailAppt.id]?.expectedStartAt } : null}
+        onClose={() => setDetailAppt(null)}
+        doctorName={doctors.find((d) => d.id === doctorId)?.full_name || undefined}
+      />
 
       <div aria-live="assertive" className="position-fixed start-50 translate-middle-x px-3" style={{ bottom: 96, zIndex: 100000, width: 'min(520px, 100%)' }}>
         {toast && (
