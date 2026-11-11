@@ -30,7 +30,7 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
         <div 
           className="doctor-banner d-flex align-items-center" 
           style={{ 
-            backgroundColor: "#155a65", 
+            backgroundColor: "#0E1954", 
             color: "#fff", 
             paddingTop: "140px", 
             paddingBottom: "60px" 
@@ -48,7 +48,7 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
         {/* Doctor Details Section */}
         <section className="section py-5">
           <div className="container">
-            <div className="bg-white p-4 p-md-5 shadow" style={{ borderTop: "3px solid #155a65", borderRadius: "4px" }}>
+            <div className="bg-white p-4 p-md-5 shadow" style={{ borderTop: "3px solid #0E1954", borderRadius: "4px" }}>
               <div className="row align-items-start">
                 {/* Image Column */}
                 <div className="col-lg-4 mb-5 mb-lg-0">
@@ -90,7 +90,7 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
                   
                   <h6 className="text-muted mb-4 fs-6" style={{ lineHeight: "1.6" }}>{doctor.designation}</h6>
                   
-                  <h4 className="mt-5 mb-4" style={{ color: "#155a65", fontWeight: 500, fontSize: "1.5rem" }}>Speciality</h4>
+                  <h4 className="mt-5 mb-4" style={{ color: "#0E1954", fontWeight: 500, fontSize: "1.5rem" }}>Speciality</h4>
                   
                   <ul className="list-unstyled mb-5">
                     {specialties.map((spec: string, index: number) => (
@@ -106,7 +106,7 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
                   </ul>
                   
                   <div className="mt-5 pt-3">
-                    <a href="/appointment" className="btn btn-primary px-5 py-2" style={{ backgroundColor: "#155a65", border: "none", borderRadius: "4px" }}>
+                    <a href="/appointment" className="btn btn-primary px-5 py-2" style={{ backgroundColor: "#0E1954", border: "none", borderRadius: "4px" }}>
                       Book Appointment
                     </a>
                   </div>

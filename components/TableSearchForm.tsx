@@ -29,7 +29,7 @@ function SearchFormInner({ placeholder }: { placeholder?: string }) {
                 onChange={e => setQuery(e.target.value)} 
                 style={{ width: '250px' }}
             />
-            <button type="submit" className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }}>Search</button>
+            <button type="submit" className="btn btn-sm text-white" style={{ backgroundColor: '#3346B5' }}>Search</button>
             {searchParams.has('q') && (
                 <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => { setQuery(''); router.push('?'); }}>
                     Clear

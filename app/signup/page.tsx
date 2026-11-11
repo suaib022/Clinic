@@ -8,7 +8,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
   const message = resolvedSearchParams?.message as string;
 
   return (
-    <div className="signup-page d-flex align-items-center justify-content-center" style={{ minHeight: "100vh", backgroundColor: "#f6f9ff" }}>
+    <div className="signup-page d-flex align-items-center justify-content-center" style={{ minHeight: "100vh", backgroundColor: "#F5F9FC" }}>
       <main className="main w-100">
         <section id="signup" className="section py-5">
           <div className="container" data-aos="fade-up" data-aos-delay="100">

@@ -276,7 +276,7 @@ export default function BookingsClient({
         const hasDocs = apptDocs.length > 0 || Boolean(a.prescription_record_id);
 
         const cardBorderLeft = isCurrentlyInside
-            ? '5px solid #0D7D72'
+            ? '5px solid #1B2978'
             : isRxPending
             ? '5px solid #f59e0b'
             : isCompleted
@@ -292,13 +292,13 @@ export default function BookingsClient({
             : '#ffffff';
 
         const cardBorderColor = isCurrentlyInside
-            ? '#99f6e4'
+            ? '#C9D6F5'
             : isRxPending
             ? '#fed7aa'
             : '#e2e8f0';
 
         const serialBg = isCurrentlyInside
-            ? '#0D7D72'
+            ? '#1B2978'
             : isCompleted
             ? '#059669'
             : isRxPending
@@ -456,7 +456,7 @@ export default function BookingsClient({
                                     <button
                                         className="btn btn-sm text-white fw-bold px-3 shadow-xs"
                                         disabled={isPending}
-                                        style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}
+                                        style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}
                                         onClick={() => doAction(() => startConsultation(a.id))}
                                         title="Call patient into doctor chamber"
                                     >
@@ -614,16 +614,16 @@ export default function BookingsClient({
     return (
         <div className="container-fluid" style={{ maxWidth: '1200px' }}>
             {/* Page Header */}
-            <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+            <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
                 <div>
-                    <h2 className="m-0" style={{ color: '#0D7D72' }}>
+                    <h2 className="m-0" style={{ color: '#1B2978' }}>
                         <i className="bi bi-calendar-check me-2"></i>Appointments & Chamber Queue
                     </h2>
                     <small className="text-muted">
                         Assigned to: <strong>Dr. {doctorName || 'Doctor'}</strong> ({specialityName || 'General'})
                         {doctorEmail && (
                             <span className="ms-2 d-inline-flex align-items-center gap-1">
-                                • <i className="bi bi-envelope" style={{ color: '#0D7D72' }}></i>
+                                • <i className="bi bi-envelope" style={{ color: '#1B2978' }}></i>
                                 <a href={`mailto:${doctorEmail}`} className="text-decoration-none text-muted">
                                     {doctorEmail}
                                 </a>
@@ -641,7 +641,7 @@ export default function BookingsClient({
 
             {/* Chamber Status & Control Center (Decision Support System) */}
             {tab === 'today' && (
-                <div className="card border-0 shadow-sm rounded-3 mb-4" style={{ borderLeft: '5px solid #0D7D72' }}>
+                <div className="card border-0 shadow-sm rounded-3 mb-4" style={{ borderLeft: '5px solid #1B2978' }}>
                     <div className="card-body p-4">
                         <div className="row align-items-center g-3">
                             <div className="col-md-7">
@@ -974,7 +974,7 @@ export default function BookingsClient({
                     <li className="nav-item" key={t.key}>
                         <button
                             className={`nav-link ${tab === t.key ? 'active fw-bold' : ''}`}
-                            style={tab === t.key ? { color: '#0D7D72', borderBottomColor: '#0D7D72' } : {}}
+                            style={tab === t.key ? { color: '#1B2978', borderBottomColor: '#1B2978' } : {}}
                             onClick={() => handleTabChange(t.key)}
                         >
                             {t.label}
@@ -1067,7 +1067,7 @@ export default function BookingsClient({
                 <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content border-0 shadow">
-                            <div className="modal-header text-white" style={{ backgroundColor: '#0D7D72' }}>
+                            <div className="modal-header text-white" style={{ backgroundColor: '#1B2978' }}>
                                 <h5 className="modal-title fw-bold">
                                     <i className="bi bi-clock-history me-2"></i>
                                     {chamberStatus === 'not_started' 
@@ -1129,7 +1129,7 @@ export default function BookingsClient({
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content border-0 shadow">
                             <form onSubmit={handlePrescriptionSubmit}>
-                                <div className="modal-header text-white" style={{ backgroundColor: '#0D7D72' }}>
+                                <div className="modal-header text-white" style={{ backgroundColor: '#1B2978' }}>
                                     <h5 className="modal-title fw-bold">
                                         <i className="bi bi-file-earmark-arrow-up me-2"></i>
                                         {prescriptionModalAppt.status === 'completed'

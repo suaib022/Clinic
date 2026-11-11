@@ -1596,8 +1596,6 @@ Terms of Service
 
 Cookie Policy
 
-Designed by  BootstrapMade . Distributed by  ThemeWagon
-
 ---
 
 ## Scriptloader

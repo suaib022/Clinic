@@ -37,12 +37,12 @@ export default async function QueueReportsPage({ searchParams }: { searchParams:
   ]);
   const rows = (data ?? []) as Row[];
   return (
-    <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+    <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
       <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
         <DashboardSidebar role="admin" />
         <div className="flex-grow-1 p-3 p-md-5" style={{ minWidth: 0 }}>
           <div className="container-fluid" style={{ maxWidth: 1300 }}>
-            <h2 className="mb-4 pb-3" style={{ color: '#0D7D72', borderBottom: '3px solid #0D7D72' }}><i className="bi bi-graph-up me-2" aria-hidden="true"></i>Queue Reports</h2>
+            <h2 className="mb-4 pb-3" style={{ color: '#1B2978', borderBottom: '1px solid #E3EAF3' }}><i className="bi bi-graph-up me-2" aria-hidden="true"></i>Queue Reports</h2>
             <form className="row g-2 align-items-end mb-4" method="get">
               <div className="col-6 col-md-2"><label className="form-label small" htmlFor="from">From</label><input id="from" name="from" type="date" className="form-control" defaultValue={from} /></div>
               <div className="col-6 col-md-2"><label className="form-label small" htmlFor="to">To</label><input id="to" name="to" type="date" className="form-control" defaultValue={to} /></div>

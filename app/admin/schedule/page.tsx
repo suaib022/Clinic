@@ -30,7 +30,7 @@ export default async function AdminSchedulePage() {
             <main className="container pt-5 mt-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 className="mb-1" style={{ color: '#0D7D72' }}>Admin: Doctor Schedule & Leave Management</h2>
+                        <h2 className="mb-1" style={{ color: '#1B2978' }}>Admin: Doctor Schedule & Leave Management</h2>
                         <p className="text-muted mb-0">Review pending schedule cancellations and doctor leave applications</p>
                     </div>
                 </div>
