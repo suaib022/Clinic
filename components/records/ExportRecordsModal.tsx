@@ -86,7 +86,7 @@ export default function ExportRecordsModal({ isOpen, onClose, patients, defaultP
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content border-0 rounded-4 shadow">
                     <div className="modal-header border-bottom-0 pb-0">
-                        <h5 id="export-title" className="modal-title fw-bold text-dark"><i className="bi bi-file-earmark-zip me-2" style={{ color: '#0D7D72' }}></i>Export Reports</h5>
+                        <h5 id="export-title" className="modal-title fw-bold text-dark"><i className="bi bi-file-earmark-zip me-2" style={{ color: '#1B2978' }}></i>Export Reports</h5>
                         <button type="button" className="btn-close" aria-label="Close" onClick={onClose} disabled={busy}></button>
                     </div>
                     <div className="modal-body py-4">
@@ -129,7 +129,7 @@ export default function ExportRecordsModal({ isOpen, onClose, patients, defaultP
                             <div className="mt-4" aria-live="polite">
                                 <div className="small text-muted mb-1">{phase.label}</div>
                                 <div className="progress" style={{ height: 8 }} role="progressbar" aria-valuenow={phase.pct} aria-valuemin={0} aria-valuemax={100}>
-                                    <div className="progress-bar" style={{ width: `${phase.pct}%`, backgroundColor: '#0D7D72' }}></div>
+                                    <div className="progress-bar" style={{ width: `${phase.pct}%`, backgroundColor: '#1B2978' }}></div>
                                 </div>
                             </div>
                         )}
@@ -140,7 +140,7 @@ export default function ExportRecordsModal({ isOpen, onClose, patients, defaultP
                         <button type="button" className="btn btn-light rounded-pill" onClick={onClose} disabled={busy}>
                             {phase.kind === 'done' ? 'Close' : 'Cancel'}
                         </button>
-                        <button type="button" className="btn text-white px-4 rounded-pill" style={{ backgroundColor: '#0D7D72' }} onClick={handleExport} disabled={busy}>
+                        <button type="button" className="btn text-white px-4 rounded-pill" style={{ backgroundColor: '#1B2978' }} onClick={handleExport} disabled={busy}>
                             <i className="bi bi-download me-1"></i>{busy ? 'Exporting…' : phase.kind === 'done' ? 'Export again' : 'Export ZIP'}
                         </button>
                     </div>

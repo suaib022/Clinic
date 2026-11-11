@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
 import type { HealthData, LabResult, Medication } from '@/lib/extraction/healthData';
 
-const ACCENT = '#0D7D72';
+const ACCENT = '#1B2978';
 
 const fmtDate = (d: string | null) => {
     if (!d) return '—';

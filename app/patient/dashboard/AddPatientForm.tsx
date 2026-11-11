@@ -99,7 +99,7 @@ export default function AddPatientForm() {
             </div>
 
             <div className="d-grid">
-                <button type="submit" className="btn text-white rounded-0" style={{ backgroundColor: '#0ab1a9' }} disabled={loading}>
+                <button type="submit" className="btn text-white rounded-0" style={{ backgroundColor: '#3346B5' }} disabled={loading}>
                     {loading ? 'Adding...' : 'Add Patient'}
                 </button>
             </div>
