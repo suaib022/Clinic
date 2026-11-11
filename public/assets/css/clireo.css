@@ -1,0 +1,906 @@
+/*--------------------------------------------------------------
+# Clireo design layer
+# Loaded after main.css. Re-skins the BootstrapMade template and the
+# dashboards to the Clireo look: Golos Text, navy #1B2978, soft blue
+# surfaces, 16px cards, 12px buttons, blur-up entrance animations.
+--------------------------------------------------------------*/
+:root {
+  --cl-navy: #1B2978;
+  --cl-ink: #0E1954;
+  --cl-text: #4A5482;
+  --cl-soft: #EDF4FA;
+  --cl-bg: #F5F9FC;
+  --cl-line: #E3EAF3;
+  --cl-pink: #E46BC9;
+  --cl-radius: 16px;
+  --cl-radius-sm: 12px;
+  --cl-ease: cubic-bezier(.22, 1, .36, 1);
+  --cl-shadow: 0 1px 2px rgba(14, 25, 84, .04), 0 12px 32px -12px rgba(14, 25, 84, .14);
+
+  --default-font: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --heading-font: "Golos Text", system-ui, sans-serif;
+  --nav-font: "Golos Text", system-ui, sans-serif;
+
+  --background-color: #ffffff;
+  --default-color: var(--cl-text);
+  --heading-color: var(--cl-navy);
+  --accent-color: var(--cl-navy);
+  --surface-color: #ffffff;
+  --contrast-color: #ffffff;
+
+  --nav-color: rgba(255, 255, 255, .82);
+  --nav-hover-color: #ffffff;
+  --nav-mobile-background-color: #ffffff;
+  --nav-dropdown-background-color: #ffffff;
+  --nav-dropdown-color: var(--cl-ink);
+  --nav-dropdown-hover-color: var(--cl-navy);
+
+  /* Bootstrap tokens */
+  --bs-primary: #1B2978;
+  --bs-primary-rgb: 27, 41, 120;
+  --bs-link-color: #1B2978;
+  --bs-link-color-rgb: 27, 41, 120;
+  --bs-link-hover-color: #0E1954;
+  --bs-body-font-family: var(--default-font);
+  --bs-body-color: var(--cl-text);
+  --bs-heading-color: var(--cl-navy);
+  --bs-border-color: var(--cl-line);
+  --bs-border-radius: 10px;
+  --bs-border-radius-lg: 16px;
+  --bs-border-radius-sm: 8px;
+  --bs-light-rgb: 245, 249, 252;
+}
+
+.light-background {
+  --background-color: var(--cl-bg);
+  --surface-color: #ffffff;
+}
+
+.dark-background {
+  --background-color: var(--cl-navy);
+  --default-color: rgba(255, 255, 255, .78);
+  --heading-color: #ffffff;
+  --surface-color: rgba(255, 255, 255, .07);
+  --contrast-color: #ffffff;
+}
+
+/*--------------------------------------------------------------
+# Base typography
+--------------------------------------------------------------*/
+body {
+  font-family: var(--default-font);
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--heading-font);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+}
+
+h1, h2 { font-weight: 400; }
+
+p { line-height: 1.55; }
+
+a { transition: color .3s var(--cl-ease), background-color .3s var(--cl-ease), opacity .3s; }
+
+::selection { background: var(--cl-navy); color: #fff; }
+
+.text-primary { color: var(--cl-navy) !important; }
+.bg-primary { background-color: var(--cl-navy) !important; }
+.border-primary { border-color: var(--cl-navy) !important; }
+.bg-light { background-color: var(--cl-bg) !important; }
+
+/*--------------------------------------------------------------
+# Buttons (main.css forces .btn colours with !important; shape lives here)
+--------------------------------------------------------------*/
+.btn,
+.btn-primary,
+.primary-cta,
+.search-btn,
+.emergency-btn,
+.highlight-cta,
+.specialty-link,
+.btn-outline,
+.btn-secondary,
+.secondary-cta,
+.btn-book,
+.btn-submit,
+.btn-appointment,
+.btn-view-all,
+.btn-action,
+.service-btn {
+  font-family: var(--default-font);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-radius: 12px;
+  transition: background-color .35s var(--cl-ease), color .35s var(--cl-ease), border-color .35s var(--cl-ease),
+    transform .35s var(--cl-ease), box-shadow .35s var(--cl-ease);
+}
+
+.btn:not(.btn-sm):not(.btn-link):not(.btn-close) { padding: .7rem 1.4rem; }
+.btn-sm { border-radius: 9px !important; padding: .35rem .8rem; }
+.btn-lg { border-radius: 14px; padding: .9rem 1.8rem; }
+
+.btn:hover,
+.btn-primary:hover,
+.primary-cta:hover,
+.highlight-cta:hover,
+.specialty-link:hover,
+.emergency-btn:hover,
+.btn-book:hover,
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -10px rgba(27, 41, 120, .55);
+}
+
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { box-shadow: 0 0 0 4px rgba(27, 41, 120, .2) !important; }
+.btn.rounded-pill, .btn[style*="50px"] { border-radius: 12px !important; }
+
+.btn-link { text-decoration: none; }
+
+/*--------------------------------------------------------------
+# Forms
+--------------------------------------------------------------*/
+.form-control,
+.form-select,
+input[type="text"].form-control,
+textarea.form-control {
+  font-family: var(--default-font);
+  background-color: var(--cl-bg);
+  border: 1px solid var(--cl-line);
+  border-radius: 10px;
+  color: var(--cl-ink);
+  padding: .7rem 1rem;
+  transition: border-color .3s var(--cl-ease), box-shadow .3s var(--cl-ease), background-color .3s;
+}
+
+.form-control-sm, .form-select-sm { padding: .35rem .7rem; border-radius: 8px; }
+
+.form-control::placeholder { color: #8C94B5; }
+
+.form-control:focus,
+.form-select:focus {
+  background-color: #fff;
+  border-color: var(--cl-navy);
+  box-shadow: 0 0 0 4px rgba(27, 41, 120, .1);
+  color: var(--cl-ink);
+}
+
+.form-label, label { color: var(--cl-ink); font-weight: 500; letter-spacing: -0.01em; }
+
+.form-check-input:checked { background-color: var(--cl-navy); border-color: var(--cl-navy); }
+.form-check-input:focus { box-shadow: 0 0 0 4px rgba(27, 41, 120, .12); border-color: var(--cl-navy); }
+
+.input-group-text { background: var(--cl-soft); border-color: var(--cl-line); color: var(--cl-navy); border-radius: 10px; }
+
+/*--------------------------------------------------------------
+# Cards, tables, modals, badges (dashboards + Bootstrap pieces)
+--------------------------------------------------------------*/
+.card {
+  border: 1px solid var(--cl-line);
+  border-radius: var(--cl-radius);
+  box-shadow: var(--cl-shadow);
+  background-color: #fff;
+  transition: transform .45s var(--cl-ease), box-shadow .45s var(--cl-ease);
+}
+
+.card.shadow-sm, .card.shadow { box-shadow: var(--cl-shadow) !important; }
+.card.border-0 { border: 1px solid var(--cl-line) !important; }
+
+.card > .card-header:first-child { border-radius: var(--cl-radius) var(--cl-radius) 0 0; }
+.card > .card-footer:last-child { border-radius: 0 0 var(--cl-radius) var(--cl-radius); }
+
+.card-header, .card-footer { background-color: transparent; border-color: var(--cl-line); }
+.card-header.bg-white, .card-footer.bg-white { background-color: transparent !important; }
+
+.card-title { color: var(--cl-navy); }
+
+.table {
+  --bs-table-color: var(--cl-ink);
+  --bs-table-border-color: var(--cl-line);
+  --bs-table-hover-bg: var(--cl-bg);
+  --bs-table-striped-bg: #FAFCFE;
+  font-size: 15px;
+}
+
+.table > thead th,
+.table thead.table-light th,
+.table > thead.table-light > tr > th {
+  background-color: var(--cl-bg);
+  color: var(--cl-navy);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  border-bottom: 1px solid var(--cl-line);
+  padding-top: 14px;
+  padding-bottom: 14px;
+  white-space: nowrap;
+}
+
+.table > tbody > tr { transition: background-color .25s; }
+.table td { vertical-align: middle; }
+
+.table-responsive { border-radius: var(--cl-radius-sm); }
+
+.modal-content {
+  border: 0;
+  border-radius: 20px;
+  box-shadow: 0 30px 80px -20px rgba(14, 25, 84, .35);
+  overflow: hidden;
+}
+
+.modal-header { border-bottom-color: var(--cl-line); padding: 1.15rem 1.5rem; }
+.modal-footer { border-top-color: var(--cl-line); }
+.modal-title { color: inherit; font-weight: 500; letter-spacing: -0.03em; }
+.modal-backdrop.show { opacity: .45; background-color: var(--cl-ink); }
+
+.badge { font-weight: 500; letter-spacing: .01em; border-radius: 999px; padding: .4em .75em; }
+
+.alert { border-radius: var(--cl-radius-sm); border-width: 1px; }
+
+.nav-pills .nav-link { border-radius: 10px; color: var(--cl-ink); }
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link { background-color: var(--cl-navy); }
+
+.nav-tabs { border-bottom-color: var(--cl-line); }
+.nav-tabs .nav-link { color: var(--cl-text); border-radius: 10px 10px 0 0; }
+.nav-tabs .nav-link.active { color: var(--cl-navy); border-color: var(--cl-line) var(--cl-line) #fff; }
+
+.pagination { --bs-pagination-color: var(--cl-navy); --bs-pagination-active-bg: var(--cl-navy); --bs-pagination-active-border-color: var(--cl-navy); --bs-pagination-border-radius: 10px; }
+
+.dropdown-menu { border: 1px solid var(--cl-line); border-radius: var(--cl-radius-sm); box-shadow: var(--cl-shadow); padding: 6px; }
+.dropdown-item { border-radius: 8px; }
+.dropdown-item.active, .dropdown-item:active { background-color: var(--cl-navy); }
+
+.progress { border-radius: 999px; background-color: var(--cl-soft); }
+.progress-bar { background-color: var(--cl-navy); }
+
+.list-group-item { border-color: var(--cl-line); }
+
+hr { border-color: var(--cl-line); opacity: 1; }
+
+/*--------------------------------------------------------------
+# Header (navy bar, white links, white pill CTA — like Clireo's sticky header)
+--------------------------------------------------------------*/
+.header {
+  --background-color: var(--cl-navy);
+  --heading-color: #ffffff;
+  --default-color: #ffffff;
+  background-color: var(--cl-navy);
+  box-shadow: none;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.scrolled .header { --background-color: var(--cl-navy); box-shadow: 0 10px 30px -12px rgba(14, 25, 84, .45); }
+
+.header .topbar { background-color: var(--cl-ink); height: 38px; font-size: 13px; }
+.header .topbar .social-links a { color: rgba(255, 255, 255, .6); }
+
+.header .branding { min-height: 72px; padding: 8px 0; }
+.header .branding > .container { justify-content: space-between !important; }
+
+.header .logo h1,
+.header .logo .sitename {
+  font-family: var(--heading-font);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.05em;
+  color: #ffffff;
+}
+
+.header .logo h1::before {
+  content: "\F4FD"; /* bi-plus-lg: Clireo-like cross mark */
+  font-family: "bootstrap-icons";
+  font-size: 20px;
+  margin-right: 8px;
+  vertical-align: -1px;
+}
+
+@media (min-width: 1200px) {
+  .navmenu > ul > li { padding: 14px 13px; }
+  .navmenu a, .navmenu a:focus { font-size: 15px; font-weight: 400; letter-spacing: -0.01em; }
+  .navmenu > ul > li > a:before { display: none; }
+  .navmenu .dropdown ul,
+  .navmenu .dropdown .mega-menu {
+    border-radius: var(--cl-radius) !important;
+    border: 1px solid var(--cl-line) !important;
+    box-shadow: 0 24px 60px -20px rgba(14, 25, 84, .3) !important;
+    padding: 10px;
+  }
+  .navmenu .dropdown ul a { border-radius: 8px; padding: 9px 14px; }
+  .navmenu .dropdown ul a:hover { background: var(--cl-bg); }
+
+  /* Dashboard button in the header: white Clireo pill */
+  .header .navmenu a.btn {
+    background: #ffffff !important;
+    color: var(--cl-navy) !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    padding: 10px 22px !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    transition: transform .35s var(--cl-ease), box-shadow .35s var(--cl-ease);
+  }
+  .header .navmenu a.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .45);
+  }
+}
+
+@media (max-width: 1199px) {
+  .mobile-nav-toggle { color: #ffffff; }
+  .mobile-nav-active .mobile-nav-toggle { color: #ffffff; }
+  .mobile-nav-active .navmenu { background: rgba(14, 25, 84, .7); backdrop-filter: blur(6px); }
+  .navmenu ul { border-radius: var(--cl-radius) !important; }
+  .navmenu a, .navmenu a:focus { font-weight: 400; color: var(--cl-ink); }
+  .navmenu a:hover, .navmenu .active, .navmenu .active:focus { color: var(--cl-navy); }
+  .header .navmenu a.btn { color: #fff !important; }
+}
+
+.department-link { border-radius: 8px; }
+.department-link:hover { background: var(--cl-bg); }
+
+/*--------------------------------------------------------------
+# Page title (sub-page hero): navy band, big light heading
+--------------------------------------------------------------*/
+.page-title {
+  --default-color: rgba(255, 255, 255, .78);
+  --heading-color: #ffffff;
+  background:
+    radial-gradient(1200px 400px at 85% -10%, rgba(228, 107, 201, .18), transparent 60%),
+    linear-gradient(180deg, var(--cl-navy), #16226A);
+  color: var(--default-color);
+}
+
+.page-title .heading { padding: 90px 0 70px; }
+.page-title .heading h1 {
+  font-size: clamp(40px, 6vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: .98;
+  color: #fff;
+}
+.page-title .heading p { font-size: 17px; color: rgba(255, 255, 255, .78); max-width: 640px; margin-left: auto; margin-right: auto; }
+
+.page-title nav { background: rgba(255, 255, 255, .06); border-top: 1px solid rgba(255, 255, 255, .08); padding: 16px 0; }
+.page-title nav ol { font-size: 14px; letter-spacing: .02em; }
+.page-title nav a { color: #fff; }
+.page-title nav ol li.current { color: rgba(255, 255, 255, .7); }
+.page-title nav ol li + li::before { color: rgba(255, 255, 255, .35); }
+
+/*--------------------------------------------------------------
+# Sections & section titles (dot eyebrow + big tight heading)
+--------------------------------------------------------------*/
+section, .section { padding: 96px 0; }
+@media (max-width: 767px) { section, .section { padding: 64px 0; } }
+
+.section-title { padding-bottom: 56px; }
+
+.section-title h2 {
+  font-size: clamp(32px, 4.2vw, 43px);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 1.04;
+  margin-bottom: 16px;
+  padding-bottom: 0;
+  padding-top: 26px;
+}
+
+.section-title h2:before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  top: 0;
+  bottom: auto;
+}
+
+.section-title h2::after { display: none; }
+
+.section-title p { font-size: 17px; max-width: 620px; margin: 0 auto; color: var(--default-color); }
+
+.section-heading { font-weight: 400 !important; letter-spacing: -0.06em; line-height: 1.04; }
+
+/*--------------------------------------------------------------
+# Template card blocks -> Clireo cards
+--------------------------------------------------------------*/
+.specialty-card, .department-highlight, .service-item, .doctor-card, .doctor-profile, .department-card,
+.department-content, .testimonial-item, .gallery-item, .action-card, .service-overview, .service-visual,
+.contact-form-card, .booking-wrapper, .certifications-section, .treatment-areas, .tos-contact .contact-box,
+.info-box, .notice-box, .alert-box, .disclaimer-box, .emergency-banner, .contact-block, .link-item,
+.featured-services .service-image-wrapper, .home-about .about-visual .main-image, .about .image-wrapper .main-image,
+.faq-item, .info-item, .info-card, .stats-card, .feature {
+  border-radius: var(--cl-radius) !important;
+}
+
+.specialty-card, .department-highlight, .service-item, .doctor-card, .doctor-profile, .department-card,
+.testimonial-item, .action-card, .info-card, .faq-item, .link-item {
+  border: 1px solid var(--cl-line);
+  box-shadow: none;
+  transition: transform .5s var(--cl-ease), box-shadow .5s var(--cl-ease), border-color .5s var(--cl-ease);
+}
+
+.specialty-card:hover, .department-highlight:hover, .service-item:hover, .doctor-card:hover, .doctor-profile:hover,
+.department-card:hover, .testimonial-item:hover, .action-card:hover, .info-card:hover, .link-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -30px rgba(14, 25, 84, .35);
+  border-color: transparent;
+}
+
+/* Image zoom on hover inside cards */
+.specialty-visual, .doctor-card .doctor-image, .service-image, .gallery-item, .department-image,
+.featured-services .service-image-wrapper, .home-about .about-visual .main-image { overflow: hidden; }
+.specialty-visual img, .doctor-card img, .service-image img, .gallery-item img, .department-image img,
+.featured-services .service-image-wrapper img, .home-about .about-visual .main-image img {
+  transition: transform .9s var(--cl-ease);
+}
+.specialty-card:hover .specialty-visual img, .doctor-card:hover img, .service-item:hover .service-image img,
+.gallery-item:hover img, .featured-services .service-image-wrapper:hover img,
+.home-about .about-visual .main-image:hover img { transform: scale(1.05); }
+
+/* Icon chips use the Clireo pink accent on soft blue */
+.highlight-icon, .department-icon, .service-icon, .icon-wrapper, .card-icon, .contact-icon,
+.home-about .about-visual .floating-card .icon {
+  background: var(--cl-soft) !important;
+  color: var(--cl-pink) !important;
+  border-radius: 12px !important;
+}
+.highlight-icon i, .department-icon i, .service-icon i, .icon-wrapper i, .card-icon i, .contact-icon i,
+.home-about .about-visual .floating-card .icon i { color: var(--cl-pink) !important; }
+
+.specialty-label, .specialty-tag, .service-badge, .service-category span, .badge-item, .specialty-badge,
+.condition-tags .tag, .last-updated {
+  background: var(--cl-soft) !important;
+  color: var(--cl-navy) !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Stats: big light numbers like Clireo's 4.8* */
+.stat-number, .stats-card .number, .stat-item .number {
+  font-family: var(--heading-font);
+  font-weight: 400 !important;
+  letter-spacing: -0.06em;
+  color: var(--cl-navy);
+}
+
+.home-about .about-visual .experience-badge {
+  background: var(--cl-navy) !important;
+  border-radius: var(--cl-radius) !important;
+}
+
+.home-about .about-visual .floating-card { border-radius: var(--cl-radius) !important; border: 1px solid var(--cl-line); }
+
+/* Call-to-action / emergency bands become navy panels */
+.call-to-action, .featured-departments .emergency-banner {
+  --default-color: rgba(255, 255, 255, .8);
+  --heading-color: #ffffff;
+}
+.featured-departments .emergency-banner { background: var(--cl-navy) !important; }
+.featured-departments .emergency-banner .emergency-btn { background: #fff !important; color: var(--cl-navy) !important; border-color: #fff !important; }
+
+/* Accordions / FAQ */
+.accordion { --bs-accordion-border-color: var(--cl-line); --bs-accordion-border-radius: var(--cl-radius); --bs-accordion-active-bg: var(--cl-bg); --bs-accordion-active-color: var(--cl-navy); --bs-accordion-btn-focus-box-shadow: 0 0 0 4px rgba(27, 41, 120, .1); }
+
+/* Swiper bullets */
+.swiper-pagination-bullet-active { background: var(--cl-navy) !important; }
+
+/*--------------------------------------------------------------
+# Footer (deep navy, like Clireo)
+--------------------------------------------------------------*/
+.footer-16 {
+  --background-color: var(--cl-ink);
+  --default-color: rgba(255, 255, 255, .72);
+  --heading-color: #ffffff;
+  --accent-color: #ffffff;
+  background: var(--cl-ink);
+  border-top: 0;
+  padding-top: 96px;
+}
+
+.footer-16 a { color: rgba(255, 255, 255, .78); }
+.footer-16 a:hover { color: #fff; }
+.footer-16 .brand-section .logo .sitename { font-weight: 400; letter-spacing: -0.05em; color: #fff; }
+.footer-16 h4, .footer-16 h5, .footer-16 .nav-column h6 {
+  font-size: 13px !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: rgba(255, 255, 255, .55) !important;
+}
+.footer-16 .footer-bottom, .footer-16 .footer-bottom * { border-color: rgba(255, 255, 255, .1) !important; }
+.footer-16 .social-links a, .footer-16 .social-icons a {
+  border-color: rgba(255, 255, 255, .15) !important;
+  color: #fff !important;
+  border-radius: 10px;
+}
+.footer-16 .social-links a:hover, .footer-16 .social-icons a:hover { background: rgba(255, 255, 255, .1) !important; }
+
+/*--------------------------------------------------------------
+# Scroll top
+--------------------------------------------------------------*/
+.scroll-top { background-color: var(--cl-navy); border-radius: 12px; }
+.scroll-top:hover { background-color: var(--cl-ink); }
+
+/*--------------------------------------------------------------
+# Entrance animation: Clireo's blur + rise (augments AOS)
+--------------------------------------------------------------*/
+html [data-aos^="fade"][data-aos^="fade"],
+html [data-aos^="zoom"][data-aos^="zoom"] {
+  filter: blur(10px);
+  transition-property: opacity, transform, filter;
+  transition-timing-function: var(--cl-ease) !important;
+}
+html [data-aos^="fade"][data-aos^="fade"].aos-animate,
+html [data-aos^="zoom"][data-aos^="zoom"].aos-animate { filter: blur(0); }
+html [data-aos="fade-up"] { transform: translate3d(0, 36px, 0); }
+html [data-aos="fade-right"] { transform: translate3d(-36px, 0, 0); }
+html [data-aos="fade-left"] { transform: translate3d(36px, 0, 0); }
+html [data-aos^="zoom"][data-aos^="zoom"]:not(.aos-animate) { transform: scale(.96); }
+
+@media (prefers-reduced-motion: reduce) {
+  html [data-aos] { filter: none !important; transition: none !important; transform: none !important; opacity: 1 !important; }
+  .card, .btn { transition: none; }
+}
+
+/*--------------------------------------------------------------
+# Dashboards
+--------------------------------------------------------------*/
+.dashboard-sidebar { background: #fff; }
+.dashboard-sidebar .nav-link { font-weight: 400 !important; letter-spacing: -0.01em; }
+
+/* Dashboard page shells keep their own layout; give the canvas Clireo's soft blue */
+main:has(> .dashboard-sidebar), .d-flex:has(> .dashboard-sidebar) { background-color: var(--cl-bg); }
+
+/*--------------------------------------------------------------
+# Home: quick links + hero banner
+--------------------------------------------------------------*/
+.cl-hero-search {
+  background: #fff; padding: 10px; border-radius: var(--cl-radius);
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, .45);
+}
+.cl-hero-search .form-control, .cl-hero-search .form-select { height: 52px; border-color: transparent; }
+.cl-hero-search .btn { height: 52px; }
+
+.cl-hero-panel {
+  display: flex; align-items: center; gap: 16px; padding: 22px 24px;
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: var(--cl-radius); backdrop-filter: blur(10px); color: #fff;
+  transition: background-color .45s var(--cl-ease), transform .45s var(--cl-ease);
+}
+.cl-hero-panel:hover { background: rgba(255, 255, 255, .18); transform: translateY(-3px); }
+.cl-hero-panel h5 { color: #fff; font-size: 24px; font-weight: 400; letter-spacing: -0.04em; }
+.cl-hero-panel-icon {
+  flex: 0 0 52px; height: 52px; display: grid; place-items: center; border-radius: 12px;
+  background: #fff; color: var(--cl-navy); font-size: 24px;
+}
+
+/* Template links that main.css paints as buttons need button padding */
+.specialty-link, .highlight-cta, .primary-cta, .secondary-cta, .home-about .about-content .cta-section .btn-primary {
+  display: inline-flex !important; align-items: center; gap: 8px; width: auto !important;
+  padding: 12px 22px !important; border-radius: 12px !important; text-decoration: none;
+}
+
+/* Square utility buttons/inputs get Clireo rounding */
+.btn.rounded-0 { border-radius: 10px !important; }
+.form-control.rounded-0, .form-select.rounded-0 { border-radius: 10px !important; }
+
+/*--------------------------------------------------------------
+# Transparent header over dark tops (Clireo): home hero and page-title
+# bands. Turns navy once main.js adds body.scrolled (scrollY > 100).
+--------------------------------------------------------------*/
+.header, .header .topbar, .header .branding { transition: background-color .5s var(--cl-ease), box-shadow .5s var(--cl-ease), border-color .5s; }
+.page-title { padding-top: 72px; }
+
+body:not(.scrolled):has(main > .cl-hero:first-child, main > .page-title:first-child) .header {
+  --background-color: transparent;
+  background-color: transparent;
+  border-bottom-color: rgba(255, 255, 255, .12);
+}
+body:not(.scrolled):has(main > .cl-hero:first-child, main > .page-title:first-child) .header .topbar {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+/*--------------------------------------------------------------
+# Highlighted pill CTA (Find Doctors / Book Appointment):
+# bright brand blue pill with a white circle arrow that turns on hover
+--------------------------------------------------------------*/
+a.cl-pill-btn, .navmenu a.cl-pill-btn, .navmenu a.cl-pill-btn:focus {
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 6px 6px 6px 24px; border-radius: 999px;
+  background: #3346B5; color: #fff; font-family: var(--default-font);
+  font-size: 16px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; white-space: nowrap;
+  box-shadow: 0 12px 28px -12px rgba(51, 70, 181, .7);
+  transition: background-color .4s var(--cl-ease), transform .4s var(--cl-ease), box-shadow .4s var(--cl-ease);
+}
+a.cl-pill-btn:hover, .navmenu a.cl-pill-btn:hover { background: #2A3BA3; color: #fff; transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(51, 70, 181, .8); }
+.cl-pill-btn-icon {
+  position: relative; overflow: hidden;
+  flex: 0 0 auto; width: 38px; height: 38px; display: grid; place-items: center;
+  border-radius: 50%; background: #fff; color: var(--cl-ink);
+}
+.cl-pill-btn-icon i, .navmenu a.cl-pill-btn .cl-pill-btn-icon i { font-size: 17px; margin: 0; line-height: 1; color: var(--cl-ink); transition: transform .4s var(--cl-ease); }
+/* Clireo arrow swap: current arrow exits top-right, a twin enters from bottom-left */
+.cl-pill-btn-icon i + i { position: absolute; inset: 0; display: grid; place-items: center; transform: translate(-150%, 150%); }
+a.cl-pill-btn:hover .cl-pill-btn-icon i:first-child { transform: translate(150%, -150%); }
+a.cl-pill-btn:hover .cl-pill-btn-icon i + i { transform: translate(0, 0); }
+a.cl-pill-btn-lg { font-size: 19px; padding: 8px 8px 8px 30px; gap: 18px; }
+a.cl-pill-btn-lg .cl-pill-btn-icon { width: 48px; height: 48px; }
+a.cl-pill-btn-lg .cl-pill-btn-icon i { font-size: 20px; }
+@media (max-width: 1199px) {
+  .navmenu li.cl-nav-cta { padding: 12px 20px; }
+  .navmenu a.cl-pill-btn { justify-content: space-between; width: 100%; padding: 6px 6px 6px 22px; }
+}
+
+/* Above-the-fold entrance (hero): same blur + rise as AOS, but on load */
+@keyframes cl-rise { from { opacity: 0; transform: translateY(28px); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.cl-rise { animation: cl-rise .9s var(--cl-ease) both; }
+@media (prefers-reduced-motion: reduce) { .cl-rise { animation: none; } }
+
+/* Desktop header: logo left, nav items centred on the bar, CTA right */
+@media (min-width: 1200px) {
+  .header .branding > .container { justify-content: space-between !important; gap: 24px !important; }
+  .header .navmenu > ul { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+}
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .navmenu > ul > li { padding: 14px 8px; }
+  .navmenu a, .navmenu a:focus { font-size: 14px; }
+  .header .navmenu a.btn { padding: 9px 16px !important; font-size: 14px !important; }
+}
+
+/*--------------------------------------------------------------
+# Home hero (Hospic-style): full-screen photo, left-aligned headline,
+# rating chip, CTA; search + Hospital/Diagnostic along the bottom
+--------------------------------------------------------------*/
+.cl-hero { min-height: 100vh; min-height: 100svh; display: flex; overflow: hidden; background: var(--cl-ink); }
+.cl-hero-bg { position: absolute; inset: 0; }
+.cl-hero-shade {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  /* neutral, left-only scrim: keeps the photo clean while white text stays readable */
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .38) 0, transparent 150px),
+    linear-gradient(90deg, rgba(0, 0, 0, .42) 0%, rgba(0, 0, 0, .18) 40%, transparent 65%);
+}
+.cl-hero-content {
+  position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end;
+  padding-top: 150px; padding-bottom: 48px; color: #fff;
+}
+.cl-hero-rating { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.cl-hero-avatars { display: flex; }
+.cl-hero-avatars img {
+  width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, .9); margin-left: -12px; background: var(--cl-soft);
+}
+.cl-hero-avatars img:first-child { margin-left: 0; }
+.cl-hero-rating-score { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.3; }
+.cl-hero-rating-sub { font-size: 16px; color: rgba(255, 255, 255, .78); line-height: 1.3; }
+.cl-hero-title {
+  color: #fff; font-size: clamp(44px, 7.4vw, 104px); font-weight: 500;
+  letter-spacing: -0.055em; line-height: .98; margin: 0 0 24px;
+}
+.cl-hero-lead { font-size: clamp(16px, 1.4vw, 20px); color: rgba(255, 255, 255, .82); max-width: 560px; margin-bottom: 32px; }
+.cl-hero-bottom { margin-top: 56px; }
+.cl-hero-search { padding: 8px; }
+.cl-hero-panel { padding: 16px 20px; }
+.cl-hero-panel h5 { font-size: 22px; }
+
+
+@media (max-width: 991px) {
+  .cl-hero-content { padding-top: 120px; padding-bottom: 32px; }
+  .cl-hero-bottom { margin-top: 40px; }
+  .cl-hero-panel { padding: 14px 16px; gap: 12px; }
+  .cl-hero-panel h5 { font-size: 18px; }
+  .cl-hero-panel-icon { flex-basis: 42px; height: 42px; font-size: 20px; }
+}
+
+/*--------------------------------------------------------------
+# Footer (Clireo): photo CTA card on navy, then columns
+--------------------------------------------------------------*/
+.footer-16 { background: #111D63; --background-color: #111D63; padding-top: 80px; }
+.cl-footer-cta {
+  position: relative; overflow: hidden; border-radius: 24px; margin-bottom: 80px;
+  background-size: cover; background-position: center 30%;
+  min-height: 460px; display: grid; place-items: center; text-align: center;
+}
+.cl-footer-cta::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(17, 29, 99, .78), rgba(27, 41, 120, .6) 50%, rgba(17, 29, 99, .78));
+}
+.cl-footer-cta-inner { position: relative; z-index: 1; padding: 56px 24px; max-width: 860px; }
+.cl-footer-cta h2 {
+  color: #fff; font-size: clamp(34px, 5vw, 64px); font-weight: 400;
+  letter-spacing: -0.06em; line-height: 1.02; margin-bottom: 20px;
+}
+.cl-footer-cta p { color: rgba(255, 255, 255, .85); font-size: 18px; max-width: 540px; margin: 0 auto 32px; }
+.cl-footer-cta-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px 28px; }
+.cl-footer-cta-rating { text-align: left; color: rgba(255, 255, 255, .85); font-size: 16px; line-height: 1.5; }
+.cl-footer-cta-rating-sub { color: rgba(255, 255, 255, .7); }
+.cl-stars { color: #fff; font-size: 12px; margin-left: 6px; letter-spacing: 2px; }
+
+/* White pill with pink arrow chip (footer CTA, like the reference) */
+a.cl-pill-btn.cl-pill-btn-light { background: #fff; color: var(--cl-navy); box-shadow: none; border-radius: 14px; }
+a.cl-pill-btn.cl-pill-btn-light:hover { background: #fff; color: var(--cl-navy); box-shadow: 0 16px 32px -14px rgba(0, 0, 0, .5); }
+.cl-pill-btn-light .cl-pill-btn-icon { background: #F28BDD; border-radius: 10px; }
+.cl-pill-btn-light .cl-pill-btn-icon i { color: #fff !important; }
+
+.footer-16 .footer-main { margin-bottom: 64px; }
+.footer-16 .footer-nav a { font-size: 17px; color: rgba(255, 255, 255, .88); letter-spacing: -0.01em; }
+.footer-16 .footer-nav a:hover { color: #fff; }
+.footer-16 .nav-column h6 { margin-bottom: 18px; letter-spacing: .14em; }
+.footer-16 .brand-section .brand-description { font-size: 20px; color: rgba(255, 255, 255, .9); font-weight: 400; letter-spacing: -0.02em; line-height: 1.45; }
+.footer-16 .brand-section .contact-info .contact-item i { color: #F28BDD; }
+.footer-16 .footer-bottom { border-top: 1px solid rgba(255, 255, 255, .1); }
+.footer-16 .footer-bottom p, .footer-16 .footer-bottom .credits { color: rgba(255, 255, 255, .6); }
+
+@media (max-width: 767px) {
+  .cl-footer-cta { min-height: 0; border-radius: 18px; margin-bottom: 56px; }
+  .cl-footer-cta-rating { text-align: center; }
+}
+.footer-16 .legal-links a { white-space: nowrap; }
+.cl-hero-title, .cl-hero-lead, .cl-hero-rating { text-shadow: 0 2px 18px rgba(0, 0, 0, .28); }
+/* Hero cards/arrows: solid white so they read on bright photos */
+.cl-hero .cl-hero-panel { background: #fff; border-color: transparent; color: var(--cl-navy); backdrop-filter: none; box-shadow: 0 20px 50px -25px rgba(0, 0, 0, .45); }
+.cl-hero .cl-hero-panel:hover { background: #fff; }
+.cl-hero .cl-hero-panel h5 { color: var(--cl-navy); text-shadow: none; }
+.cl-hero .cl-hero-panel-icon { background: var(--cl-soft); color: var(--cl-pink); }
+/* Hero search: fields centred in the card, input takes the space, select stays compact */
+.cl-hero .cl-hero-search { align-items: center; padding: 10px; }
+.cl-hero .cl-hero-search .form-control { flex: 1 1 auto; min-width: 0; text-overflow: ellipsis; }
+.cl-hero .cl-hero-search .form-select { flex: 0 0 190px; min-width: 0 !important; }
+.cl-hero .cl-hero-search .form-control,
+.cl-hero .cl-hero-search .form-select { height: 52px; border: 1px solid transparent; background-color: var(--cl-bg); }
+.cl-hero .cl-hero-search .form-control:focus,
+.cl-hero .cl-hero-search .form-select:focus { border-color: var(--cl-navy); background-color: #fff; }
+.cl-hero .cl-hero-search .btn { flex: 0 0 auto; height: 52px; width: 64px; padding: 0 !important; display: grid; place-items: center; }
+@media (max-width: 767px) {
+  .cl-hero .cl-hero-search { align-items: stretch; }
+  .cl-hero .cl-hero-search .form-select { flex-basis: auto; }
+  .cl-hero .cl-hero-search .btn { width: auto; }
+}
+/* Light CTA inside the white mobile menu needs an outline to stand out */
+@media (max-width: 1199px) {
+  .navmenu a.cl-pill-btn.cl-pill-btn-light { border: 1px solid var(--cl-line); background: var(--cl-bg); }
+}
+.navmenu a.cl-pill-btn.cl-pill-btn-light .cl-pill-btn-icon i { color: #fff; }
+/* Dim the banner photo itself (no colour tint) so white text and the header read clearly */
+.cl-hero-bg .carousel-item > div { filter: brightness(.62) contrast(1.05); }
+
+/* Hero Book Appointment: same white/pink format, but bigger with a soft pink glow pulse so it stands out */
+.cl-hero a.cl-pill-btn.cl-pill-btn-light.cl-pill-btn-lg {
+  font-size: 21px; padding: 10px 10px 10px 32px; gap: 22px; border-radius: 16px;
+  box-shadow: 0 18px 40px -12px rgba(242, 139, 221, .65), 0 0 0 0 rgba(242, 139, 221, .55);
+  animation: cl-cta-pulse 2.4s var(--cl-ease) infinite;
+}
+.cl-hero a.cl-pill-btn-light.cl-pill-btn-lg .cl-pill-btn-icon { width: 54px; height: 54px; border-radius: 12px; }
+.cl-hero a.cl-pill-btn-light.cl-pill-btn-lg:hover { animation-play-state: paused; box-shadow: 0 22px 46px -12px rgba(242, 139, 221, .8); }
+@keyframes cl-cta-pulse {
+  0% { box-shadow: 0 18px 40px -12px rgba(242, 139, 221, .65), 0 0 0 0 rgba(242, 139, 221, .55); }
+  70% { box-shadow: 0 18px 40px -12px rgba(242, 139, 221, .65), 0 0 0 14px rgba(242, 139, 221, 0); }
+  100% { box-shadow: 0 18px 40px -12px rgba(242, 139, 221, .65), 0 0 0 0 rgba(242, 139, 221, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .cl-hero a.cl-pill-btn-light.cl-pill-btn-lg { animation: none; } }
+
+/* Hero right column: search wraps to two lines (input full width, then select + button) */
+.cl-hero .cl-hero-side .cl-hero-search { flex-wrap: wrap; }
+.cl-hero .cl-hero-side .cl-hero-search .form-control { flex: 1 1 100%; }
+.cl-hero .cl-hero-side .cl-hero-search .form-select { flex: 1 1 auto; }
+@media (max-width: 991px) { .cl-hero .cl-hero-side { margin-top: 32px; } }
+.cl-hero .cl-hero-side .cl-hero-search .form-select { flex: 1 1 0; min-width: 0 !important; }
+@media (max-width: 767px) { .cl-hero .cl-hero-side .cl-hero-search .btn { flex: 0 0 56px; width: 56px; } }
+
+/* Hero v3: search bar right under the header, headline block at the bottom */
+.cl-hero .cl-hero-content { justify-content: flex-start; padding-top: 96px; }
+.cl-hero .cl-hero-search-top { box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .55); }
+.cl-hero .cl-hero-search-top .form-select { flex: 0 0 240px; }
+.cl-hero .cl-hero-main { margin-top: auto; padding-top: 56px; }
+@media (max-width: 991px) {
+  .cl-hero .cl-hero-content { padding-top: 84px; }
+}
+@media (max-width: 767px) {
+  .cl-hero .cl-hero-search-top { align-items: stretch; }
+  .cl-hero .cl-hero-search-top .form-select { flex-basis: auto; }
+  .cl-hero .cl-hero-search-top .btn { width: auto; }
+}
+
+/* Hero slide arrows (bottom-right) */
+.cl-hero-ctrls { position: absolute; right: 12px; bottom: 150px; display: flex; gap: 8px; }
+.cl-hero-ctrl {
+  width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+  color: var(--cl-navy); background: rgba(255, 255, 255, .9); border: 0;
+  transition: background-color .3s var(--cl-ease), transform .3s var(--cl-ease);
+}
+.cl-hero-ctrl:hover { background: #fff; transform: translateY(-2px); }
+@media (max-width: 767px) { .cl-hero-ctrls { display: none; } }
+/* Laptop and up: narrower, centred search bar */
+@media (min-width: 992px) {
+  .cl-hero .cl-hero-search-top { width: 100%; max-width: 780px; margin-left: auto; margin-right: auto; }
+  .cl-hero .cl-hero-search-top .form-select { flex-basis: 200px; }
+}
+
+/* Below-banner search strip (smaller screens only) */
+.cl-search-strip { background: var(--cl-bg); padding: 24px 0; border-bottom: 1px solid var(--cl-line); }
+.cl-search-strip .cl-hero-search { background: #fff; padding: 10px; border-radius: var(--cl-radius); box-shadow: var(--cl-shadow); }
+.cl-search-strip .form-control, .cl-search-strip .form-select { height: 52px; border: 1px solid transparent; background-color: var(--cl-bg); }
+.cl-search-strip .form-control { flex: 1 1 auto; min-width: 0; }
+.cl-search-strip .btn { height: 52px; display: grid; place-items: center; }
+@media (min-width: 576px) { .cl-search-strip .form-select { flex: 0 0 200px; } .cl-search-strip .btn { flex: 0 0 64px; padding: 0 !important; } }
+/* Without the top search, the banner content needs less top room on small screens */
+@media (max-width: 991px) { .cl-hero .cl-hero-main { padding-top: 0; } }
+/* Laptop+: centre the headline block in the space under the search bar (no tall empty gap) */
+@media (min-width: 992px) {
+  .cl-hero .cl-hero-main { margin-top: auto; margin-bottom: auto; padding-top: 40px; }
+}
+.cl-hero .cl-hero-title { font-size: clamp(44px, 6.4vw, 100px); }
+/* Below laptop: equal space above (under the 73px header) and below the banner content */
+@media (max-width: 991px) {
+  .cl-hero .cl-hero-content { padding-top: calc(73px + 32px); padding-bottom: 32px; }
+  .cl-hero .cl-hero-main { margin-top: auto; margin-bottom: auto; padding-top: 0; }
+}
+/* Below laptop: header, banner and search strip use the full width with a 20px side gutter */
+@media (max-width: 991px) {
+  .header .container, .cl-hero .container, .cl-search-strip .container {
+    max-width: 100%; padding-left: 20px; padding-right: 20px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Appointment booking (step 1)
+--------------------------------------------------------------*/
+.cl-book-section { background: var(--cl-bg); padding: 56px 0 80px; }
+.cl-book-section > .cl-book { padding-top: 0 !important; padding-bottom: 0 !important; }
+
+.cl-book-doctor { overflow: hidden; border: 1px solid var(--cl-line); position: sticky; top: 100px; }
+.cl-book-doctor .card-header {
+  background: linear-gradient(135deg, var(--cl-navy), #2B3C9E) !important; border: 0;
+  border-radius: var(--cl-radius) var(--cl-radius) 0 0 !important;
+}
+.cl-book-doctor .card-header h5 { color: #fff; font-size: 17px; letter-spacing: -0.01em; }
+.cl-book-doctor .card-header small { color: rgba(255, 255, 255, .75); }
+.cl-book-doctor .card-header .rounded-circle { border: 3px solid rgba(255, 255, 255, .35); }
+.cl-book-doctor .card-body { padding: 20px 22px 22px; }
+.cl-book-eyebrow { font-size: 12px !important; font-weight: 600; letter-spacing: .08em; color: var(--cl-navy); }
+.cl-book-eyebrow i { color: var(--cl-pink); }
+.cl-book-schedule li {
+  font-size: 14px; color: var(--cl-ink); padding: 10px 12px; margin-bottom: 8px;
+  background: var(--cl-bg); border-radius: 10px;
+}
+.cl-book-schedule li i { color: var(--cl-pink); }
+
+.cl-book-form { padding: 28px; border: 1px solid var(--cl-line); }
+.cl-book-form .form-label { font-size: 14px !important; margin-bottom: 6px !important; }
+.cl-book-form .form-control, .cl-book-form .form-select { height: 50px; }
+.cl-book-fee {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cl-bg) !important; border-color: var(--cl-line) !important;
+  color: #B4369A; font-weight: 600; font-size: 15px;
+}
+.cl-book-notice {
+  display: flex; align-items: center; margin: 0; padding: 14px 16px; border-radius: 12px;
+  background: #FFF4F4; border: 1px solid #F8D3D3; color: #B42318; font-weight: 500; font-size: 15px;
+}
+.cl-book-slot {
+  min-width: 92px; padding: 10px 14px; font-size: 14px; font-weight: 500; border-radius: 10px;
+  border: 1px solid var(--cl-line); background: #fff;
+  transition: background-color .25s var(--cl-ease), transform .25s var(--cl-ease), box-shadow .25s;
+}
+.cl-book-slot:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 18px -10px rgba(27, 41, 120, .5); }
+.cl-book-actions { border-top: 1px solid var(--cl-line); }
+.cl-book-actions .btn { min-width: 120px; }
+
+@media (max-width: 767px) {
+  .cl-book-section { padding: 32px 0 56px; }
+  .cl-book-doctor { position: static; }
+  .cl-book-form { padding: 20px; }
+  .cl-book-actions .btn { flex: 1; }
+}
