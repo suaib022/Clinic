@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { format } from 'date-fns';
+import { startExtraction } from '@/lib/extraction/actions';
 
 type UploadFileState = {
     id: string;
@@ -55,7 +56,7 @@ export default function UploadDocumentModal({
                 return {
                     id: Math.random().toString(36).substring(7),
                     file,
-                    category: 'other',
+                    category: '',
                     title: nameWithoutExt,
                     document_date: format(new Date(), 'yyyy-MM-dd'),
                     notes: '',
@@ -100,7 +101,7 @@ export default function UploadDocumentModal({
 
             // 2. Insert into DB
             const { data: userData } = await supabase.auth.getUser();
-            const { error: dbError } = await supabase.from('medical_records').insert({
+            const { data: inserted, error: dbError } = await supabase.from('medical_records').insert({
                 patient_id: selectedPatientId,
                 doctor_id: visits?.find(v => v.id === f.visit_id)?.doctor_id || null,
                 uploaded_by: userData.user?.id,
@@ -112,10 +113,12 @@ export default function UploadDocumentModal({
                 appointment_id: f.visit_id || null,
                 file_size: f.file.size,
                 file_type: f.file.type
-            });
+            }).select('id').single();
 
             if (dbError) throw dbError;
-            
+            // Runs in the background on the server; upload is already done either way.
+            if (inserted) startExtraction([inserted.id]).catch(() => {});
+
             updateFile(f.id, { status: 'success', progress: 100 });
         } catch (err: any) {
             updateFile(f.id, { status: 'error', error: err.message || 'Upload failed' });
@@ -128,6 +131,10 @@ export default function UploadDocumentModal({
             return;
         }
         const pendingFiles = files.filter(f => f.status === 'pending' || f.status === 'error');
+        if (pendingFiles.some(f => !f.category)) {
+            alert('Please select a document type (Prescription, Test Report, ...) for every file');
+            return;
+        }
         for (const f of pendingFiles) {
             await uploadFile(f);
         }
@@ -178,7 +185,7 @@ export default function UploadDocumentModal({
                                     <i className="bi bi-cloud-arrow-up fs-2 mb-2"></i>
                                     <span>Select Files (Images or PDF)</span>
                                     <small className="text-muted">Up to 10 files</small>
-                                    <input type="file" multiple accept="image/*,.pdf" className="d-none" onChange={handleFileChange} />
+                                    <input type="file" multiple accept="image/jpeg,image/png,image/webp,application/pdf,.pdf" className="d-none" onChange={handleFileChange} />
                                 </label>
                             </div>
                         )}
@@ -208,9 +215,10 @@ export default function UploadDocumentModal({
                                             </div>
                                             <div className="col-md-6">
                                                 <select className="form-select form-select-sm" value={f.category} onChange={e => updateFile(f.id, { category: e.target.value })} disabled={f.status === 'success' || f.status === 'uploading'}>
-                                                    <option value="other">Other</option>
+                                                    <option value="" disabled>-- Select type --</option>
                                                     <option value="prescription">Prescription</option>
                                                     <option value="test_report">Test Report</option>
+                                                    <option value="other">Other</option>
                                                     <option value="imaging">Imaging</option>
                                                     <option value="discharge_summary">Discharge Summary</option>
                                                 </select>

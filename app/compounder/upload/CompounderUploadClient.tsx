@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react';
 import { format, parseISO } from 'date-fns';
-import { createClient } from '@/lib/supabase/client';
 import UploadDocumentModal from '@/components/UploadDocumentModal';
+import { deleteMedicalRecord } from '@/lib/records/actions';
 
 export default function CompounderUploadClient({ patients, recentUploads }: { patients: any[], recentUploads: any[] }) {
-    const supabase = createClient();
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [selectedPatientId, setSelectedPatientId] = useState<string | undefined>();
 
@@ -15,19 +14,16 @@ export default function CompounderUploadClient({ patients, recentUploads }: { pa
         setIsUploadOpen(true);
     };
 
-    const handleRetract = async (recordId: string, path: string) => {
+    const handleRetract = async (recordId: string) => {
         if (!confirm('Are you sure you want to retract this document? This cannot be undone.')) return;
-        
-        // Compounders can only retract if within 15 minutes, enforced by RLS.
-        const { error } = await supabase.from('medical_records').update({ is_deleted: true }).eq('id', recordId);
+
+        // Compounders can only retract their own uploads within 15 minutes (checked server-side).
+        const { error } = await deleteMedicalRecord(recordId);
         if (error) {
-            alert('Failed to retract: ' + error.message);
+            alert('Failed to retract: ' + error);
             return;
         }
-        
-        // Soft deleted in DB, now remove from storage
-        await supabase.storage.from('medical_documents').remove([path]);
-        
+
         window.location.reload();
     };
 
@@ -102,7 +98,7 @@ export default function CompounderUploadClient({ patients, recentUploads }: { pa
                                                     {isRetractable && (
                                                         <button 
                                                             className="btn btn-sm btn-outline-danger h-100" 
-                                                            onClick={() => handleRetract(r.id, r.file_path)}
+                                                            onClick={() => handleRetract(r.id)}
                                                             title="Retract document"
                                                         >
                                                             <i className="bi bi-arrow-counterclockwise"></i>

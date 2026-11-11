@@ -40,7 +40,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/admin/patients', label: 'Patients', icon: 'bi-person-badge' },
         { href: '/admin/compounders', label: 'Compounders', icon: 'bi-person-badge-fill' },
         { href: '/admin/specialities', label: 'Specialities', icon: 'bi-tags' },
-        { href: '/admin/reports', label: 'Reports', icon: 'bi-bar-chart' },
+        { href: '/admin/reports', label: 'Health Insights', icon: 'bi-bar-chart' },
         { href: '/admin/queue-reports', label: 'Queue Reports', icon: 'bi-graph-up' },
         { href: '/admin/queue-settings', label: 'Queue Settings', icon: 'bi-sliders' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },

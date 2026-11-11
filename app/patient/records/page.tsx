@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
 import RecordsClient from './RecordsClient';
+import { loadHealthData } from '@/lib/extraction/healthData';
 
 export default async function PatientRecordsPage() {
     const { user } = await requireRole(['patient']);
@@ -61,6 +62,7 @@ export default async function PatientRecordsPage() {
             appointment_id,
             file_size,
             file_type,
+            extraction_status,
             uploader:uploaded_by(role, full_name),
             doctor:doctor_id(full_name),
             appointment:appointments!medical_records_appointment_id_fkey(
@@ -78,12 +80,14 @@ export default async function PatientRecordsPage() {
         records = data || [];
     }
 
+    const health = await loadHealthData(supabase, patientIds);
+
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
-                    <RecordsClient patients={safePatients} visits={visits || []} records={records || []} userId={user.id} />
+                    <RecordsClient patients={safePatients} visits={visits || []} records={records || []} userId={user.id} health={health} />
                 </div>
             </div>
         </main>

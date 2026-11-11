@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/auth/requireRole';
+import { after } from 'next/server';
+import { processRecord } from '@/lib/extraction/processRecord';
 
 // ──── APPOINTMENT ACTIONS ────
 
@@ -157,6 +159,7 @@ export async function uploadVisitPrescription(formData: FormData) {
         if (recordErr || !record) {
             return { success: false, error: `Failed to save record metadata: ${recordErr?.message}` };
         }
+        after(() => processRecord(record.id));
 
         // 4. Update appointment to 'completed' with prescription_record_id via RPC
         const { error: rpcErr } = await supabaseAdmin.rpc('complete_prescription_upload', {
