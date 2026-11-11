@@ -35,7 +35,7 @@ export default async function DepartmentsPage() {
       
           <div className="container mt-4 mb-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
-              <h1 className="fw-bold" style={{ color: '#0D7D72' }}>Our Departments</h1>
+              <h1 className="fw-bold" style={{ color: '#1B2978' }}>Our Departments</h1>
               <div>
                  <span className="text-muted small"><Link href="/" className="text-decoration-none text-muted">Home</Link> | Department</span>
               </div>
@@ -57,10 +57,10 @@ export default async function DepartmentsPage() {
                   <Link href={`/doctors?dept=${encodeURIComponent(dept.name)}`} className="text-decoration-none">
                     <div className="card h-100 border-0 shadow-sm rounded-0 department-card" style={{ transition: 'transform 0.2s', cursor: 'pointer' }}>
                       <div className="card-body text-center p-4">
-                        <div className="icon-box mb-3 d-flex justify-content-center align-items-center mx-auto" style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#f0f9f8', color: '#0ab1a9' }}>
+                        <div className="icon-box mb-3 d-flex justify-content-center align-items-center mx-auto" style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#f0f9f8', color: '#3346B5' }}>
                            <i className={`bi ${getIcon(dept.name)} fs-3`}></i>
                         </div>
-                        <h6 className="card-title fw-bold" style={{ color: '#0D7D72' }}>{dept.name}</h6>
+                        <h6 className="card-title fw-bold" style={{ color: '#1B2978' }}>{dept.name}</h6>
                         <p className="small text-muted mb-0 mt-3" style={{ fontSize: '13px' }}>
                           We provide specialized care and consultation for {dept.name.toLowerCase()} related issues.
                         </p>

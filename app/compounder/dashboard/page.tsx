@@ -23,7 +23,7 @@ export default async function CompounderDashboard() {
     // No doctor assigned - empty state
     if (!doctorId) {
         return (
-            <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+            <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
                 <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                     <DashboardSidebar role="compounder" />
                     <div className="flex-grow-1 p-4 p-md-5">
@@ -93,25 +93,25 @@ export default async function CompounderDashboard() {
     const sess = sessionLabels[sessionStatus] || sessionLabels.not_started;
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="compounder" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid" style={{ maxWidth: '1200px' }}>
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
+                            <h2 className="m-0" style={{ color: '#1B2978' }}>
                                 <i className="bi bi-grid me-2"></i>Dashboard
                             </h2>
-                            <Link href="/compounder/queue" className="btn btn-sm btn-primary" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}>
+                            <Link href="/compounder/queue" className="btn btn-sm btn-primary" style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}>
                                 <i className="bi bi-calendar-check me-1"></i>Manage Live Queue & Chamber
                             </Link>
                         </div>
 
                         {/* Doctor Card with Chamber Delay Status */}
-                        <div className="card border-0 shadow-sm rounded-3 mb-4" style={{ borderLeft: '4px solid #0D7D72' }}>
+                        <div className="card border-0 shadow-sm rounded-3 mb-4" style={{ borderLeft: '4px solid #1B2978' }}>
                             <div className="card-body d-flex align-items-center gap-3 p-4">
                                 <div className="rounded-circle bg-light d-flex align-items-center justify-content-center" style={{ width: 56, height: 56 }}>
-                                    <i className="bi bi-person-badge fs-3" style={{ color: '#0D7D72' }}></i>
+                                    <i className="bi bi-person-badge fs-3" style={{ color: '#1B2978' }}></i>
                                 </div>
                                 <div>
                                     <h5 className="m-0 fw-bold">Dr. {doctor?.full_name}</h5>
@@ -121,7 +121,7 @@ export default async function CompounderDashboard() {
                                             <>
                                                 <span className="text-muted" style={{ fontSize: '11px' }}>•</span>
                                                 <small className="text-muted d-inline-flex align-items-center gap-1">
-                                                    <i className="bi bi-envelope" style={{ color: '#0D7D72' }}></i>
+                                                    <i className="bi bi-envelope" style={{ color: '#1B2978' }}></i>
                                                     <a href={`mailto:${doctor.email}`} className="text-decoration-none text-muted">
                                                         {doctor.email}
                                                     </a>

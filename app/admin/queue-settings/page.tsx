@@ -14,12 +14,12 @@ export default async function QueueSettingsPage() {
   const { data: log } = await supabase.from('dss_settings_log').select('changed_at, old_values, new_values, changed_by').order('changed_at', { ascending: false }).limit(20);
   const values = Object.fromEntries(Object.entries(row ?? {}).filter(([k]) => !['id', 'updated_at', 'updated_by'].includes(k)));
   return (
-    <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+    <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
       <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
         <DashboardSidebar role="admin" />
         <div className="flex-grow-1 p-3 p-md-5">
           <div className="container-fluid" style={{ maxWidth: 1000 }}>
-            <h2 className="mb-4 pb-3" style={{ color: '#0D7D72', borderBottom: '3px solid #0D7D72' }}><i className="bi bi-sliders me-2" aria-hidden="true"></i>Queue Settings</h2>
+            <h2 className="mb-4 pb-3" style={{ color: '#1B2978', borderBottom: '1px solid #E3EAF3' }}><i className="bi bi-sliders me-2" aria-hidden="true"></i>Queue Settings</h2>
             {row ? <SettingsForm initial={values as SettingsValues} /> : <div className="alert alert-warning">Settings table not found.</div>}
             <h5 className="mt-5 mb-3">Change log</h5>
             <ul className="list-group">

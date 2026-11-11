@@ -543,7 +543,7 @@ export default function PatientAppointmentsTable({
                                         ? 'text-white shadow-sm'
                                         : 'btn-outline-secondary bg-white text-secondary'
                                 }`}
-                                style={{ backgroundColor: selectedTimeTab === 'all' ? '#0D7D72' : undefined, borderColor: selectedTimeTab === 'all' ? '#0D7D72' : undefined }}
+                                style={{ backgroundColor: selectedTimeTab === 'all' ? '#1B2978' : undefined, borderColor: selectedTimeTab === 'all' ? '#1B2978' : undefined }}
                                 onClick={() => setSelectedTimeTab('all')}
                             >
                                 <span>All Visits</span>
@@ -559,7 +559,7 @@ export default function PatientAppointmentsTable({
                                         ? 'text-white shadow-sm'
                                         : 'btn-outline-secondary bg-white text-secondary'
                                 }`}
-                                style={{ backgroundColor: selectedTimeTab === 'upcoming' ? '#0ab1a9' : undefined, borderColor: selectedTimeTab === 'upcoming' ? '#0ab1a9' : undefined }}
+                                style={{ backgroundColor: selectedTimeTab === 'upcoming' ? '#3346B5' : undefined, borderColor: selectedTimeTab === 'upcoming' ? '#3346B5' : undefined }}
                                 onClick={() => setSelectedTimeTab('upcoming')}
                             >
                                 <Calendar size={14} />
@@ -576,7 +576,7 @@ export default function PatientAppointmentsTable({
                                         ? 'text-white shadow-sm'
                                         : 'btn-outline-secondary bg-white text-secondary'
                                 }`}
-                                style={{ backgroundColor: selectedTimeTab === 'today' ? '#0D7D72' : undefined, borderColor: selectedTimeTab === 'today' ? '#0D7D72' : undefined }}
+                                style={{ backgroundColor: selectedTimeTab === 'today' ? '#1B2978' : undefined, borderColor: selectedTimeTab === 'today' ? '#1B2978' : undefined }}
                                 onClick={() => setSelectedTimeTab('today')}
                             >
                                 <Clock size={14} />
@@ -665,13 +665,13 @@ export default function PatientAppointmentsTable({
                             <table className="table table-hover mb-0 align-middle">
                                 <thead className="table-light border-bottom">
                                     <tr>
-                                        <th className="px-4 py-3" style={{ color: '#0D7D72' }}>Serial</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Patient Details</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Date & Slot</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Consulting Doctor</th>
-                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Download Slips</th>
-                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Visit Feedback</th>
-                                        <th className="px-4 py-3 text-end" style={{ color: '#0D7D72' }}>Status & Action</th>
+                                        <th className="px-4 py-3" style={{ color: '#1B2978' }}>Serial</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Patient Details</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Date & Slot</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Consulting Doctor</th>
+                                        <th className="py-3 text-center" style={{ color: '#1B2978' }}>Download Slips</th>
+                                        <th className="py-3 text-center" style={{ color: '#1B2978' }}>Visit Feedback</th>
+                                        <th className="px-4 py-3 text-end" style={{ color: '#1B2978' }}>Status & Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -704,7 +704,7 @@ export default function PatientAppointmentsTable({
                                                         title="Click to view full appointment details"
                                                     >
                                                         <span className="small text-muted" style={{ fontSize: '10px', lineHeight: 1 }}>TOKEN</span>
-                                                        <span className="fw-bold fs-6 text-dark" style={{ color: '#0D7D72', lineHeight: 1.2 }}>
+                                                        <span className="fw-bold fs-6 text-dark" style={{ color: '#1B2978', lineHeight: 1.2 }}>
                                                             #{apt.serial_no || '-'}
                                                         </span>
                                                     </div>
@@ -766,7 +766,7 @@ export default function PatientAppointmentsTable({
                                                         <button
                                                             type="button"
                                                             className="btn btn-sm py-1 px-2.5 d-inline-flex align-items-center gap-1 text-white shadow-xs"
-                                                            style={{ backgroundColor: '#0D7D72', fontSize: '11px', borderColor: '#0D7D72' }}
+                                                            style={{ backgroundColor: '#1B2978', fontSize: '11px', borderColor: '#1B2978' }}
                                                             title="Download hospital prescription ticket PDF (sample-pres replica)"
                                                             disabled={isGeneratingRx}
                                                             onClick={(e) => {
@@ -928,14 +928,14 @@ export default function PatientAppointmentsTable({
                         </div>
                     ) : (
                         <div className="p-5 text-center text-muted">
-                            <i className="bi bi-calendar-x" style={{ fontSize: '3rem', color: '#0D7D72' }}></i>
+                            <i className="bi bi-calendar-x" style={{ fontSize: '3rem', color: '#1B2978' }}></i>
                             <h5 className="mt-3 mb-1 fw-bold text-dark">No appointments found</h5>
                             <p className="text-muted small mb-3">
                                 {selectedTimeTab !== 'all' || selectedPatientId !== 'all' || searchQuery 
                                     ? 'No bookings match your current time, patient, or search filters.'
                                     : 'You have no appointments scheduled in this account yet.'}
                             </p>
-                            <a href="/patient/book" className="btn btn-sm text-white px-3" style={{ backgroundColor: '#0D7D72' }}>
+                            <a href="/patient/book" className="btn btn-sm text-white px-3" style={{ backgroundColor: '#1B2978' }}>
                                 Book an Appointment
                             </a>
                         </div>
@@ -980,11 +980,11 @@ export default function PatientAppointmentsTable({
                         >
                             <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
                                 {/* Header */}
-                                <div className="modal-header text-white rounded-0 py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                                <div className="modal-header text-white rounded-0 py-3 px-4" style={{ backgroundColor: '#1B2978' }}>
                                     <div className="d-flex align-items-center gap-3">
-                                        <div className="bg-white text-dark fw-bold px-2.5 py-1 text-center" style={{ minWidth: '45px', border: '2px solid #0ab1a9', borderRadius: '4px' }}>
+                                        <div className="bg-white text-dark fw-bold px-2.5 py-1 text-center" style={{ minWidth: '45px', border: '2px solid #3346B5', borderRadius: '4px' }}>
                                             <div style={{ fontSize: '9px', lineHeight: 1, letterSpacing: '1px' }}>TOKEN</div>
-                                            <div className="fs-5" style={{ color: '#0D7D72', lineHeight: 1.1 }}>#{detailModalAppt.serial_no || '-'}</div>
+                                            <div className="fs-5" style={{ color: '#1B2978', lineHeight: 1.1 }}>#{detailModalAppt.serial_no || '-'}</div>
                                         </div>
                                         <div>
                                             <h5 className="modal-title fw-bold m-0 text-white">Appointment Details</h5>
@@ -1027,8 +1027,8 @@ export default function PatientAppointmentsTable({
                                         <div className="col-md-6">
                                             <div className="card h-100 border shadow-none rounded">
                                                 <div className="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center gap-2">
-                                                    <User size={15} style={{ color: '#0D7D72' }} />
-                                                    <span className="fw-bold small text-uppercase" style={{ color: '#0D7D72' }}>Patient Information</span>
+                                                    <User size={15} style={{ color: '#1B2978' }} />
+                                                    <span className="fw-bold small text-uppercase" style={{ color: '#1B2978' }}>Patient Information</span>
                                                 </div>
                                                 <div className="card-body p-3">
                                                     <div className="mb-2">
@@ -1057,8 +1057,8 @@ export default function PatientAppointmentsTable({
                                         <div className="col-md-6">
                                             <div className="card h-100 border shadow-none rounded">
                                                 <div className="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center gap-2">
-                                                    <i className="bi bi-person-badge fs-6" style={{ color: '#0D7D72' }}></i>
-                                                    <span className="fw-bold small text-uppercase" style={{ color: '#0D7D72' }}>Doctor & Department</span>
+                                                    <i className="bi bi-person-badge fs-6" style={{ color: '#1B2978' }}></i>
+                                                    <span className="fw-bold small text-uppercase" style={{ color: '#1B2978' }}>Doctor & Department</span>
                                                 </div>
                                                 <div className="card-body p-3">
                                                     <div className="mb-2">
@@ -1084,8 +1084,8 @@ export default function PatientAppointmentsTable({
                                             <div className="card border shadow-none rounded">
                                                 <div className="card-header bg-white py-2 px-3 border-bottom d-flex justify-content-between align-items-center">
                                                     <div className="d-flex align-items-center gap-2">
-                                                        <CreditCard size={15} style={{ color: '#0D7D72' }} />
-                                                        <span className="fw-bold small text-uppercase" style={{ color: '#0D7D72' }}>Payment & Billing Receipt</span>
+                                                        <CreditCard size={15} style={{ color: '#1B2978' }} />
+                                                        <span className="fw-bold small text-uppercase" style={{ color: '#1B2978' }}>Payment & Billing Receipt</span>
                                                     </div>
                                                     <span className={`badge ${isPaid ? 'bg-success' : 'bg-warning text-dark'}`}>
                                                         {isPaid ? 'PAID' : 'PAYMENT DUE'}
@@ -1136,7 +1136,7 @@ export default function PatientAppointmentsTable({
                                         <button
                                             type="button"
                                             className="btn text-white d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold rounded-2"
-                                            style={{ backgroundColor: '#0D7D72' }}
+                                            style={{ backgroundColor: '#1B2978' }}
                                             disabled={isGeneratingRx}
                                             onClick={() => handleDownloadSlipPdf(detailModalAppt, 'prescription')}
                                         >
@@ -1223,7 +1223,7 @@ export default function PatientAppointmentsTable({
                     <div className="modal-dialog modal-dialog-centered my-4" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
                             <form onSubmit={handleSubmitFeedback}>
-                                <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                                <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#1B2978' }}>
                                     <h5 className="modal-title fw-bold m-0 text-white">
                                         <i className="bi bi-star-half me-2"></i>Rate Your Visit Experience
                                     </h5>
@@ -1357,7 +1357,7 @@ export default function PatientAppointmentsTable({
                 >
                     <div className="modal-dialog modal-dialog-centered my-4" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
-                            <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                            <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#1B2978' }}>
                                 <h5 className="modal-title fw-bold m-0 text-white">
                                     <i className="bi bi-star-fill text-warning me-2"></i>Your Submitted Feedback
                                 </h5>
@@ -1537,7 +1537,7 @@ export default function PatientAppointmentsTable({
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content border-0 shadow">
                             <form onSubmit={handleProcessRebook}>
-                                <div className="modal-header text-white" style={{ backgroundColor: '#0D7D72' }}>
+                                <div className="modal-header text-white" style={{ backgroundColor: '#1B2978' }}>
                                     <h5 className="modal-title fw-bold">
                                         <i className="bi bi-arrow-repeat me-2"></i>Rebook Appointment
                                     </h5>

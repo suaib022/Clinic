@@ -34,41 +34,41 @@ export default async function AdminDashboard() {
         .limit(5);
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="admin" />
                 
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Admin Dashboard</h2>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
+                            <h2 className="m-0" style={{ color: '#1B2978' }}>Admin Dashboard</h2>
                             <div className="text-muted">Welcome, System Admin</div>
                         </div>
 
                         {/* Stats Row */}
                         <div className="row g-4 mb-5">
                             <div className="col-md-4">
-                                <div className="card border-0 shadow-sm rounded-3 h-100 p-4" style={{ borderLeft: '4px solid #0ab1a9' }}>
+                                <div className="card border-0 shadow-sm rounded-3 h-100 p-4" style={{ borderLeft: '4px solid #3346B5' }}>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 className="text-muted mb-2">Total Doctors</h6>
                                             <h3 className="fw-bold mb-0">{doctorsCount || 0}</h3>
                                         </div>
                                         <div className="bg-light p-3 rounded-circle text-center" style={{ width: '60px', height: '60px' }}>
-                                            <i className="bi bi-people fs-4" style={{ color: '#0ab1a9' }}></i>
+                                            <i className="bi bi-people fs-4" style={{ color: '#3346B5' }}></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-md-4">
-                                <div className="card border-0 shadow-sm rounded-3 h-100 p-4" style={{ borderLeft: '4px solid #0D7D72' }}>
+                                <div className="card border-0 shadow-sm rounded-3 h-100 p-4" style={{ borderLeft: '4px solid #1B2978' }}>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 className="text-muted mb-2">Total Patients</h6>
                                             <h3 className="fw-bold mb-0">{patientsCount || 0}</h3>
                                         </div>
                                         <div className="bg-light p-3 rounded-circle text-center" style={{ width: '60px', height: '60px' }}>
-                                            <i className="bi bi-person-badge fs-4" style={{ color: '#0D7D72' }}></i>
+                                            <i className="bi bi-person-badge fs-4" style={{ color: '#1B2978' }}></i>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@ export default async function AdminDashboard() {
                         <div className="card border-0 shadow-sm rounded-3 p-4">
                             <div className="d-flex justify-content-between align-items-center mb-4">
                                 <h5 className="m-0 fw-bold text-secondary">Recent Appointments</h5>
-                                <a href="/admin/appointments" className="btn btn-sm btn-outline-primary" style={{ borderColor: '#0ab1a9', color: '#0ab1a9' }}>View All</a>
+                                <a href="/admin/appointments" className="btn btn-sm btn-outline-primary" style={{ borderColor: '#3346B5', color: '#3346B5' }}>View All</a>
                             </div>
                             
                             <div className="table-responsive">

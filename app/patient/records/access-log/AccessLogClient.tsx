@@ -17,9 +17,9 @@ export default function AccessLogClient({ patients, logs }: { patients: any[], l
 
     return (
         <div className="container-fluid max-w-1200 mx-auto">
-            <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+            <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
                 <div>
-                    <h2 className="m-0" style={{ color: '#0D7D72' }}>Access Log</h2>
+                    <h2 className="m-0" style={{ color: '#1B2978' }}>Access Log</h2>
                     <p className="text-muted small mb-0 mt-1">Record of staff who accessed your medical files (excluding your own actions).</p>
                 </div>
                 <a href="/patient/records" className="btn btn-sm btn-outline-secondary">

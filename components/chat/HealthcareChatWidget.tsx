@@ -467,10 +467,10 @@ export default function HealthcareChatWidget() {
                     align-items: center !important;
                     gap: 8px !important;
                     background: #ffffff !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 9999px !important;
                     padding: 9px 20px 9px 16px !important;
-                    box-shadow: 2px 2px 0px #000000 !important;
+                    box-shadow: 2px 2px 0px #0E1954 !important;
                     cursor: pointer !important;
                     transition: transform 0.15s ease, box-shadow 0.15s ease !important;
                     outline: none !important;
@@ -478,12 +478,12 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-call-pill:hover {
                     transform: translateY(-2px) !important;
-                    box-shadow: 3px 3px 0px #000000 !important;
+                    box-shadow: 3px 3px 0px #0E1954 !important;
                 }
 
                 .adaapt-call-pill:active {
                     transform: translateY(1px) !important;
-                    box-shadow: 1px 1px 0px #000000 !important;
+                    box-shadow: 1px 1px 0px #0E1954 !important;
                 }
 
                 .adaapt-red-dot {
@@ -503,7 +503,7 @@ export default function HealthcareChatWidget() {
                 .adaapt-call-label {
                     font-weight: 700 !important;
                     font-size: 14px !important;
-                    color: #000000 !important;
+                    color: #0E1954 !important;
                     letter-spacing: -0.2px !important;
                 }
 
@@ -518,7 +518,7 @@ export default function HealthcareChatWidget() {
                     display: flex !important;
                     align-items: center !important;
                     justify-content: center !important;
-                    box-shadow: 2px 2px 0px #000000 !important;
+                    box-shadow: 2px 2px 0px #0E1954 !important;
                     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
                 }
 
@@ -533,7 +533,7 @@ export default function HealthcareChatWidget() {
                     height: 615px !important;
                     max-height: calc(100vh - 40px) !important;
                     background: #ffffff !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 20px !important;
                     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28) !important;
                     display: flex !important;
@@ -547,13 +547,19 @@ export default function HealthcareChatWidget() {
                     to { opacity: 1; transform: translateY(0) scale(1); }
                 }
 
+                /* Minimized: the base height above is !important, so the collapsed size must be too */
+                .adaapt-chat-window.adaapt-minimized {
+                    height: auto !important;
+                    width: 310px !important;
+                }
+
                 .adaapt-header {
-                    background: #080d26 !important;
+                    background: #1B2978 !important;
                     padding: 14px 18px !important;
                     display: flex !important;
                     align-items: center !important;
                     justify-content: space-between !important;
-                    border-bottom: 2px solid #000000 !important;
+                    border-bottom: 2px solid #0E1954 !important;
                 }
 
                 .adaapt-header-left {
@@ -573,7 +579,7 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-header-status {
                     font-size: 10px !important;
-                    color: #38bdf8 !important;
+                    color: #F28BDD !important;
                     font-weight: 700 !important;
                     letter-spacing: 0.7px !important;
                     text-transform: uppercase !important;
@@ -587,7 +593,7 @@ export default function HealthcareChatWidget() {
                     width: 6px !important;
                     height: 6px !important;
                     border-radius: 50% !important;
-                    background-color: #38bdf8 !important;
+                    background-color: #F28BDD !important;
                 }
 
                 .adaapt-header-actions {
@@ -629,7 +635,7 @@ export default function HealthcareChatWidget() {
                     width: 5px !important;
                 }
                 .adaapt-messages-area::-webkit-scrollbar-thumb {
-                    background: #cbd5e1 !important;
+                    background: #C9D6F5 !important;
                     border-radius: 4px !important;
                 }
 
@@ -642,10 +648,10 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-ai-bubble {
                     background: #ffffff !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 14px !important;
                     padding: 12px 15px !important;
-                    color: #000000 !important;
+                    color: #0E1954 !important;
                     font-size: 13.5px !important;
                     line-height: 1.45 !important;
                     max-width: 86% !important;
@@ -659,10 +665,10 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-user-bubble {
                     background: #ffffff !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 14px !important;
                     padding: 11px 15px !important;
-                    color: #000000 !important;
+                    color: #0E1954 !important;
                     font-size: 13.5px !important;
                     line-height: 1.45 !important;
                     max-width: 85% !important;
@@ -681,13 +687,13 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-btn-white {
                     background: #ffffff !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 8px !important;
                     padding: 7px 15px !important;
                     font-size: 13px !important;
                     font-weight: 700 !important;
-                    color: #000000 !important;
-                    box-shadow: 2px 2px 0px #000000 !important;
+                    color: #0E1954 !important;
+                    box-shadow: 2px 2px 0px #0E1954 !important;
                     cursor: pointer !important;
                     transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease !important;
                     text-align: left !important;
@@ -696,24 +702,24 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-btn-white:hover {
                     transform: translate(-1px, -1px) !important;
-                    box-shadow: 3px 3px 0px #000000 !important;
-                    background: #f8fafc !important;
+                    box-shadow: 3px 3px 0px #0E1954 !important;
+                    background: #F5F9FC !important;
                 }
 
                 .adaapt-btn-white:active {
                     transform: translate(1px, 1px) !important;
-                    box-shadow: 1px 1px 0px #000000 !important;
+                    box-shadow: 1px 1px 0px #0E1954 !important;
                 }
 
                 .adaapt-btn-orange {
-                    background: #f59e0b !important;
-                    border: 2px solid #000000 !important;
+                    background: #F28BDD !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 8px !important;
                     padding: 7px 15px !important;
                     font-size: 13px !important;
                     font-weight: 700 !important;
-                    color: #000000 !important;
-                    box-shadow: 2px 2px 0px #000000 !important;
+                    color: #0E1954 !important;
+                    box-shadow: 2px 2px 0px #0E1954 !important;
                     cursor: pointer !important;
                     transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease !important;
                     display: inline-flex !important;
@@ -725,13 +731,13 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-btn-orange:hover {
                     transform: translate(-1px, -1px) !important;
-                    box-shadow: 3px 3px 0px #000000 !important;
-                    background: #d97706 !important;
+                    box-shadow: 3px 3px 0px #0E1954 !important;
+                    background: #E46BC9 !important;
                 }
 
                 .adaapt-btn-orange:active {
                     transform: translate(1px, 1px) !important;
-                    box-shadow: 1px 1px 0px #000000 !important;
+                    box-shadow: 1px 1px 0px #0E1954 !important;
                 }
 
                 /* Footer Unified Neo-Brutalist Input Container */
@@ -742,7 +748,7 @@ export default function HealthcareChatWidget() {
 
                 .adaapt-unified-input-card {
                     background: #ffffff !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 16px !important;
                     padding: 10px 12px 10px 12px !important;
                     display: flex !important;
@@ -757,7 +763,7 @@ export default function HealthcareChatWidget() {
                     resize: none !important;
                     background: transparent !important;
                     font-size: 13px !important;
-                    color: #000000 !important;
+                    color: #0E1954 !important;
                     line-height: 1.4 !important;
                     padding: 0 !important;
                     margin: 0 !important;
@@ -765,7 +771,7 @@ export default function HealthcareChatWidget() {
                 }
 
                 .adaapt-unified-textarea::placeholder {
-                    color: #94a3b8 !important;
+                    color: #8C94B5 !important;
                 }
 
                 .adaapt-unified-actions {
@@ -777,10 +783,10 @@ export default function HealthcareChatWidget() {
                 .adaapt-tool-btn {
                     width: 36px !important;
                     height: 34px !important;
-                    border: 2px solid #000000 !important;
+                    border: 2px solid #0E1954 !important;
                     border-radius: 8px !important;
                     background: #ffffff !important;
-                    color: #000000 !important;
+                    color: #0E1954 !important;
                     display: inline-flex !important;
                     align-items: center !important;
                     justify-content: center !important;
@@ -791,7 +797,7 @@ export default function HealthcareChatWidget() {
                 }
 
                 .adaapt-tool-btn:hover {
-                    background: #f1f5f9 !important;
+                    background: #EDF4FA !important;
                     transform: translateY(-1px) !important;
                 }
 
@@ -800,16 +806,16 @@ export default function HealthcareChatWidget() {
                 }
 
                 .adaapt-clip-btn {
-                    color: #ef4444 !important;
+                    color: #E46BC9 !important;
                 }
 
                 .adaapt-send-peach-btn {
-                    background: #fed7aa !important;
-                    color: #000000 !important;
+                    background: #F7C6EE !important;
+                    color: #0E1954 !important;
                 }
 
                 .adaapt-send-peach-btn:hover {
-                    background: #fdba74 !important;
+                    background: #F28BDD !important;
                 }
 
                 .adaapt-right-tools {
@@ -875,8 +881,7 @@ export default function HealthcareChatWidget() {
                 {/* 2. OPEN STATE CHAT MODAL (adaaapt.com layout) */}
                 {isOpen && (
                     <div
-                        className="adaapt-chat-window"
-                        style={isMinimized ? { height: '62px', width: '310px' } : {}}
+                        className={`adaapt-chat-window${isMinimized ? ' adaapt-minimized' : ''}`}
                     >
                         {/* Header */}
                         <div className="adaapt-header">
@@ -887,7 +892,7 @@ export default function HealthcareChatWidget() {
                                     <p className="adaapt-header-status">
                                         <span
                                             className="adaapt-header-status-dot"
-                                            style={{ backgroundColor: isConnected ? '#38bdf8' : '#fbbf24' }}
+                                            style={{ backgroundColor: isConnected ? '#F28BDD' : '#F7C6EE' }}
                                         ></span>
                                         <span>
                                             {connectionStatus === 'connected'
@@ -933,7 +938,7 @@ export default function HealthcareChatWidget() {
                                     <div
                                         style={{
                                             backgroundColor: '#f0fdf4',
-                                            borderBottom: '1.5px solid #000000',
+                                            borderBottom: '1.5px solid #0E1954',
                                             padding: '8px 14px',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -959,12 +964,12 @@ export default function HealthcareChatWidget() {
                                                 fontSize: '11px',
                                                 fontWeight: 700,
                                                 color: '#b91c1c',
-                                                border: '1.5px solid #000000',
+                                                border: '1.5px solid #0E1954',
                                                 backgroundColor: '#ffffff',
                                                 padding: '2px 8px',
                                                 borderRadius: '6px',
                                                 cursor: 'pointer',
-                                                boxShadow: '1px 1px 0px #000000'
+                                                boxShadow: '1px 1px 0px #0E1954'
                                             }}
                                         >
                                             End Call
@@ -977,7 +982,7 @@ export default function HealthcareChatWidget() {
                                     <div
                                         style={{
                                             backgroundColor: '#fffbeb',
-                                            borderBottom: '1px solid #000000',
+                                            borderBottom: '1px solid #0E1954',
                                             padding: '6px 12px',
                                             color: '#92400e',
                                             fontSize: '11px',
@@ -986,7 +991,7 @@ export default function HealthcareChatWidget() {
                                             gap: '5px'
                                         }}
                                     >
-                                        <AlertCircle size={13} color="#d97706" />
+                                        <AlertCircle size={13} color="#E46BC9" />
                                         <span>{errorMsg}</span>
                                     </div>
                                 )}
@@ -1000,8 +1005,8 @@ export default function HealthcareChatWidget() {
                                                     <span
                                                         style={{
                                                             fontSize: '10px',
-                                                            backgroundColor: '#f1f5f9',
-                                                            border: '1px solid #000000',
+                                                            backgroundColor: '#EDF4FA',
+                                                            border: '1px solid #0E1954',
                                                             color: '#334155',
                                                             padding: '2px 8px',
                                                             borderRadius: '6px',
@@ -1029,8 +1034,8 @@ export default function HealthcareChatWidget() {
                                                                         key={idx}
                                                                         style={{
                                                                             fontSize: '10px',
-                                                                            backgroundColor: '#f1f5f9',
-                                                                            border: '1px solid #000000',
+                                                                            backgroundColor: '#EDF4FA',
+                                                                            border: '1px solid #0E1954',
                                                                             padding: '2px 6px',
                                                                             borderRadius: '4px',
                                                                             fontWeight: 600
@@ -1114,8 +1119,8 @@ export default function HealthcareChatWidget() {
                                     <div
                                         style={{
                                             padding: '8px 14px',
-                                            backgroundColor: '#f8fafc',
-                                            borderTop: '1.5px solid #000000',
+                                            backgroundColor: '#F5F9FC',
+                                            borderTop: '1.5px solid #0E1954',
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: '6px',
@@ -1130,12 +1135,12 @@ export default function HealthcareChatWidget() {
                                                     alignItems: 'center',
                                                     gap: '5px',
                                                     backgroundColor: '#ffffff',
-                                                    border: '1.5px solid #000000',
+                                                    border: '1.5px solid #0E1954',
                                                     padding: '2px 8px',
                                                     borderRadius: '6px',
                                                     fontSize: '11px',
                                                     fontWeight: 600,
-                                                    boxShadow: '1px 1px 0px #000000'
+                                                    boxShadow: '1px 1px 0px #0E1954'
                                                 }}
                                             >
                                                 {sf.type === 'image' ? <ImageIcon size={12} color="#0284c7" /> : <FileText size={12} color="#e11d48" />}
@@ -1218,7 +1223,7 @@ export default function HealthcareChatWidget() {
                                                     className="adaapt-tool-btn"
                                                     style={{
                                                         backgroundColor: isConnected ? '#fee2e2' : '#ffffff',
-                                                        borderColor: isConnected ? '#ef4444' : '#000000'
+                                                        borderColor: isConnected ? '#ef4444' : '#0E1954'
                                                     }}
                                                     title={isConnected ? 'End voice call' : 'Start voice call with Aura'}
                                                 >

@@ -19,13 +19,13 @@ export default async function PatientSettingsPage() {
         .single();
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Profile Settings</h2>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
+                            <h2 className="m-0" style={{ color: '#1B2978' }}>Profile Settings</h2>
                         </div>
                         
                         <div className="row">
@@ -37,7 +37,7 @@ export default async function PatientSettingsPage() {
                                         </div>
                                         <h4 className="fw-bold mb-1">{userRecord?.full_name || 'No Name Set'}</h4>
                                         <p className="text-muted mb-0">{userRecord?.email}</p>
-                                        <span className="badge mt-2" style={{ backgroundColor: '#0ab1a9' }}>Patient Account</span>
+                                        <span className="badge mt-2" style={{ backgroundColor: '#3346B5' }}>Patient Account</span>
                                     </div>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@ export default async function PatientSettingsPage() {
                             <div className="col-md-8 mb-4">
                                 <div className="card border-0 shadow-sm rounded-0">
                                     <div className="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-                                        <h5 className="fw-bold m-0" style={{ color: '#0D7D72' }}>Account Information</h5>
+                                        <h5 className="fw-bold m-0" style={{ color: '#1B2978' }}>Account Information</h5>
                                     </div>
                                     <div className="card-body p-4">
                                         <form>
@@ -73,7 +73,7 @@ export default async function PatientSettingsPage() {
                                             </div>
                                             
                                             <div className="mt-4 pt-3 border-top d-flex gap-2">
-                                                <button type="button" className="btn text-white disabled" style={{ backgroundColor: '#0ab1a9', opacity: 0.7 }}>
+                                                <button type="button" className="btn text-white disabled" style={{ backgroundColor: '#3346B5', opacity: 0.7 }}>
                                                     Save Changes
                                                 </button>
                                                 <span className="form-text mt-2 ms-2">Editing profile is currently disabled.</span>

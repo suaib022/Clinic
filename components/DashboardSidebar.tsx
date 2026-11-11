@@ -89,8 +89,8 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                     <i className={`bi ${menuOpen ? 'bi-x-lg' : 'bi-list'}`} aria-hidden="true" />
                 </button>
                 <div className="d-flex align-items-center gap-2">
-                    <i className="bi bi-shield-check" style={{ color: '#0D7D72', fontSize: '18px' }} />
-                    <strong style={{ color: '#0D7D72', fontSize: '15px' }}>{ROLE_TITLES[role]}</strong>
+                    <i className="bi bi-shield-check" style={{ color: '#1B2978', fontSize: '18px' }} />
+                    <strong style={{ color: '#1B2978', fontSize: '15px' }}>{ROLE_TITLES[role]}</strong>
                 </div>
                 {user ? <NotificationBell userId={user.id} /> : <span style={{ width: 46 }} />}
                 {menuOpen && (
@@ -147,7 +147,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                 className="dashboard-sidebar bg-white shadow-sm p-3 d-none d-md-flex flex-column flex-shrink-0"
                 style={{
                     width: '280px',
-                    borderRight: '1px solid #eee',
+                    borderRight: '1px solid #E3EAF3',
                     minHeight: 'calc(100vh - 100px)',
                     position: 'sticky',
                     top: '100px',
@@ -156,7 +156,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
                 }}
             >
                 <div className="mb-4 px-3 py-2">
-                    <h5 className="m-0 fw-bold" style={{ color: '#0D7D72' }}>
+                    <h5 className="m-0 fw-bold" style={{ color: '#1B2978' }}>
                         <i className="bi bi-shield-check me-2" />
                         {ROLE_TITLES[role]}
                     </h5>
@@ -199,13 +199,13 @@ export default function DashboardSidebar({ role }: { role: Role }) {
             </div>
             <style jsx global>{`
                 .hover-bg-light:hover {
-                    background-color: rgba(13, 125, 114, 0.1);
-                    color: #0D7D72 !important;
+                    background-color: #EDF4FA;
+                    color: #1B2978 !important;
                 }
                 .active-nav-link {
-                    background-color: rgba(13, 125, 114, 0.1);
-                    color: #0D7D72 !important;
-                    font-weight: 600 !important;
+                    background-color: #1B2978;
+                    color: #ffffff !important;
+                    font-weight: 500 !important;
                 }
             `}</style>
         </>

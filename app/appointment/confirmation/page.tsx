@@ -100,9 +100,9 @@ export default async function ConfirmationPage({
             <div className="container" style={{ maxWidth: '820px' }}>
                 {/* Status Hero Card */}
                 <div className="card border-0 shadow-sm rounded-3 overflow-hidden print-card mb-4">
-                    <div className="p-4 p-md-5 text-center text-white" style={{ backgroundColor: '#0D7D72' }}>
+                    <div className="p-4 p-md-5 text-center text-white" style={{ backgroundColor: '#1B2978' }}>
                         <div className="d-inline-flex p-3 rounded-circle bg-white text-success mb-3 shadow-sm">
-                            <CheckCircle2 size={48} color="#0D7D72" />
+                            <CheckCircle2 size={48} color="#1B2978" />
                         </div>
                         <h2 className="fw-bold mb-2">Appointment Confirmed & Paid</h2>
                         <p className="lead mb-0 text-white-50 fs-6">
@@ -116,7 +116,7 @@ export default async function ConfirmationPage({
                             <span className="text-muted text-uppercase fw-semibold small tracking-wide d-block mb-1">
                                 Your Queue Serial Number
                             </span>
-                            <span className="display-4 fw-bold" style={{ color: '#0D7D72' }}>
+                            <span className="display-4 fw-bold" style={{ color: '#1B2978' }}>
                                 #{appointment?.serial_no || '-'}
                             </span>
                             <p className="text-muted small mt-2 mb-0">
@@ -130,7 +130,7 @@ export default async function ConfirmationPage({
                             <div className="col-md-6">
                                 <div className="border p-3 rounded-3 h-100 bg-white">
                                     <div className="d-flex align-items-center gap-2 mb-2 text-muted small fw-semibold">
-                                        <Stethoscope size={16} color="#0D7D72" />
+                                        <Stethoscope size={16} color="#1B2978" />
                                         <span>DOCTOR & SPECIALITY</span>
                                     </div>
                                     <h5 className="fw-bold text-dark mb-1">{doctor?.full_name || 'Consulting Doctor'}</h5>
@@ -142,7 +142,7 @@ export default async function ConfirmationPage({
                             <div className="col-md-6">
                                 <div className="border p-3 rounded-3 h-100 bg-white">
                                     <div className="d-flex align-items-center gap-2 mb-2 text-muted small fw-semibold">
-                                        <Calendar size={16} color="#0D7D72" />
+                                        <Calendar size={16} color="#1B2978" />
                                         <span>DATE & TIME</span>
                                     </div>
                                     <h5 className="fw-bold text-dark mb-1">
@@ -159,7 +159,7 @@ export default async function ConfirmationPage({
                             <div className="col-md-6">
                                 <div className="border p-3 rounded-3 h-100 bg-white">
                                     <div className="d-flex align-items-center gap-2 mb-2 text-muted small fw-semibold">
-                                        <User size={16} color="#0D7D72" />
+                                        <User size={16} color="#1B2978" />
                                         <span>PATIENT INFORMATION</span>
                                     </div>
                                     <h6 className="fw-bold text-dark mb-1">{patient?.full_name || 'Patient'}</h6>
@@ -174,7 +174,7 @@ export default async function ConfirmationPage({
                             <div className="col-md-6">
                                 <div className="border p-3 rounded-3 h-100 bg-white">
                                     <div className="d-flex align-items-center gap-2 mb-2 text-muted small fw-semibold">
-                                        <CreditCard size={16} color="#0D7D72" />
+                                        <CreditCard size={16} color="#1B2978" />
                                         <span>PAYMENT RECEIPT</span>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mb-1">
@@ -218,7 +218,7 @@ export default async function ConfirmationPage({
                                     <ArrowRight size={16} />
                                     <span>My Appointments</span>
                                 </Link>
-                                <Link href="/" className="btn btn-success d-inline-flex align-items-center gap-1 text-white" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}>
+                                <Link href="/" className="btn btn-success d-inline-flex align-items-center gap-1 text-white" style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}>
                                     <Home size={16} />
                                     <span>Home</span>
                                 </Link>

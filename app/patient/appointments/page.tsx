@@ -96,14 +96,14 @@ export default async function PatientAppointmentsPage() {
     );
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Appointments & Live Queue</h2>
-                            <a href="/patient/book" className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }}>Book New Appointment</a>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
+                            <h2 className="m-0" style={{ color: '#1B2978' }}>Appointments & Live Queue</h2>
+                            <a href="/patient/book" className="btn btn-sm text-white" style={{ backgroundColor: '#3346B5' }}>Book New Appointment</a>
                         </div>
 
                         {/* Decision Support: Live Queue Status for Today's Appointments */}

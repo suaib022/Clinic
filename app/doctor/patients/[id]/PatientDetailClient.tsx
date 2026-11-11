@@ -71,14 +71,14 @@ export default function PatientDetailClient({ patient, records, myVisits, userId
 
     return (
         <div className="container-fluid max-w-1200 mx-auto">
-            <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+            <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
                 <div>
                     <Link href="/doctor/patients" className="btn btn-sm btn-link text-muted px-0 text-decoration-none mb-1"><i className="bi bi-arrow-left"></i> Back to Patients</Link>
-                    <h2 className="m-0" style={{ color: '#0D7D72' }}>{patient.full_name}</h2>
+                    <h2 className="m-0" style={{ color: '#1B2978' }}>{patient.full_name}</h2>
                     <p className="text-muted small mb-0 mt-1">UHID: {patient.uhid || 'N/A'} • {patient.gender}, {format(parseISO(patient.dob), 'MMM d, yyyy')}</p>
                 </div>
                 <div className="d-flex gap-2">
-                    <button className="btn btn-sm text-white" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setIsUploadOpen(true)}>
+                    <button className="btn btn-sm text-white" style={{ backgroundColor: '#3346B5' }} onClick={() => setIsUploadOpen(true)}>
                         <i className="bi bi-upload"></i> Upload Document
                     </button>
                 </div>
@@ -88,7 +88,7 @@ export default function PatientDetailClient({ patient, records, myVisits, userId
                 {([['profile', 'bi-heart-pulse', 'Health Profile'], ['documents', 'bi-folder2-open', `Documents (${records.length})`]] as const).map(([key, icon, label]) => (
                     <button key={key} type="button"
                         className={`btn btn-sm rounded-pill px-3 fw-semibold ${view === key ? 'text-white' : 'btn-outline-secondary bg-white'}`}
-                        style={view === key ? { backgroundColor: '#0D7D72', borderColor: '#0D7D72' } : undefined}
+                        style={view === key ? { backgroundColor: '#1B2978', borderColor: '#1B2978' } : undefined}
                         onClick={() => setView(key)}>
                         <i className={`bi ${icon} me-1`}></i>{label}
                     </button>

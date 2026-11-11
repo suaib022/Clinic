@@ -41,7 +41,7 @@ export default function ProfileForms({ user, doctorDetails }: { user: any, docto
                 <button 
                     onClick={() => setEditModalOpen(true)} 
                     className="btn text-white me-2" 
-                    style={{ backgroundColor: '#0ab1a9' }}>
+                    style={{ backgroundColor: '#3346B5' }}>
                     Edit Profile
                 </button>
                 <button 
@@ -77,7 +77,7 @@ export default function ProfileForms({ user, doctorDetails }: { user: any, docto
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setEditModalOpen(false)}>Cancel</button>
-                                    <button type="submit" className="btn text-white" style={{ backgroundColor: '#0ab1a9' }}>Save Changes</button>
+                                    <button type="submit" className="btn text-white" style={{ backgroundColor: '#3346B5' }}>Save Changes</button>
                                 </div>
                             </form>
                         </div>
@@ -111,7 +111,7 @@ export default function ProfileForms({ user, doctorDetails }: { user: any, docto
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setPinModalOpen(false)}>Cancel</button>
-                                    <button type="submit" className="btn text-white" style={{ backgroundColor: '#0ab1a9' }}>Update PIN</button>
+                                    <button type="submit" className="btn text-white" style={{ backgroundColor: '#3346B5' }}>Update PIN</button>
                                 </div>
                             </form>
                         </div>
