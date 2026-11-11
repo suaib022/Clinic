@@ -81,7 +81,7 @@ export default function PrescriptionSlip({
                     {/* Left Emblem */}
                     <div style={{ width: '70px', height: '70px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <svg width="68" height="68" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="46" fill="#0D7D72" stroke="#004d40" strokeWidth="3" />
+                            <circle cx="50" cy="50" r="46" fill="#1B2978" stroke="#004d40" strokeWidth="3" />
                             <circle cx="50" cy="50" r="32" fill="#d32f2f" />
                             <polygon points="50,24 57,40 74,40 60,50 66,66 50,56 34,66 40,50 26,40 43,40" fill="#ffd700" />
                             <circle cx="50" cy="50" r="48" fill="none" stroke="#ffd700" strokeWidth="2" strokeDasharray="3 3" />

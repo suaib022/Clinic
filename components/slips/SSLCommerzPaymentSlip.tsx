@@ -190,7 +190,7 @@ export default function SSLCommerzPaymentSlip({
 
                 <div style={{ textAlign: 'right', fontSize: '10.5px', color: '#64748b', maxWidth: '240px', lineHeight: '1.35' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', color: '#0f172a', fontWeight: 700, marginBottom: '2px' }}>
-                        <Lock size={12} color="#0D7D72" />
+                        <Lock size={12} color="#1B2978" />
                         <span>SSLCOMMERZ SECURED</span>
                     </div>
                     Bangladesh Bank Authorized Payment System Operator (PSO).
