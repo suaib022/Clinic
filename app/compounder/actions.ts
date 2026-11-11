@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/auth/requireRole';
+import { after } from 'next/server';
+import { processRecord } from '@/lib/extraction/processRecord';
 
 // ──── APPOINTMENT ACTIONS ────
 
@@ -136,6 +138,12 @@ export async function uploadVisitPrescription(formData: FormData) {
 
         // 3. Create medical_records entry
         const doctorName = (appt.doctor as any)?.full_name || 'Consultant';
+        const docTitle = notes.trim()
+            ? (notes.length > 60 ? `${notes.slice(0, 60)}...` : notes)
+            : (appt.status === 'completed'
+                ? `Medical Document - Dr. ${doctorName} (${appt.appointment_date})`
+                : `Prescription - Dr. ${doctorName} (${appt.appointment_date})`);
+
         const { data: record, error: recordErr } = await supabaseAdmin
             .from('medical_records')
             .insert({
@@ -144,8 +152,10 @@ export async function uploadVisitPrescription(formData: FormData) {
                 appointment_id: appt.id,
                 uploaded_by: user.id,
                 record_type: 'prescription',
-                title: `Prescription - Dr. ${doctorName} (${appt.appointment_date})`,
-                description: notes.trim() || `Prescription uploaded for Serial #${appt.serial_no}`,
+                title: docTitle,
+                description: notes.trim() || (appt.status === 'completed'
+                    ? `Additional document uploaded for Serial #${appt.serial_no}`
+                    : `Prescription uploaded for Serial #${appt.serial_no}`),
                 file_path: fileName,
                 document_date: appt.appointment_date,
                 file_size: file.size,
@@ -157,6 +167,7 @@ export async function uploadVisitPrescription(formData: FormData) {
         if (recordErr || !record) {
             return { success: false, error: `Failed to save record metadata: ${recordErr?.message}` };
         }
+        after(() => processRecord(record.id));
 
         // 4. Update appointment to 'completed' with prescription_record_id via RPC
         const { error: rpcErr } = await supabaseAdmin.rpc('complete_prescription_upload', {
@@ -176,13 +187,98 @@ export async function uploadVisitPrescription(formData: FormData) {
         revalidatePath('/patient/appointments');
         revalidatePath('/patient/dashboard');
 
+        const isCompletedAlready = appt.status === 'completed';
         return { 
             success: true, 
             recordId: record.id,
-            message: `Prescription uploaded successfully. Serial #${appt.serial_no} is now marked Complete.` 
+            message: isCompletedAlready
+                ? `Document uploaded successfully for Serial #${appt.serial_no}.`
+                : `Prescription uploaded successfully. Serial #${appt.serial_no} is now marked Complete.` 
         };
     } catch (err: any) {
         return { success: false, error: err.message || 'Prescription upload failed' };
+    }
+}
+
+export async function getAppointmentDocuments(appointmentId: string) {
+    await requireRole(['compounder', 'doctor', 'admin']);
+    if (!appointmentId) return { success: false, error: 'Appointment ID required', documents: [] };
+
+    try {
+        const { data: records, error } = await supabaseAdmin
+            .from('medical_records')
+            .select('id, title, description, record_type, file_path, file_size, file_type, created_at, document_date')
+            .eq('appointment_id', appointmentId)
+            .eq('is_deleted', false)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            return { success: false, error: error.message, documents: [] };
+        }
+
+        let docs = records || [];
+
+        // Also check if appointment has a prescription_record_id not included in docs
+        const { data: appt } = await supabaseAdmin
+            .from('appointments')
+            .select('prescription_record_id')
+            .eq('id', appointmentId)
+            .single();
+
+        if (appt?.prescription_record_id && !docs.some(d => d.id === appt.prescription_record_id)) {
+            const { data: rxDoc } = await supabaseAdmin
+                .from('medical_records')
+                .select('id, title, description, record_type, file_path, file_size, file_type, created_at, document_date')
+                .eq('id', appt.prescription_record_id)
+                .eq('is_deleted', false)
+                .single();
+            if (rxDoc) {
+                docs = [rxDoc, ...docs];
+            }
+        }
+
+        return { success: true, documents: docs };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to fetch documents', documents: [] };
+    }
+}
+
+export async function getDocumentSignedUrl(filePath: string) {
+    await requireRole(['compounder', 'doctor', 'admin']);
+    if (!filePath) return { success: false, error: 'File path required' };
+
+    try {
+        const { data, error } = await supabaseAdmin.storage
+            .from('medical_documents')
+            .createSignedUrl(filePath, 3600);
+
+        if (error || !data?.signedUrl) {
+            return { success: false, error: error?.message || 'Failed to generate access URL' };
+        }
+
+        return { success: true, url: data.signedUrl };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to generate access URL' };
+    }
+}
+
+export async function getDocumentDownloadUrl(filePath: string, fileName?: string) {
+    await requireRole(['compounder', 'doctor', 'admin']);
+    if (!filePath) return { success: false, error: 'File path required' };
+
+    try {
+        const cleanName = fileName ? fileName.replace(/[^a-zA-Z0-9._-]/g, '_') : undefined;
+        const { data, error } = await supabaseAdmin.storage
+            .from('medical_documents')
+            .createSignedUrl(filePath, 3600, cleanName ? { download: cleanName } : { download: true });
+
+        if (error || !data?.signedUrl) {
+            return { success: false, error: error?.message || 'Failed to generate download URL' };
+        }
+
+        return { success: true, url: data.signedUrl };
+    } catch (err: any) {
+        return { success: false, error: err.message || 'Failed to generate download URL' };
     }
 }
 

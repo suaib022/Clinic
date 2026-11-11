@@ -1,9 +1,14 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
 import UploadDocumentModal from '@/components/UploadDocumentModal';
+import { deleteMedicalRecord } from '@/lib/records/actions';
+import HealthProfile from '@/components/records/HealthProfile';
+import ExportRecordsModal from '@/components/records/ExportRecordsModal';
+import type { HealthData } from '@/lib/extraction/healthData';
 
 export interface Patient {
     id: string;
@@ -39,6 +44,7 @@ export interface MedicalRecord {
     appointment_id?: string | null;
     file_size?: number | null;
     file_type?: string | null;
+    extraction_status?: string | null;
     uploader?: { role?: string; full_name?: string } | null;
     doctor?: { full_name?: string } | null;
     appointment?: {
@@ -56,12 +62,22 @@ interface Props {
     visits: Visit[];
     records: MedicalRecord[];
     userId: string;
+    health: HealthData;
 }
 
-type ViewTab = 'all' | 'timeline' | 'standalone';
+type ViewTab = 'all' | 'timeline' | 'standalone' | 'profile';
 
-export default function RecordsClient({ patients, visits, records, userId }: Props) {
+export default function RecordsClient({ patients, visits, records, userId, health }: Props) {
     const supabase = createClient();
+    const router = useRouter();
+
+    // While documents are being read, refresh every 10s so status and profile update on their own.
+    const isProcessing = records.some(r => r.extraction_status === 'pending' || r.extraction_status === 'processing');
+    useEffect(() => {
+        if (!isProcessing) return;
+        const t = setInterval(() => router.refresh(), 10_000);
+        return () => clearInterval(t);
+    }, [isProcessing, router]);
 
     // Filters
     const [selectedPatientId, setSelectedPatientId] = useState<string>('ALL');
@@ -73,6 +89,8 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
 
     // Upload Modal State
     const [isUploadOpen, setIsUploadOpen] = useState(false);
+    const [exportFor, setExportFor] = useState<{ patientId?: string; key: number } | null>(null);
+    const openExport = (patientId?: string) => setExportFor({ patientId, key: Date.now() });
     const [uploadDefaultPatientId, setUploadDefaultPatientId] = useState<string | undefined>(undefined);
     const [uploadDefaultVisitId, setUploadDefaultVisitId] = useState<string | undefined>(undefined);
 
@@ -306,9 +324,9 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
 
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to permanently delete this document from the vault?')) {
-            const { error } = await supabase.from('medical_records').update({ is_deleted: true }).eq('id', id);
+            const { error } = await deleteMedicalRecord(id);
             if (error) {
-                alert('Failed to delete document: ' + error.message);
+                alert('Failed to delete document: ' + error);
             } else {
                 window.location.reload();
             }
@@ -324,6 +342,33 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
         setUploadDefaultPatientId(patientId || (selectedPatientId !== 'ALL' ? selectedPatientId : undefined));
         setUploadDefaultVisitId(visitId);
         setIsUploadOpen(true);
+    };
+
+    const profileData = useMemo<HealthData>(() => {
+        if (selectedPatientId === 'ALL') return health;
+        const mine = <T extends { patient_id: string }>(rows: T[]) => rows.filter(r => r.patient_id === selectedPatientId);
+        return { medications: mine(health.medications), notes: mine(health.notes), labs: mine(health.labs), insights: mine(health.insights) };
+    }, [health, selectedPatientId]);
+
+    const handleViewSource = (recordId: string) => {
+        const rec = records.find(r => r.id === recordId);
+        if (rec) handleView(rec.file_path);
+    };
+
+    const renderExtractionBadge = (status?: string | null) => {
+        const map: Record<string, { label: string; cls: string; icon: string }> = {
+            pending: { label: 'Reading document…', cls: 'bg-info-subtle text-info-emphasis', icon: 'bi-hourglass-split' },
+            processing: { label: 'Reading document…', cls: 'bg-info-subtle text-info-emphasis', icon: 'bi-hourglass-split' },
+            done: { label: 'Added to health profile', cls: 'bg-success-subtle text-success-emphasis', icon: 'bi-check-circle' },
+            failed: { label: 'Could not read document', cls: 'bg-warning-subtle text-warning-emphasis', icon: 'bi-exclamation-circle' },
+        };
+        const cfg = status ? map[status] : undefined;
+        if (!cfg) return null;
+        return (
+            <span className={`badge ${cfg.cls} d-inline-flex align-items-center gap-1 fw-semibold`} style={{ fontSize: '11px' }}>
+                <i className={`bi ${cfg.icon}`}></i>{cfg.label}
+            </span>
+        );
     };
 
     // Render single Document Row / Card
@@ -374,6 +419,7 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
                             <div className="d-flex align-items-center flex-wrap gap-2 mb-1.5">
                                 <h6 className="mb-0 fw-bold text-dark fs-6">{r.title}</h6>
                                 {renderCategoryBadge(r.record_type)}
+                                {renderExtractionBadge(r.extraction_status)}
                                 
                                 {/* Visit Linked vs Standalone Badge */}
                                 {r.appointment ? (
@@ -498,6 +544,14 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
                         <i className="bi bi-upload"></i>
                         <span>Upload Document</span>
                     </button>
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-outline-secondary px-3 py-2 d-inline-flex align-items-center gap-1.5"
+                        onClick={() => openExport(selectedPatientId !== 'ALL' ? selectedPatientId : undefined)}
+                    >
+                        <i className="bi bi-file-earmark-zip"></i>
+                        <span>Export Reports</span>
+                    </button>
                     <a href="/patient/records/access-log" className="btn btn-sm btn-outline-secondary px-3 py-2 d-inline-flex align-items-center gap-1.5">
                         <i className="bi bi-shield-check"></i>
                         <span>Access Log</span>
@@ -616,6 +670,7 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
                                             <span className={`badge ${isSelected ? 'bg-success' : 'bg-primary'} text-white rounded-pill px-2.5`}>
                                                 {docCount} Docs
                                             </span>
+                                            <div className="d-flex gap-1">
                                             <button 
                                                 type="button" 
                                                 className="btn btn-xs btn-outline-secondary p-0 px-1.5 py-0.5" 
@@ -628,6 +683,20 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
                                             >
                                                 <i className="bi bi-plus-lg me-1"></i>Upload
                                             </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-xs btn-outline-secondary p-0 px-1.5 py-0.5"
+                                                style={{ fontSize: '11px' }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openExport(p.id);
+                                                }}
+                                                title={`Export all reports of ${p.full_name} as ZIP`}
+                                                aria-label={`Export all reports of ${p.full_name} as ZIP`}
+                                            >
+                                                <i className="bi bi-file-earmark-zip me-1"></i>Export
+                                            </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -786,9 +855,23 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
                             {standaloneRecords.length}
                         </span>
                     </button>
+
+                    <button
+                        type="button"
+                        className={`btn btn-sm px-3 py-1.5 fw-semibold rounded-pill d-inline-flex align-items-center gap-1.5 transition-all ${
+                            activeTab === 'profile'
+                                ? 'text-white shadow-sm'
+                                : 'btn-outline-secondary bg-white text-secondary'
+                        }`}
+                        style={{ backgroundColor: activeTab === 'profile' ? '#0D7D72' : undefined, borderColor: activeTab === 'profile' ? '#0D7D72' : undefined }}
+                        onClick={() => setActiveTab('profile')}
+                    >
+                        <i className="bi bi-heart-pulse"></i>
+                        <span>Health Profile</span>
+                    </button>
                 </div>
 
-                <div className="small text-muted">
+                <div className={`small text-muted ${activeTab === 'profile' ? 'd-none' : ''}`}>
                     Showing <strong>{activeTab === 'all' ? filteredRecords.length : activeTab === 'timeline' ? visitLinkedRecords.length : standaloneRecords.length}</strong> records
                 </div>
             </div>
@@ -905,6 +988,28 @@ export default function RecordsClient({ patients, visits, records, userId }: Pro
                         standaloneRecords.map(renderDocumentCard)
                     )}
                 </div>
+            )}
+
+            {activeTab === 'profile' && (
+                selectedPatientId === 'ALL' && patients.length > 1 ? (
+                    <div className="card border-0 shadow-sm rounded-3 p-5 text-center">
+                        <i className="bi bi-person-check fs-1 text-muted mb-3"></i>
+                        <h5 className="fw-bold text-dark">Select a family member</h5>
+                        <p className="text-muted small mb-0">Choose a profile card above to see that person&apos;s health profile.</p>
+                    </div>
+                ) : (
+                    <HealthProfile data={profileData} onViewSource={handleViewSource} />
+                )
+            )}
+
+            {exportFor && (
+                <ExportRecordsModal
+                    key={exportFor.key}
+                    isOpen
+                    onClose={() => setExportFor(null)}
+                    patients={patients}
+                    defaultPatientId={exportFor.patientId}
+                />
             )}
 
             {/* Document Upload Modal */}

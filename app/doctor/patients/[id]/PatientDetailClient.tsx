@@ -5,10 +5,13 @@ import { format, parseISO } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
 import UploadDocumentModal from '@/components/UploadDocumentModal';
 import Link from 'next/link';
+import HealthProfile from '@/components/records/HealthProfile';
+import type { HealthData } from '@/lib/extraction/healthData';
 
-export default function PatientDetailClient({ patient, records, myVisits, userId }: { patient: any, records: any[], myVisits: any[], userId: string }) {
+export default function PatientDetailClient({ patient, records, myVisits, userId, health }: { patient: any, records: any[], myVisits: any[], userId: string, health: HealthData }) {
     const supabase = createClient();
     const [isUploadOpen, setIsUploadOpen] = useState(false);
+    const [view, setView] = useState<'profile' | 'documents'>('profile');
 
     // Group records by document_date
     const groupedRecords = useMemo(() => {
@@ -81,7 +84,22 @@ export default function PatientDetailClient({ patient, records, myVisits, userId
                 </div>
             </div>
 
-            {groupedRecords.length === 0 ? (
+            <div className="d-flex gap-2 mb-4">
+                {([['profile', 'bi-heart-pulse', 'Health Profile'], ['documents', 'bi-folder2-open', `Documents (${records.length})`]] as const).map(([key, icon, label]) => (
+                    <button key={key} type="button"
+                        className={`btn btn-sm rounded-pill px-3 fw-semibold ${view === key ? 'text-white' : 'btn-outline-secondary bg-white'}`}
+                        style={view === key ? { backgroundColor: '#0D7D72', borderColor: '#0D7D72' } : undefined}
+                        onClick={() => setView(key)}>
+                        <i className={`bi ${icon} me-1`}></i>{label}
+                    </button>
+                ))}
+            </div>
+
+            {view === 'profile' && (
+                <HealthProfile data={health} onViewSource={id => { const r = records.find(x => x.id === id); if (r) handleView(r.file_path); }} />
+            )}
+
+            {view === 'documents' && (groupedRecords.length === 0 ? (
                 <div className="text-center py-5 bg-white rounded shadow-sm">
                     <i className="bi bi-folder2-open display-4 text-muted mb-3"></i>
                     <h5 className="text-muted">No medical records found.</h5>
@@ -121,7 +139,7 @@ export default function PatientDetailClient({ patient, records, myVisits, userId
                         </div>
                     ))}
                 </div>
-            )}
+            ))}
 
             <UploadDocumentModal 
                 isOpen={isUploadOpen} 

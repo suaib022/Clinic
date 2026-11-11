@@ -351,7 +351,7 @@ export default function WalkInClient({ doctorOnBreak }: { doctorOnBreak: boolean
                                 <i className="bi bi-plus-circle me-2"></i>New Walk-in
                             </button>
                             <button className="btn btn-success" onClick={() => router.push('/compounder/bookings')}>
-                                <i className="bi bi-calendar-check me-2"></i>View Bookings
+                                <i className="bi bi-calendar-check me-2"></i>View Appointments
                             </button>
                         </div>
                     </div>

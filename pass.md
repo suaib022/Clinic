@@ -5,7 +5,7 @@ patient : UHID61569802
 
 ---
 
-## 8 New DSS Test Patients (Today 6:00 PM - 8:00 PM)
+## 8 New DSS Test Patients (Today Nov 10, 2026: 6:00 PM - 8:00 PM)
 **Universal PIN / Password:** `123456`  
 **Consulting Doctor:** `doc-532373@staff.clinic.local` (`Professor (Dr.) Md. Shahidullah (Sabuj)`)
 

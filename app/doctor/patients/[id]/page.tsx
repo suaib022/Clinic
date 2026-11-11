@@ -4,6 +4,7 @@ import { redirect, notFound } from 'next/navigation';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
 import PatientDetailClient from './PatientDetailClient';
+import { loadHealthData } from '@/lib/extraction/healthData';
 
 export default async function DoctorPatientDetailPage(props: { params: Promise<{ id: string }> }) {
     const { user } = await requireRole(['doctor']);
@@ -68,6 +69,8 @@ export default async function DoctorPatientDetailPage(props: { params: Promise<{
         .eq('status', 'completed')
         .order('appointment_date', { ascending: false });
 
+    const health = await loadHealthData(supabase, [patientId]);
+
     return (
         <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
@@ -78,6 +81,7 @@ export default async function DoctorPatientDetailPage(props: { params: Promise<{
                         records={records || []} 
                         myVisits={myVisits || []} 
                         userId={user.id} 
+                        health={health}
                     />
                 </div>
             </div>

@@ -45,3 +45,14 @@ next-env.d.ts
 
 # Work notes (local only)
 work.md
+
+# AI assistant configs, prompts, and skills
+.agents/
+.claude/
+.gemini/
+.cursor/
+CLAUDE.md
+AGENTS.md
+prompt
+skills-lock.json
+artifacts/

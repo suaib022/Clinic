@@ -114,6 +114,10 @@ export function getAvailableActions(
     }
     if (status === 'prescription_pending') {
       results.upload_prescription = { allowed: true };
+      results.complete_consultation = { allowed: true };
+    }
+    if (status === 'completed') {
+      results.upload_prescription = { allowed: true };
     }
     results.cancel = { allowed: false, reason: 'Compounders cannot cancel appointments' };
   }
@@ -122,7 +126,13 @@ export function getAvailableActions(
     if (status === 'scheduled' && ctx.isToday) results.check_in = { allowed: true };
     if (status === 'checked_in') results.start_consultation = { allowed: true };
     if (status === 'in_consultation') results.complete_consultation = { allowed: true };
-    if (status === 'prescription_pending') results.upload_prescription = { allowed: true };
+    if (status === 'prescription_pending') {
+      results.upload_prescription = { allowed: true };
+      results.complete_consultation = { allowed: true };
+    }
+    if (status === 'completed') {
+      results.upload_prescription = { allowed: true };
+    }
     if (['scheduled', 'checked_in'].includes(status)) results.cancel = { allowed: true };
     if (['scheduled', 'checked_in'].includes(status)) results.set_priority = { allowed: true };
     if (status === 'scheduled' && ctx.isToday) results.mark_no_show = { allowed: true };
@@ -132,7 +142,13 @@ export function getAvailableActions(
     if (status === 'scheduled' && ctx.isToday) results.check_in = { allowed: true };
     if (status === 'checked_in') results.start_consultation = { allowed: true };
     if (status === 'in_consultation') results.complete_consultation = { allowed: true };
-    if (status === 'prescription_pending') results.upload_prescription = { allowed: true };
+    if (status === 'prescription_pending') {
+      results.upload_prescription = { allowed: true };
+      results.complete_consultation = { allowed: true };
+    }
+    if (status === 'completed') {
+      results.upload_prescription = { allowed: true };
+    }
     if (!['completed', 'cancelled'].includes(status)) results.cancel = { allowed: true };
     if (['scheduled', 'checked_in'].includes(status)) results.set_priority = { allowed: true };
     if (status === 'scheduled') results.mark_no_show = { allowed: true };
