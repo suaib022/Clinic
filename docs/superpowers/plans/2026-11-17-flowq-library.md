@@ -259,3 +259,18 @@ Result (200 days): busy-lab engine lab MAE 5.96 → 3.78 min (baseline 3.76, whi
 - Engine options (DSS defaults unchanged): `sumWith`, `expectArrivals` with `showP`, `walkInPerHour`, `latenessMeanMin/SdMin` (Bayesian chance a missing booked patient still comes), `rangeMethod: 'normal_sum'` with `rangeCoverage`.
 - 500 days, default scenario, full options: doctor MAE 7.27 vs best baseline 7.68 (p = 5.5e-22), p90 16.9 vs 17.4, within 5 min 50% vs 46%, range coverage 79% for an 80% target (DSS rule: 50%). The engine is given long-run no-show, walk-in and punctuality rates that baselines do not use.
 - Routing: no significant journey-time difference.
+
+## Follow-up: staff actions, routing, returns, process mining, robustness (2026-11-18)
+
+- Staff actions simulated with the app's rules (skip/rejoin, late skip, priority, undo), own random stream.
+- Routing: new `lookahead` policy; new `lab_visit` time metric (routing cannot change report turnaround). Result: engine,
+  look-ahead and fixed order are equivalent; patient's own choice is best at moderate load but 11 min worse at heavy load;
+  random is worst. Value of routing = robustness, not large gains.
+- Same-day return policies (`advice` / `always` / `never`): advice turns nobody away and cuts overtime vs `always`.
+- Conformance (normative process tree, alignments) and object-centric analysis (OCEL 2.0) in `analysis/`; analysis package
+  is AGPL-3.0 because pm4py is AGPL; `packages/flowq` stays MIT.
+- `learnRates`: walk-in rate and show probability learned from the day, smoothed towards the configured prior.
+- Robustness (engine assumptions fixed, world varied, 20 settings): engine lowest MAE in 16; losses when there are no
+  walk-ins at all (wrong prior, 0.73 min), no-shows 35% (n.s.), doctor never late (n.s.); range coverage falls to 65-68% with
+  many walk-ins or absent patients.
+- `packages/flowq/experiments/run-all.sh` reproduces everything.

@@ -3,6 +3,7 @@ export * from './types';
 export { countedTime, compareLine, computeQueueOrder } from './order';
 export { computeExpectedDurations, percentile } from './durations';
 export { durationOf, perVisitMin } from './visit';
+export { learnRates } from './rates';
 export { computeEstimates, statusLabel, confidence, reasonText, expectedArrivalsAheadMin, stillComesP } from './estimates';
 export { computeSuggestions } from './suggestions';
 export { activeMinutes, round5, MIN, normalQuantile, normalCdf } from './time';

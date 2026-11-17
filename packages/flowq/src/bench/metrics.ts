@@ -55,4 +55,20 @@ export function journeyMinutes(day: SimDay): number[] {
   return [...span.values()].filter((s) => s[2]).map(([a, b]) => (b - a) / MIN);
 }
 
+/**
+ * Minutes each patient spends in the lab: first lab_queue to last sample_collected. This is the part routing can change
+ * (journeyMinutes also includes report turnaround, which routing does not affect).
+ */
+export function labVisitMinutes(day: SimDay): number[] {
+  const span = new Map<string, [number, number]>();
+  for (const e of day.events) {
+    if (e.activity !== 'lab_queue' && e.activity !== 'sample_collected') continue;
+    const pid = e.objects.find((o) => o.type === 'patient')?.id;
+    if (!pid) continue;
+    const s = span.get(pid) ?? [Infinity, -Infinity];
+    span.set(pid, [e.activity === 'lab_queue' ? Math.min(s[0], e.time) : s[0], e.activity === 'sample_collected' ? Math.max(s[1], e.time) : s[1]]);
+  }
+  return [...span.values()].filter(([a, b]) => Number.isFinite(a) && Number.isFinite(b)).map(([a, b]) => (b - a) / MIN);
+}
+
 export { meanOf, sorted };

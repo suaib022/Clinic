@@ -1,4 +1,4 @@
-import { suggestRoute } from '../lab/routing';
+import { suggestRoute, suggestRouteLookahead } from '../lab/routing';
 import type { Rng } from './rng';
 
 /**
@@ -20,21 +20,27 @@ export type ReturnPolicy = 'advice' | 'always' | 'never';
 export const RETURN_POLICIES: readonly ReturnPolicy[] = ['advice', 'always', 'never'];
 
 /** How a patient with tests in several lab lines picks the next line. */
-export type RoutePolicy = 'engine' | 'fixed' | 'random' | 'shortest_line';
-export const ROUTE_POLICIES: readonly RoutePolicy[] = ['engine', 'fixed', 'random', 'shortest_line'];
+export type RoutePolicy = 'engine' | 'lookahead' | 'fixed' | 'random' | 'shortest_line';
+export const ROUTE_POLICIES: readonly RoutePolicy[] = ['engine', 'lookahead', 'fixed', 'random', 'shortest_line'];
 
 /**
- * engine: suggestRoute on expected waits. fixed: must-go-first, then the hospital's line order.
+ * engine: suggestRoute on expected waits. lookahead: suggestRouteLookahead (projects each line's wait forward). fixed: must-go-first, then the hospital's line order.
  * random: any remaining line. shortest_line: fewest people standing in line (what a patient sees).
  */
 export function chooseNextLine(
   policy: RoutePolicy, pending: { lineId: string; mustFirst: boolean }[], waits: Record<string, number>,
   queuedNow: Record<string, number>, lineOrder: readonly string[], rng: Rng,
+  ahead?: { serviceMin: Record<string, number>; driftPerMin: Record<string, number> },
 ): string {
   const ids = [...new Set(pending.map((x) => x.lineId))].sort((a, b) => lineOrder.indexOf(a) - lineOrder.indexOf(b));
   const first = new Set(pending.filter((x) => x.mustFirst).map((x) => x.lineId));
   switch (policy) {
     case 'engine': return suggestRoute(pending, waits)[0];
+    case 'lookahead':
+      return suggestRouteLookahead(pending.map((x) => ({
+        lineId: x.lineId, mustFirst: x.mustFirst, waitMin: waits[x.lineId] ?? Infinity,
+        serviceMin: ahead?.serviceMin[x.lineId] ?? 0, driftPerMin: ahead?.driftPerMin[x.lineId] ?? 0,
+      })))[0];
     case 'fixed': return [...ids].sort((a, b) => Number(first.has(b)) - Number(first.has(a)))[0];
     case 'random': return rng.pick(ids);
     case 'shortest_line': return [...ids].sort((a, b) => (queuedNow[a] ?? 0) - (queuedNow[b] ?? 0))[0];

@@ -10,7 +10,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  ETA_POLICIES, RETURN_POLICIES, ROUTE_POLICIES, etaMetrics, journeyMinutes, parseScenario, simulateDay, waitMetrics,
+  ETA_POLICIES, RETURN_POLICIES, ROUTE_POLICIES, etaMetrics, journeyMinutes, labVisitMinutes, parseScenario, simulateDay, waitMetrics,
   type EtaMetrics, type SimDay,
 } from '../src';
 
@@ -60,6 +60,7 @@ const ETA_KEYS: (keyof EtaMetrics)[] = ['mae', 'medianAe', 'p90Ae', 'within5', '
 function flowRows(v: string, kind: string, policy: string, s: number, day: SimDay) {
   for (const w of waitMetrics(day)) rows.push(`${param},${v},${kind},${policy},${s},${w.stage},mean_wait_min,${fmt(w.meanMin)}`);
   rows.push(`${param},${v},${kind},${policy},${s},journey,mean_min,${fmt(avg(journeyMinutes(day)))}`);
+  rows.push(`${param},${v},${kind},${policy},${s},lab_visit,mean_min,${fmt(avg(labVisitMinutes(day)))}`);
   rows.push(`${param},${v},${kind},${policy},${s},doctor,overtime_min,${fmt(sum(day.stats.doctorOvertimeMin))}`);
 }
 

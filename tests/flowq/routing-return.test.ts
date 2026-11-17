@@ -50,3 +50,24 @@ describe('adviseReturn', () => {
       .toEqual({ kind: 'same_day', expectedStartAt: at(18, 20) });
   });
 });
+
+describe('suggestRouteLookahead', () => {
+  const L = (lineId: string, waitMin: number, driftPerMin: number, mustFirst = false, serviceMin = 5) => ({ lineId, waitMin, driftPerMin, mustFirst, serviceMin });
+  it('visits a line whose queue is growing first, even if its wait is longer now', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    // A then B: 15 + (12 + 15) + 5 = 47 min; B then A: 17 + 10 + 5 = 32 min.
+    expect(suggestRouteLookahead([L('A', 10, 0), L('B', 12, 1)])).toEqual(['B', 'A']);
+  });
+  it('leaves a shrinking queue for later', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    expect(suggestRouteLookahead([L('A', 10, -0.5), L('B', 8, 0)])).toEqual(['B', 'A']);
+  });
+  it('with no drift it is shortest wait first', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    expect(suggestRouteLookahead([L('A', 10, 0), L('B', 3, 0), L('C', 6, 0)])).toEqual(['B', 'C', 'A']);
+  });
+  it('must-go-first still leads, closed lines still go last, duplicates count once', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    expect(suggestRouteLookahead([L('X', Infinity, 0), L('B', 1, 0), L('A', 30, 0, true), L('B', 1, 0)])).toEqual(['A', 'B', 'X']);
+  });
+});

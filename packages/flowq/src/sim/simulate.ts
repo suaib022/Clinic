@@ -5,6 +5,7 @@ import { DEFAULT_SETTINGS } from '../engine/types';
 import { computeQueueOrder } from '../engine/order';
 import { computeEstimates } from '../engine/estimates';
 import { MIN } from '../engine/time';
+import { learnRates } from '../engine/rates';
 import type { LabItem } from '../lab/types';
 import { computeLineEstimates, expectedWaitMin } from '../lab/line';
 import { adviseReturn } from '../lab/returnAdvice';
@@ -240,8 +241,15 @@ export function simulateDay(
   }
 
   // ----- snapshots and predictions -----
+  // Like the app would: when the engine expects arrivals, it gets today's learned walk-in rate and show probability,
+  // smoothed towards the configured long-run values (learnRates), instead of fixed numbers.
+  const settingsAt = (doc: Doctor, now: number): DssSettings => (!settings.expectArrivals ? settings : {
+    ...settings,
+    ...learnRates({ now, sessionStartAt: doc.session.scheduledStartAt ?? now, appointments: doc.appts,
+      prior: { walkInPerHour: settings.walkInPerHour, showP: settings.showP }, noShowMin: settings.noShowMin }),
+  });
   const doctorSnapshot = (doc: Doctor, now: number) =>
-    computeEstimates({ now, settings, session: doc.session, appointments: doc.appts, history: doc.history, slotMinutes: doc.slotMin });
+    computeEstimates({ now, settings: settingsAt(doc, now), session: doc.session, appointments: doc.appts, history: doc.history, slotMinutes: doc.slotMin });
   const lineSnapshot = (line: Line, now: number) =>
     computeLineEstimates({ now, settings: labSettings, session: labSession(line, now), line, items: line.items, history: line.history });
 
@@ -251,7 +259,7 @@ export function simulateDay(
       id: '__probe__', serialNo: 0, status: 'checked_in', bookedAt: now, checkedInAt: now, slotMinutes: doc.slotMin,
       priorityLevel: 0, visitType: 'follow_up', visitReason: 'report_review', visitSource: 'walk_in',
     };
-    const r = computeEstimates({ now, settings, session: doc.session, appointments: [...doc.appts, probe], history: doc.history, slotMinutes: doc.slotMin });
+    const r = computeEstimates({ now, settings: settingsAt(doc, now), session: doc.session, appointments: [...doc.appts, probe], history: doc.history, slotMinutes: doc.slotMin });
     const at = r.estimates[probe.id]?.expectedStartAt;
     return at == null ? 0 : Math.max(0, (at - now) / MIN);
   }
@@ -398,7 +406,20 @@ export function simulateDay(
     for (const id of v.remaining) waits[id] = expectedWaitMin(lineSnapshot(lines.get(id)!, now), labSettings);
     const queuedNow: Record<string, number> = {};
     for (const id of v.remaining) queuedNow[id] = lines.get(id)!.items.filter((x) => x.status === 'queued').length;
-    const pick = chooseNextLine(p.route, v.remaining.map((id) => ({ lineId: id, mustFirst: lines.get(id)!.mustFirst })), waits, queuedNow, lineIds, routeRng);
+    // For look-ahead: each line's service time and how fast its wait is changing, from the last 30 minutes of arrivals.
+    const serviceMin: Record<string, number> = {}, driftPerMin: Record<string, number> = {};
+    if (p.route === 'lookahead') {
+      for (const id of v.remaining) {
+        const line = lines.get(id)!;
+        const s = mean(line.history.slice(0, labSettings.historyWindow)) ?? line.typicalMin;
+        const recent = line.items.filter((x) => x.queuedAt > now - 30 * MIN).length;
+        const busy = line.current != null || line.items.some((x) => x.status === 'queued');
+        serviceMin[id] = s;
+        driftPerMin[id] = (recent / 30) * s - (busy ? 1 : 0);
+      }
+    }
+    const pick = chooseNextLine(p.route, v.remaining.map((id) => ({ lineId: id, mustFirst: lines.get(id)!.mustFirst })), waits, queuedNow, lineIds, routeRng,
+      { serviceMin, driftPerMin });
     v.remaining = v.remaining.filter((x) => x !== pick);
     return pick;
   }

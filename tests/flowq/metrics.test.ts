@@ -25,3 +25,12 @@ describe('etaMetrics patient-facing measures', () => {
     expect(m.p90Ae).toBeCloseTo(16.4, 5); // linear interpolation between 8 and 20
   });
 });
+
+describe('labVisitMinutes', () => {
+  it('first lab_queue to last sample_collected per patient', async () => {
+    const { labVisitMinutes } = await import('../../packages/flowq/src');
+    const ev = (activity: string, min: number, pid: string) => ({ id: `${pid}${min}`, activity, time: min * MIN, objects: [{ type: 'patient', id: pid }], attrs: {} });
+    const day = { predictions: [], stats: {}, events: [ev('lab_queue', 0, 'p1'), ev('sample_collected', 5, 'p1'), ev('lab_queue', 5, 'p1'), ev('sample_collected', 12, 'p1'), ev('report_ready', 90, 'p1'), ev('lab_queue', 3, 'p2')] };
+    expect(labVisitMinutes(day as never)).toEqual([12]);
+  });
+});

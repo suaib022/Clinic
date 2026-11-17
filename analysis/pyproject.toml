@@ -3,6 +3,9 @@ name = "flowq-analysis"
 version = "0.1.0"
 description = "Process-mining analysis of flowq hospital event logs (XES)."
 requires-python = ">=3.10"
+# pm4py is AGPL-3.0-or-later, so this analysis package is AGPL too. The flowq TypeScript library (packages/flowq) does
+# not use pm4py and stays MIT.
+license = "AGPL-3.0-or-later"
 dependencies = ["pm4py>=2.7", "pandas>=2.0", "matplotlib>=3.7"]
 
 [dependency-groups]
