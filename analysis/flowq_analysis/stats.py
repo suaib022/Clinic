@@ -19,7 +19,9 @@ import pandas as pd
 from scipy.stats import wilcoxon
 
 ETA_METRICS = ["mae", "medianAe", "p90Ae", "within5", "within10", "coverage"]
-HIGHER_IS_BETTER = {"within5", "within10"}
+AHEAD = ("a0_1", "a2_3", "a4_6", "a7plus")
+HIGHER_IS_BETTER = {"within5", "within10"} | {f"within5_{h}" for h in AHEAD}
+HORIZON_METRICS = [f"{m}_{h}" for m in ("mae", "within5", "coverage") for h in AHEAD]
 FLOW_METRICS = [("journey", "mean_min"), ("lab", "mean_wait_min"), ("doctor", "mean_wait_min")]
 B = 10_000
 
@@ -81,7 +83,7 @@ def main(argv: list[str] | None = None) -> None:
     rng = np.random.default_rng(a.seed)
     df = pd.read_csv(a.per_day)
 
-    eta = df[(df.route == "engine") & df.policy.notna() & df.metric.isin(ETA_METRICS)]
+    eta = df[(df.route == "engine") & df.policy.notna() & df.metric.isin(ETA_METRICS + HORIZON_METRICS)]
     eta_summary = summarise(eta, "policy", ["stage", "metric"], rng)
     eta_tests = []
     for (stage, metric), g in eta.groupby(["stage", "metric"]):

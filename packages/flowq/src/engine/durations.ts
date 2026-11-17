@@ -10,6 +10,16 @@ export function percentile(sorted: number[], p: number): number {
   return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
 }
 
+/**
+ * Mean residual life: among past visits that lasted longer than `elapsedMin`, the average time they still took.
+ * Null when fewer than `minSamples` past visits were that long (the caller falls back).
+ */
+export function residualMin(history: number[], elapsedMin: number, minSamples = 3): number | null {
+  const longer = history.filter((v) => Number.isFinite(v) && v > elapsedMin);
+  if (longer.length < minSamples) return null;
+  return longer.reduce((a, v) => a + (v - elapsedMin), 0) / longer.length;
+}
+
 /** Sample standard deviation (n - 1). */
 export function sampleSd(xs: number[]): number {
   if (xs.length < 2) return 0;

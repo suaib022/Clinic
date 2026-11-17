@@ -107,3 +107,16 @@ describe('baselines', () => {
     expect(policies('lab').has('history_mean')).toBe(true);
   });
 });
+
+describe('re-estimates while waiting', () => {
+  const d = simulateDay(SC, 13, { route: 'engine' });
+  it('patients who wait through several calls get several engine updates, all before their real start', () => {
+    const eng = d.updates.filter((p) => p.policy === 'engine');
+    expect(eng.length).toBeGreaterThan(d.predictions.filter((p) => p.policy === 'engine' && p.stage === 'doctor').length);
+    for (const p of eng) if (p.actualStartAt != null) expect(p.madeAt).toBeLessThanOrEqual(p.actualStartAt);
+    const perVisit = new Map<string, number>();
+    for (const p of eng) perVisit.set(p.visitId, (perVisit.get(p.visitId) ?? 0) + 1);
+    expect(Math.max(...perVisit.values())).toBeGreaterThan(2);
+  });
+  it('updates exist only for the doctor queue', () => expect(new Set(d.updates.map((p) => p.stage))).toEqual(new Set(['doctor'])));
+});

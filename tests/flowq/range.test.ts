@@ -51,3 +51,28 @@ describe('range method', () => {
     expect(w(0.9)).toBeGreaterThan(w(0.8));
   });
 });
+
+describe('time left for the visit in the room (mean mode)', () => {
+  // History: half the visits take 4 min, half take 16 (mean 10). After 6 minutes in the room, only 16-minute visits are
+  // still going, so 10 more minutes are expected (not 10 - 6 = 4).
+  const HIST2 = Array.from({ length: 20 }, (_, i) => (i % 2 ? 16 : 4));
+  const base = (s: Partial<DssSettings>): EngineInput => ({
+    now: at(16), settings: { ...DEFAULT_SETTINGS, ...s },
+    session: { state: 'active', startedAt: T, scheduledStartAt: T, scheduledEndAt: at(180), pauses: [] },
+    appointments: [
+      { id: 'R', serialNo: 1, status: 'in_consultation', bookedAt: at(0), checkedInAt: at(0), consultStartedAt: at(10), slotMinutes: 10, priorityLevel: 0, visitType: 'new', visitSource: 'walk_in' },
+      waiting('A', 2, 5),
+    ],
+    history: { new: HIST2, follow_up: [] }, slotMinutes: 10,
+  });
+  it('uses the mean remaining time of past visits that lasted longer than the time spent', async () => {
+    const { residualMin } = await import('../../packages/flowq/src');
+    expect(residualMin(HIST2, 6)).toBe(10);
+    expect(residualMin(HIST2, 20)).toBeNull(); // no past visit lasted that long
+    expect(computeEstimates(base({ sumWith: 'mean' })).estimates.A.expectedStartAt).toBe(at(26));
+  });
+  it('the DSS rule (median mode) is unchanged', () => {
+    // median of HIST2 = 10, elapsed 6 -> 4 more minutes.
+    expect(computeEstimates(base({})).estimates.A.expectedStartAt).toBe(at(20));
+  });
+});

@@ -21,6 +21,8 @@ export interface Prediction {
   /** Doctor id or lab line id. */
   serverId: string;
   madeAt: number;
+  /** People ahead in line when the prediction was made (+1 if someone is with the doctor or at the counter). Known at prediction time. */
+  ahead: number;
   predictedAt: number;
   low: number | null;
   high: number | null;
@@ -30,6 +32,11 @@ export interface Prediction {
 export interface SimDay {
   events: FlowEvent[];
   predictions: Prediction[];
+  /**
+   * Re-estimates while patients wait (doctor queue): every time the doctor calls someone, every patient still in line gets
+   * a fresh prediction from each policy, as the app's screens refresh. Used for accuracy by time-before-start.
+   */
+  updates: Prediction[];
   stats: {
     doctorIdleMin: Record<string, number>;
     lineIdleMin: Record<string, number>;
@@ -142,6 +149,8 @@ export function simulateDay(
   const heap = new Heap();
   const events: FlowEvent[] = [];
   const predictions: Prediction[] = [];
+  const updates: Prediction[] = [];
+  const pendingUpdates = new Map<string, Prediction[]>();
   const pending = new Map<string, Prediction[]>(); // visitId -> predictions waiting for the actual start
   let evSeq = 0, patSeq = 0, apptSeq = 0, itemSeq = 0, orderSeq = 0, visitSeq = 0;
   const clock = (hhmm: string) => dhakaClock(sc.day.date, hhmm);
@@ -264,7 +273,7 @@ export function simulateDay(
     return at == null ? 0 : Math.max(0, (at - now) / MIN);
   }
 
-  function predictDoctor(doc: Doctor, a: QueueAppointment, now: number) {
+  function predictDoctor(doc: Doctor, a: QueueAppointment, now: number, mode: 'first' | 'update' = 'first') {
     const r = doctorSnapshot(doc, now);
     const e = r.estimates[a.id];
     const ahead = e?.patientsAhead ?? 0;
@@ -286,7 +295,7 @@ export function simulateDay(
       running_mean: [startFrom + (ahead + busy) * per * MIN, null, null],
       history_mean: [startFrom + histSum * MIN, null, null],
     };
-    record(a.id, 'doctor', doc.id, now, values);
+    record(a.id, 'doctor', doc.id, now, values, mode, ahead + busy);
   }
 
   function predictLab(line: Line, item: LabItem, now: number) {
@@ -304,19 +313,29 @@ export function simulateDay(
       running_mean: [now + (ahead + busy) * per * MIN, null, null],
       history_mean: [now + (ahead + busy) * hPer * MIN, null, null],
     };
-    record(item.id, 'lab', line.id, now, values);
+    record(item.id, 'lab', line.id, now, values, 'first', ahead + busy);
   }
 
-  function record(visitId: string, stage: 'doctor' | 'lab', serverId: string, now: number, v: Partial<Record<EtaPolicy, [number, number | null, number | null]>>) {
+  function record(
+    visitId: string, stage: 'doctor' | 'lab', serverId: string, now: number, v: Partial<Record<EtaPolicy, [number, number | null, number | null]>>,
+    mode: 'first' | 'update' = 'first', ahead = 0,
+  ) {
     const list = ETA_POLICIES.filter((policy) => v[policy]).map((policy) => ({
-      visitId, policy, stage, serverId, madeAt: now, predictedAt: v[policy]![0], low: v[policy]![1], high: v[policy]![2], actualStartAt: null,
+      visitId, policy, stage, serverId, madeAt: now, ahead, predictedAt: v[policy]![0], low: v[policy]![1], high: v[policy]![2], actualStartAt: null,
     }) as Prediction);
+    if (mode === 'update') {
+      updates.push(...list);
+      pendingUpdates.set(visitId, [...(pendingUpdates.get(visitId) ?? []), ...list]);
+      return;
+    }
     predictions.push(...list);
     pending.set(visitId, list);
   }
   const started = (visitId: string, at: number) => {
     for (const x of pending.get(visitId) ?? []) x.actualStartAt = at;
+    for (const x of pendingUpdates.get(visitId) ?? []) x.actualStartAt = at;
     pending.delete(visitId);
+    pendingUpdates.delete(visitId);
   };
 
   // ----- dispatch: every idle server takes the next person -----
@@ -357,6 +376,8 @@ export function simulateDay(
     emit('call', at, refs, { role: 'compounder' });
     emit('consult_start', at, refs, { role: 'doctor', priority: next.priorityLevel, review: next.visitReason === 'report_review' });
     heap.push(at + Math.round(doc.truth.get(next.id)!.durationMin * MIN), { kind: 'consult_end', doctor: doc.id, appt: next.id });
+    // Screens refresh after every call: everyone still waiting gets a new estimate.
+    for (const w of computeQueueOrder(doc.appts, settings).line) predictDoctor(doc, w, at, 'update');
   }
 
   function maybeEnd(doc: Doctor, now: number) {
@@ -607,5 +628,5 @@ export function simulateDay(
     const s = doc.session;
     doctorOvertimeMin[doc.id] = s.endedAt != null && s.scheduledEndAt != null ? Math.max(0, (s.endedAt - s.scheduledEndAt) / MIN) : 0;
   }
-  return { events, predictions, stats: { doctorIdleMin, lineIdleMin, doctorOvertimeMin, returns } };
+  return { events, predictions, updates, stats: { doctorIdleMin, lineIdleMin, doctorOvertimeMin, returns } };
 }

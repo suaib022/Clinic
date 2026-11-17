@@ -33,6 +33,22 @@ export function etaMetrics(preds: Prediction[]): EtaMetrics {
   };
 }
 
+/**
+ * Buckets of people ahead (including the one being served) when the prediction was made. Grouping by something known at
+ * prediction time keeps the comparison fair; grouping by the real waiting time would select the cases where things
+ * happened to go fast and penalise any method that allows for possible arrivals.
+ */
+export const HORIZONS: readonly { key: string; from: number; to: number }[] = [
+  { key: 'a0_1', from: 0, to: 2 }, { key: 'a2_3', from: 2, to: 4 }, { key: 'a4_6', from: 4, to: 7 }, { key: 'a7plus', from: 7, to: Infinity },
+];
+
+/** ETA quality split by people ahead at prediction time (only predictions with a real start). */
+export function etaByHorizon(preds: Prediction[]): Record<string, EtaMetrics> {
+  const out: Record<string, EtaMetrics> = {};
+  for (const h of HORIZONS) out[h.key] = etaMetrics(preds.filter((p) => p.actualStartAt != null && p.ahead >= h.from && p.ahead < h.to));
+  return out;
+}
+
 /** Waiting time per stage (doctor: check-in to call; lab: queue to call). One entry per visit, read from the engine's predictions. */
 export function waitMetrics(day: SimDay): { stage: 'doctor' | 'lab'; meanMin: number | null; p90Min: number | null }[] {
   return (['doctor', 'lab'] as const).map((stage) => {

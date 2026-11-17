@@ -7,7 +7,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  ETA_POLICIES, ROUTE_POLICIES, etaMetrics, journeyMinutes, parseScenario, percentile, simulateDay, toOcelJson, toXes, waitMetrics,
+  ETA_POLICIES, HORIZONS, ROUTE_POLICIES, etaByHorizon, etaMetrics, journeyMinutes, parseScenario, percentile, simulateDay, toOcelJson, toXes, waitMetrics,
   type EtaMetrics, type Prediction,
 } from '../src';
 
@@ -39,6 +39,7 @@ const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.le
 
 for (const route of ROUTE_POLICIES) {
   const preds: Prediction[] = [];
+  const updates: Prediction[] = [];
   const waits: Record<'doctor' | 'lab', number[]> = { doctor: [], lab: [] };
   const journeys: number[] = [];
   const docIdle: number[] = [], lineIdle: number[] = [];
@@ -53,7 +54,13 @@ for (const route of ROUTE_POLICIES) {
           const m = etaMetrics(sel);
           for (const k of ETA_KEYS) perDay.push(`${route},${s},${policy},${stage},${k},${fmt(m[k])}`);
         }
+        // Re-estimates while waiting (doctor queue), by people ahead when predicted.
+        const hz = etaByHorizon(day.updates.filter((p) => p.policy === policy));
+        for (const h of HORIZONS) {
+          for (const k of ['mae', 'within5', 'coverage'] as const) perDay.push(`${route},${s},${policy},doctor,${k}_${h.key},${fmt(hz[h.key][k])}`);
+        }
       }
+      updates.push(...day.updates);
     }
     const dayJourneys = journeyMinutes(day);
     for (const w of waitMetrics(day)) {
@@ -76,6 +83,10 @@ for (const route of ROUTE_POLICIES) {
         if (!sel.length) continue;
         const m = etaMetrics(sel);
         for (const k of ETA_KEYS) pooled.push({ route, policy, stage, metric: k, value: m[k] });
+      }
+      const hz = etaByHorizon(updates.filter((p) => p.policy === policy));
+      for (const h of HORIZONS) {
+        for (const k of ['n', 'mae', 'within5', 'coverage'] as const) pooled.push({ route, policy, stage: 'doctor', metric: `${k}_${h.key}`, value: hz[h.key][k] });
       }
     }
   }
@@ -103,6 +114,10 @@ console.table(ETA_POLICIES.flatMap((policy) => STAGES.filter((stage) => g('engin
   p90: g('engine', policy, stage, 'p90Ae'), within5: g('engine', policy, stage, 'within5'), within10: g('engine', policy, stage, 'within10'),
   coverage: g('engine', policy, stage, 'coverage'),
 }))));
+console.log('Doctor ETA while waiting, by people ahead when predicted (MAE / coverage):');
+console.table(ETA_POLICIES.filter((p) => g('engine', p, 'doctor', 'n_a0_1') !== '').map((policy) => Object.fromEntries([
+  ['policy', policy], ...HORIZONS.map((h) => [h.key, `${g('engine', policy, 'doctor', `mae_${h.key}`)} / ${g('engine', policy, 'doctor', `coverage_${h.key}`) || '-'}`]),
+])));
 console.log('Lab routing:');
 console.table(ROUTE_POLICIES.map((route) => ({
   route, lab_wait: g(route, '', 'lab', 'mean_wait_min'), journey_mean: g(route, '', 'journey', 'mean_min'),

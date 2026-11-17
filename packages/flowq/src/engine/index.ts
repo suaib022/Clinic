@@ -1,10 +1,10 @@
 // Queue engine: pure functions for the Live Queue & Decision Support System (Part B rules).
 export * from './types';
 export { countedTime, compareLine, computeQueueOrder } from './order';
-export { computeExpectedDurations, percentile } from './durations';
+export { computeExpectedDurations, percentile, residualMin } from './durations';
 export { durationOf, perVisitMin } from './visit';
 export { learnRates } from './rates';
-export { computeEstimates, statusLabel, confidence, reasonText, expectedArrivalsAheadMin, stillComesP } from './estimates';
+export { computeEstimates, statusLabel, confidence, reasonText, expectedArrivalsAheadMin, stillComesP, arrivesBeforeP } from './estimates';
 export { computeSuggestions } from './suggestions';
 export { activeMinutes, round5, MIN, normalQuantile, normalCdf } from './time';
 

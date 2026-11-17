@@ -274,3 +274,14 @@ Result (200 days): busy-lab engine lab MAE 5.96 → 3.78 min (baseline 3.76, whi
   walk-ins at all (wrong prior, 0.73 min), no-shows 35% (n.s.), doctor never late (n.s.); range coverage falls to 65-68% with
   many walk-ins or absent patients.
 - `packages/flowq/experiments/run-all.sh` reproduces everything.
+
+## Follow-up: re-estimates while waiting, arrival window, final numbers (2026-11-18)
+
+- Audit item 9 closed: the simulator records a fresh estimate for everyone in line after every call (`SimDay.updates`),
+  grouped by people ahead at prediction time (grouping by real waiting time is outcome-dependent and was dropped).
+- Engine fix: expected arrivals only count people who can arrive before this patient is called (window ends at the earlier
+  of the counted time and the expected call time; `arrivesBeforeP`). Mean mode also uses the mean residual time of the visit
+  in progress (`residualMin`).
+- Final results (500 days, staff actions on): doctor MAE engine 7.88 vs DSS rules 9.21 vs best baseline 8.62; within 5 min
+  50.8% vs 43.4%; range coverage 73.8% (DSS 47.5%). Robustness: engine lowest MAE in 20 of 20 settings, all significant.
+  Known limits: coverage below the 80% target when many walk-ins or absent patients; routing gains are small.
