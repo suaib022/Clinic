@@ -11,7 +11,7 @@ import { adviseReturn } from '../lab/returnAdvice';
 import type { FlowActivity, FlowEvent, FlowObjectRef } from '../log/events';
 import { makeRng, type Rng } from './rng';
 import type { Scenario } from './scenario';
-import { ETA_POLICIES, chooseNextLine, type EtaPolicy, type RoutePolicy } from './policies';
+import { ETA_POLICIES, chooseNextLine, type EtaPolicy, type ReturnPolicy, type RoutePolicy } from './policies';
 
 export interface Prediction {
   visitId: string;
@@ -29,7 +29,18 @@ export interface Prediction {
 export interface SimDay {
   events: FlowEvent[];
   predictions: Prediction[];
-  stats: { doctorIdleMin: Record<string, number>; lineIdleMin: Record<string, number> };
+  stats: {
+    doctorIdleMin: Record<string, number>;
+    lineIdleMin: Record<string, number>;
+    /** Minutes each doctor worked past the scheduled session end (0 if on time). */
+    doctorOvertimeMin: Record<string, number>;
+    /**
+     * Same-day report reviews. eligible: all of a hospital patient's reports ready while the doctor still had a session
+     * today; suggested: the app's advice said same day; attempted: the patient came back; seen: seen by the doctor;
+     * turnedAway: came back after the session ended.
+     */
+    returns: { eligible: number; suggested: number; attempted: number; seen: number; turnedAway: number };
+  };
 }
 
 // ---------- internal state ----------
@@ -114,7 +125,11 @@ const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.l
  * Simulates one day. Same scenario + seed + route policy ⇒ identical output.
  * Every ETA policy is evaluated on the same day, so policies are compared on identical patients.
  */
-export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy }, base: DssSettings = DEFAULT_SETTINGS): SimDay {
+export function simulateDay(
+  sc: Scenario, seed: number, p: { route: RoutePolicy; returns?: ReturnPolicy }, base: DssSettings = DEFAULT_SETTINGS,
+): SimDay {
+  const returnPolicy: ReturnPolicy = p.returns ?? 'advice';
+  const returns = { eligible: 0, suggested: 0, attempted: 0, seen: 0, turnedAway: 0 };
   // Doctor queues use the scenario's engine settings on top of the base (DSS) settings.
   const settings: DssSettings = { ...base, ...sc.engine.doctor };
   const rng: Rng = makeRng(seed);
@@ -230,6 +245,17 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
   const lineSnapshot = (line: Line, now: number) =>
     computeLineEstimates({ now, settings: labSettings, session: labSession(line, now), line, items: line.items, history: line.history });
 
+  /** Minutes until a report review joining the doctor's line now would be seen (engine estimate for a probe patient). */
+  function newcomerWaitMin(doc: Doctor, now: number): number {
+    const probe: QueueAppointment = {
+      id: '__probe__', serialNo: 0, status: 'checked_in', bookedAt: now, checkedInAt: now, slotMinutes: doc.slotMin,
+      priorityLevel: 0, visitType: 'follow_up', visitReason: 'report_review', visitSource: 'walk_in',
+    };
+    const r = computeEstimates({ now, settings, session: doc.session, appointments: [...doc.appts, probe], history: doc.history, slotMinutes: doc.slotMin });
+    const at = r.estimates[probe.id]?.expectedStartAt;
+    return at == null ? 0 : Math.max(0, (at - now) / MIN);
+  }
+
   function predictDoctor(doc: Doctor, a: QueueAppointment, now: number) {
     const r = doctorSnapshot(doc, now);
     const e = r.estimates[a.id];
@@ -318,6 +344,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
     next.status = 'in_consultation'; next.calledAt = at; next.consultStartedAt = at;
     doc.current = next.id;
     started(next.id, at);
+    if (next.visitReason === 'report_review') returns.seen++;
     const refs = docRefs(doc, next);
     emit('call', at, refs, { role: 'compounder' });
     emit('consult_start', at, refs, { role: 'doctor', priority: next.priorityLevel, review: next.visitReason === 'report_review' });
@@ -498,13 +525,16 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
         visit.reportsDue -= 1; visit.lastReportAt = now;
         if (visit.reportsDue > 0 || !visit.doctorId || visit.remaining.length) break;
         const doc = doctors.get(visit.doctorId)!;
-        const snap = doctorSnapshot(doc, now);
-        const wait = doc.session.state === 'ended' ? 0 : snap.doctorFreeInMin + snap.line.reduce((m, id) => {
-          const a = doc.appts.find((x) => x.id === id)!;
-          return m + (a.visitReason === 'report_review' ? settings.reportReviewMin : snap.durations[a.visitType].typical);
-        }, 0);
+        if (doc.session.state === 'ended') break;
+        returns.eligible++;
+        // The wait a report review joining now would get, from the same engine the app uses (no duplicate logic).
+        const wait = newcomerWaitMin(doc, now);
         const advice = adviseReturn({ reportReadyAt: now, doctorSession: doc.session, queueWaitMin: wait, travelBufferMin: sc.returns.travelBufferMin });
-        if (advice.kind === 'same_day' && rng.bernoulli(sc.returns.sameDayWillingP)) {
+        if (advice.kind === 'same_day') returns.suggested++;
+        const willing = rng.bernoulli(sc.returns.sameDayWillingP);
+        const goes = returnPolicy === 'always' || (returnPolicy === 'advice' && advice.kind === 'same_day');
+        if (goes && willing) {
+          returns.attempted++;
           heap.push(now + sc.returns.travelBufferMin * MIN, { kind: 'return_arrive', visit: ev.visit });
         }
         break;
@@ -512,7 +542,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
       case 'return_arrive': {
         const visit = visits.get(ev.visit)!;
         const doc = doctors.get(visit.doctorId!)!;
-        if (doc.session.state === 'ended') break;
+        if (doc.session.state === 'ended') { returns.turnedAway++; break; }
         const id = `a${++apptSeq}`;
         const a: QueueAppointment = {
           id, serialNo: Math.max(0, ...doc.appts.map((x) => x.serialNo)) + 1, status: 'checked_in', bookedAt: now, checkedInAt: now,
@@ -551,5 +581,10 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
   }
 
   events.sort((a, b) => a.time - b.time || Number(a.id.slice(1)) - Number(b.id.slice(1)));
-  return { events, predictions, stats: { doctorIdleMin, lineIdleMin } };
+  const doctorOvertimeMin: Record<string, number> = {};
+  for (const doc of doctors.values()) {
+    const s = doc.session;
+    doctorOvertimeMin[doc.id] = s.endedAt != null && s.scheduledEndAt != null ? Math.max(0, (s.endedAt - s.scheduledEndAt) / MIN) : 0;
+  }
+  return { events, predictions, stats: { doctorIdleMin, lineIdleMin, doctorOvertimeMin, returns } };
 }

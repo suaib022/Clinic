@@ -12,6 +12,13 @@ import type { Rng } from './rng';
 export type EtaPolicy = 'engine' | 'booked' | 'position_slot' | 'running_mean' | 'history_mean';
 export const ETA_POLICIES: readonly EtaPolicy[] = ['engine', 'booked', 'position_slot', 'running_mean', 'history_mean'];
 
+/**
+ * Same-day report review. advice: return only when the app's return advice says there is time (and the patient agrees).
+ * always: return whenever the ordering doctor's session is not over. never: always book a later visit.
+ */
+export type ReturnPolicy = 'advice' | 'always' | 'never';
+export const RETURN_POLICIES: readonly ReturnPolicy[] = ['advice', 'always', 'never'];
+
 /** How a patient with tests in several lab lines picks the next line. */
 export type RoutePolicy = 'engine' | 'fixed' | 'random' | 'shortest_line';
 export const ROUTE_POLICIES: readonly RoutePolicy[] = ['engine', 'fixed', 'random', 'shortest_line'];
