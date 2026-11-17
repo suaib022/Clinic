@@ -3,9 +3,9 @@ export * from './types';
 export { countedTime, compareLine, computeQueueOrder } from './order';
 export { computeExpectedDurations, percentile } from './durations';
 export { durationOf, perVisitMin } from './visit';
-export { computeEstimates, statusLabel, confidence, reasonText } from './estimates';
+export { computeEstimates, statusLabel, confidence, reasonText, expectedArrivalsAheadMin, stillComesP } from './estimates';
 export { computeSuggestions } from './suggestions';
-export { activeMinutes, round5, MIN } from './time';
+export { activeMinutes, round5, MIN, normalQuantile, normalCdf } from './time';
 
 import type { EngineInput, QueueResult, Suggestion } from './types';
 import { computeEstimates } from './estimates';

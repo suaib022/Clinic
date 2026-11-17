@@ -56,6 +56,13 @@ export function settingsFromRow(row: RawSnapshot['settings']): DssSettings {
     reportReviewMin: n('report_review_min', DEFAULT_SETTINGS.reportReviewMin),
     historyWindow: n('history_window', DEFAULT_SETTINGS.historyWindow),
     sumWith: row.sum_with === 'mean' ? 'mean' : 'median',
+    expectArrivals: row.expect_arrivals === 'true' || row.expect_arrivals === 1,
+    showP: n('show_p', DEFAULT_SETTINGS.showP),
+    walkInPerHour: n('walk_in_per_hour', DEFAULT_SETTINGS.walkInPerHour),
+    latenessMeanMin: n('lateness_mean_min', DEFAULT_SETTINGS.latenessMeanMin),
+    latenessSdMin: n('lateness_sd_min', DEFAULT_SETTINGS.latenessSdMin),
+    rangeMethod: row.range_method === 'normal_sum' ? 'normal_sum' : 'quartile_sum',
+    rangeCoverage: n('range_coverage', DEFAULT_SETTINGS.rangeCoverage),
   };
 }
 

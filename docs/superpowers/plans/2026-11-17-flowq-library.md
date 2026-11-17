@@ -251,3 +251,11 @@ Root causes found by splitting lab ETA error by wait length (busy-lab, 30 days):
 3. Adding medians under-estimates long queues (skewed durations). Fix: `DurationStats.mean` and setting `sumWith: 'median' | 'mean'` (default 'median', DSS rule unchanged); lab lines use 'mean'.
 
 Result (200 days): busy-lab engine lab MAE 5.96 → 3.78 min (baseline 3.76, which is given the true typical time), median error 1.67 vs 1.94, bias ≈ 0; default scenario 0.39 vs 0.72. Doctor ETA unchanged (6.9 vs 7.6); doctor range coverage 55% still open.
+
+## Follow-up: fair baselines, statistics, calibrated doctor estimates (2026-11-17)
+
+- New baseline `history_mean` (same history as the engine, simple rule); lab no longer gets the meaningless `booked` baseline.
+- New metrics p90 error, share within 5 / 10 min; `per_day.csv` and `analysis/flowq_analysis/stats.py` (day-level bootstrap CIs, paired Wilcoxon, Holm).
+- Engine options (DSS defaults unchanged): `sumWith`, `expectArrivals` with `showP`, `walkInPerHour`, `latenessMeanMin/SdMin` (Bayesian chance a missing booked patient still comes), `rangeMethod: 'normal_sum'` with `rangeCoverage`.
+- 500 days, default scenario, full options: doctor MAE 7.27 vs best baseline 7.68 (p = 5.5e-22), p90 16.9 vs 17.4, within 5 min 50% vs 46%, range coverage 79% for an 80% target (DSS rule: 50%). The engine is given long-run no-show, walk-in and punctuality rates that baselines do not use.
+- Routing: no significant journey-time difference.

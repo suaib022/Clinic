@@ -46,3 +46,14 @@ describe('scenario provenance', () => {
     });
   }
 });
+
+describe('scenario engine settings', () => {
+  it('defaults to no overrides', () => expect(parseScenario(DEFAULT).engine).toEqual({ doctor: {}, lab: {} }));
+  it('accepts known settings', () => {
+    expect(parseScenario({ ...DEFAULT, engine: { doctor: { sumWith: 'mean', expectArrivals: true, showP: 0.77 } } }).engine.doctor)
+      .toEqual({ sumWith: 'mean', expectArrivals: true, showP: 0.77 });
+  });
+  it('rejects unknown settings by path', () => {
+    expect(() => parseScenario({ ...DEFAULT, engine: { doctor: { magic: 1 } } })).toThrow('scenario.engine.doctor.magic');
+  });
+});

@@ -97,3 +97,13 @@ describe('lab closing time', () => {
     expect(d.events.filter((e) => e.activity === 'lab_call').length).toBe(q);
   });
 });
+
+describe('baselines', () => {
+  const d = simulateDay(SC, 11, { route: 'engine' });
+  const policies = (stage: string) => new Set(d.predictions.filter((p) => p.stage === stage).map((p) => p.policy));
+  it('lab has no "booked" baseline (it would always say "now")', () => expect(policies('lab').has('booked')).toBe(false));
+  it('both stages have the same-information baseline history_mean', () => {
+    expect(policies('doctor').has('history_mean')).toBe(true);
+    expect(policies('lab').has('history_mean')).toBe(true);
+  });
+});

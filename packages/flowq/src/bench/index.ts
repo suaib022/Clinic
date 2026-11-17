@@ -1,1 +1,1 @@
-export { etaMetrics, waitMetrics, journeyMinutes } from './metrics';
+export { etaMetrics, waitMetrics, journeyMinutes, type EtaMetrics } from './metrics';

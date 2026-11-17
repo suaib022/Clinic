@@ -10,6 +10,13 @@ export function percentile(sorted: number[], p: number): number {
   return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
 }
 
+/** Sample standard deviation (n - 1). */
+export function sampleSd(xs: number[]): number {
+  if (xs.length < 2) return 0;
+  const m = xs.reduce((a, b) => a + b, 0) / xs.length;
+  return Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / (xs.length - 1));
+}
+
 // Without enough history there is no spread to measure; these factors give a plausible range around the typical value.
 const SHORT_FACTOR = 0.7;
 const LONG_FACTOR = 1.4;
@@ -27,6 +34,7 @@ function stats(
     return {
       typical: c(percentile(sorted, 0.5)),
       mean: c(sorted.reduce((a, b) => a + b, 0) / sorted.length),
+      sd: sampleSd(sorted),
       short: c(percentile(sorted, 0.25)),
       long: c(percentile(sorted, 0.75)),
       source: 'history',
@@ -35,7 +43,7 @@ function stats(
   }
   const base = departmentAvgMin && departmentAvgMin > 0 ? departmentAvgMin : slotMin;
   const source = departmentAvgMin && departmentAvgMin > 0 ? 'department' : 'slot';
-  return { typical: c(base), mean: c(base), short: c(base * SHORT_FACTOR), long: c(base * LONG_FACTOR), source, samples: last30.length };
+  return { typical: c(base), mean: c(base), sd: (c(base * LONG_FACTOR) - c(base * SHORT_FACTOR)) / 1.349, short: c(base * SHORT_FACTOR), long: c(base * LONG_FACTOR), source, samples: last30.length };
 }
 
 /**

@@ -14,5 +14,14 @@ describe('etaMetrics', () => {
     expect(etaMetrics([p(0, 5, 0, 10), p(0, 15, 0, 10), p(0, 0, 0, 10), p(0, 11, 0, 10)]).coverage).toBe(0.5);
   });
   it('predictions without a real start are ignored', () => expect(etaMetrics([p(0, null), p(5, 5)]).n).toBe(1));
-  it('empty input gives nulls, not NaN', () => expect(etaMetrics([])).toEqual({ n: 0, mae: null, medianAe: null, coverage: null }));
+  it('empty input gives nulls, not NaN', () => expect(etaMetrics([])).toEqual({ n: 0, mae: null, medianAe: null, p90Ae: null, within5: null, within10: null, coverage: null }));
+});
+
+describe('etaMetrics patient-facing measures', () => {
+  it('share within 5 and 10 minutes, and p90 error', () => {
+    const m = etaMetrics([p(0, 0), p(0, 4), p(0, 8), p(0, 20)]);
+    expect(m.within5).toBe(0.5);
+    expect(m.within10).toBe(0.75);
+    expect(m.p90Ae).toBeCloseTo(16.4, 5); // linear interpolation between 8 and 20
+  });
 });

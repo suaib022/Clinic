@@ -112,7 +112,9 @@ const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.l
  * Simulates one day. Same scenario + seed + route policy ⇒ identical output.
  * Every ETA policy is evaluated on the same day, so policies are compared on identical patients.
  */
-export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy }, settings: DssSettings = DEFAULT_SETTINGS): SimDay {
+export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy }, base: DssSettings = DEFAULT_SETTINGS): SimDay {
+  // Doctor queues use the scenario's engine settings on top of the base (DSS) settings.
+  const settings: DssSettings = { ...base, ...sc.engine.doctor };
   const rng: Rng = makeRng(seed);
   // Routing draws use their own stream, so route policies see the same patients.
   const routeRng: Rng = makeRng((seed ^ 0x9e3779b9) >>> 0);
@@ -189,7 +191,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
   });
   // Lab lines see many patients a day, so their duration estimate may use a longer history than a doctor's 30 visits.
   // Long lines add up many visits, so they sum averages rather than medians.
-  const labSettings: DssSettings = { ...settings, historyWindow: LAB_HISTORY_WINDOW, sumWith: 'mean' };
+  const labSettings: DssSettings = { ...base, historyWindow: LAB_HISTORY_WINDOW, sumWith: 'mean', ...sc.engine.lab };
   const visits = new Map<string, LabVisit>();
   const lineIds = sc.lab.lines.map((l) => l.id);
   const shares = sc.lab.lines.map((l) => l.share);
@@ -231,11 +233,18 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
     const today = doc.appts.filter((x) => x.consultStartedAt != null && x.consultEndedAt != null)
       .map((x) => (x.consultEndedAt! - x.consultStartedAt!) / MIN);
     const per = mean(today) ?? doc.slotMin;
-    const values: Record<EtaPolicy, [number, number | null, number | null]> = {
+    // history_mean: the engine's own history, simple rule (one mean per visit type, no elapsed-time credit).
+    const hMean = (x: QueueAppointment) => (x.visitReason === 'report_review' ? settings.reportReviewMin
+      : mean(doc.history[x.visitType].slice(0, settings.historyWindow)) ?? doc.slotMin);
+    const aheadIds = r.line.slice(0, ahead);
+    const histSum = aheadIds.reduce((m, id) => m + hMean(doc.appts.find((x) => x.id === id)!), 0)
+      + (doc.current ? hMean(doc.appts.find((x) => x.id === doc.current)!) : 0);
+    const values: Partial<Record<EtaPolicy, [number, number | null, number | null]>> = {
       engine: [e?.expectedStartAt ?? now, e?.lowAt ?? null, e?.highAt ?? null],
       booked: [a.visitSource === 'online' ? Math.max(a.bookedAt, now) : now, null, null],
       position_slot: [startFrom + (ahead + busy) * doc.slotMin * MIN, null, null],
       running_mean: [startFrom + (ahead + busy) * per * MIN, null, null],
+      history_mean: [startFrom + histSum * MIN, null, null],
     };
     record(a.id, 'doctor', doc.id, now, values);
   }
@@ -248,18 +257,19 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
     const today = line.items.filter((x) => x.status === 'collected' && x.calledAt != null && x.collectedAt != null)
       .map((x) => (x.collectedAt! - x.calledAt!) / MIN);
     const per = mean(today) ?? line.typicalMin;
-    const values: Record<EtaPolicy, [number, number | null, number | null]> = {
+    const hPer = mean(line.history.slice(0, labSettings.historyWindow)) ?? line.typicalMin;
+    const values: Partial<Record<EtaPolicy, [number, number | null, number | null]>> = {
       engine: [e?.expectedStartAt ?? now, e?.lowAt ?? null, e?.highAt ?? null],
-      booked: [now, null, null],
       position_slot: [now + (ahead + busy) * line.typicalMin * MIN, null, null],
       running_mean: [now + (ahead + busy) * per * MIN, null, null],
+      history_mean: [now + (ahead + busy) * hPer * MIN, null, null],
     };
     record(item.id, 'lab', line.id, now, values);
   }
 
-  function record(visitId: string, stage: 'doctor' | 'lab', serverId: string, now: number, v: Record<EtaPolicy, [number, number | null, number | null]>) {
-    const list = ETA_POLICIES.map((policy) => ({
-      visitId, policy, stage, serverId, madeAt: now, predictedAt: v[policy][0], low: v[policy][1], high: v[policy][2], actualStartAt: null,
+  function record(visitId: string, stage: 'doctor' | 'lab', serverId: string, now: number, v: Partial<Record<EtaPolicy, [number, number | null, number | null]>>) {
+    const list = ETA_POLICIES.filter((policy) => v[policy]).map((policy) => ({
+      visitId, policy, stage, serverId, madeAt: now, predictedAt: v[policy]![0], low: v[policy]![1], high: v[policy]![2], actualStartAt: null,
     }) as Prediction);
     predictions.push(...list);
     pending.set(visitId, list);

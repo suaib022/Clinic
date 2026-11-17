@@ -8,5 +8,5 @@ export const perVisitMin = (d: DurationStats, s: Pick<DssSettings, 'sumWith'>): 
 export function durationOf(a: QueueAppointment, d: Durations, s: DssSettings): DurationStats {
   if (a.visitReason !== 'report_review') return d[a.visitType];
   const c = (v: number) => clamp(v, s.durationClampMin, s.durationClampMax);
-  return { typical: c(s.reportReviewMin), mean: c(s.reportReviewMin), short: c(s.reportReviewMin * 0.7), long: c(s.reportReviewMin * 1.4), source: 'slot', samples: 0 };
+  return { typical: c(s.reportReviewMin), mean: c(s.reportReviewMin), sd: (c(s.reportReviewMin * 1.4) - c(s.reportReviewMin * 0.7)) / 1.349, short: c(s.reportReviewMin * 0.7), long: c(s.reportReviewMin * 1.4), source: 'slot', samples: 0 };
 }

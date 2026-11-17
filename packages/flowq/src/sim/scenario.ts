@@ -1,3 +1,5 @@
+import { DEFAULT_SETTINGS, type DssSettings } from '../engine/types';
+
 /** One simulated hospital day. Every time is a Dhaka wall-clock 'HH:MM'; every duration is minutes. */
 export interface Scenario {
   day: { date: string };
@@ -12,6 +14,8 @@ export interface Scenario {
     lines: { id: string; name: string; typicalMin: number; cv: number; mustFirst: boolean; turnaroundMin: number; turnaroundCv: number; share: number }[];
   };
   returns: { sameDayWillingP: number; travelBufferMin: number };
+  /** Engine settings to use in this experiment (unset keys keep the defaults; lab lines default to historyWindow 200, sumWith 'mean'). */
+  engine: { doctor: Partial<DssSettings>; lab: Partial<DssSettings> };
   /**
    * Provenance for every parameter, keyed by its path (for example 'visits.newMedianMin').
    * Each value starts with [cited], [derived] or [assumption]; assumptions are covered by the sensitivity sweep.
@@ -60,6 +64,22 @@ export function parseScenario(json: unknown): Scenario {
     };
   });
   const sources = obj(r.sources ?? {}, 'sources');
+  const eng = obj(r.engine ?? {}, 'engine');
+  const engineSide = (v: unknown, path: string): Partial<DssSettings> => {
+    const o = obj(v ?? {}, path);
+    const out: Record<string, unknown> = {};
+    for (const [k, x] of Object.entries(o)) {
+      const def = (DEFAULT_SETTINGS as unknown as Record<string, unknown>)[k];
+      if (def === undefined) fail(`${path}.${k}`, 'is not an engine setting');
+      if (k === 'latenessMeanMin') out[k] = typeof x === 'number' && Number.isFinite(x) ? x : fail(`${path}.${k}`, 'must be a number');
+      else if (typeof def === 'number') out[k] = num(x, `${path}.${k}`);
+      else if (typeof def === 'boolean') out[k] = bool(x, `${path}.${k}`);
+      else if (k === 'sumWith') out[k] = x === 'mean' || x === 'median' ? x : fail(`${path}.${k}`, "must be 'median' or 'mean'");
+      else if (k === 'rangeMethod') out[k] = x === 'quartile_sum' || x === 'normal_sum' ? x : fail(`${path}.${k}`, "must be 'quartile_sum' or 'normal_sum'");
+      else out[k] = str(x, `${path}.${k}`);
+    }
+    return out as Partial<DssSettings>;
+  };
   return {
     day: { date: str(day.date, 'day.date') },
     doctors,
@@ -79,6 +99,7 @@ export function parseScenario(json: unknown): Scenario {
       open: hhmm(l.open, 'lab.open'), close: hhmm(l.close, 'lab.close'), lines,
     },
     returns: { sameDayWillingP: prob(ret.sameDayWillingP, 'returns.sameDayWillingP'), travelBufferMin: num(ret.travelBufferMin, 'returns.travelBufferMin') },
+    engine: { doctor: engineSide(eng.doctor, 'engine.doctor'), lab: engineSide(eng.lab, 'engine.lab') },
     sources: Object.fromEntries(Object.entries(sources).map(([k, x]) => [k, String(x)])),
   };
 }
