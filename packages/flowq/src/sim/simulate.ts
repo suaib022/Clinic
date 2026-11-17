@@ -45,7 +45,7 @@ interface Doctor {
   busyMin: number;
 }
 interface Line {
-  id: string; name: string; typicalMin: number; cv: number; mustFirst: boolean; turnaroundMin: number;
+  id: string; name: string; typicalMin: number; cv: number; mustFirst: boolean; turnaroundMin: number; turnaroundCv: number;
   items: LabItem[]; current: string | null; history: number[]; busyMin: number; firstAt: number | null; lastAt: number | null;
 }
 interface LabVisit {
@@ -423,7 +423,8 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
         const visit = visits.get(vid)!;
         emit('sample_collected', now, [{ type: 'patient', id: visit.patientId }, { type: 'lab_queue_item', id: item.id }, { type: 'lab_line', id: line.id },
           { type: 'lab_order', id: visit.orderIds[line.id] }], { role: 'lab_staff' });
-        heap.push(now + line.turnaroundMin * MIN, { kind: 'report_ready', visit: vid, line: line.id });
+        const tat = line.turnaroundMin > 0 ? rng.lognormalMin(line.turnaroundMin, line.turnaroundCv) : 0;
+        heap.push(now + Math.round(tat * MIN), { kind: 'report_ready', visit: vid, line: line.id });
         const nxt = nextLine(vid, now);
         if (nxt) heap.push(now, { kind: 'lab_arrive', visit: vid, line: nxt });
         break;

@@ -32,3 +32,17 @@ describe('scenario', () => {
     expect(() => parseScenario({ ...DEFAULT, lab: { ...DEFAULT.lab, lines: undefined } })).toThrow('scenario.lab.lines');
   });
 });
+
+describe('scenario provenance', () => {
+  const REQUIRED = [
+    'visits.newMedianMin', 'visits.cv', 'visits.followUpMedianMin', 'visits.followUpShare', 'patients.latenessMeanMin', 'patients.latenessSdMin',
+    'patients.noShowP', 'patients.walkInPerHour', 'patients.emergencyShareOfWalkIns', 'doctors.startLateMeanMin', 'doctors.slotMin',
+    'lab.orderP', 'lab.nowP', 'lab.outsidePerHour', 'lab.lines.blood.typicalMin', 'lab.lines.blood.turnaroundMin', 'returns.sameDayWillingP',
+  ];
+  for (const file of ['default.json', 'busy-lab.json']) {
+    it(`${file}: every parameter says where it comes from`, () => {
+      const sc = parseScenario(JSON.parse(readFileSync(path.resolve(__dirname, `../../packages/flowq/scenarios/${file}`), 'utf8')));
+      for (const k of REQUIRED) expect(sc.sources[k], k).toMatch(/^\[(cited|derived|assumption)\] /);
+    });
+  }
+});

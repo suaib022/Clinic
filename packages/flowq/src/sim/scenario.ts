@@ -9,10 +9,13 @@ export interface Scenario {
   patients: { latenessMeanMin: number; latenessSdMin: number; noShowP: number; walkInPerHour: number; emergencyShareOfWalkIns: number };
   lab: {
     orderP: number; testsPerOrder: [number, number]; nowP: number; outsidePerHour: number; open: string; close: string;
-    lines: { id: string; name: string; typicalMin: number; cv: number; mustFirst: boolean; turnaroundMin: number; share: number }[];
+    lines: { id: string; name: string; typicalMin: number; cv: number; mustFirst: boolean; turnaroundMin: number; turnaroundCv: number; share: number }[];
   };
   returns: { sameDayWillingP: number; travelBufferMin: number };
-  /** Where each group of values comes from (citations). */
+  /**
+   * Provenance for every parameter, keyed by its path (for example 'visits.newMedianMin').
+   * Each value starts with [cited], [derived] or [assumption]; assumptions are covered by the sensitivity sweep.
+   */
   sources: Record<string, string>;
 }
 
@@ -52,7 +55,8 @@ export function parseScenario(json: unknown): Scenario {
     return {
       id: str(o.id, `lab.lines[${i}].id`), name: str(o.name, `lab.lines[${i}].name`), typicalMin: num(o.typicalMin, `lab.lines[${i}].typicalMin`),
       cv: num(o.cv, `lab.lines[${i}].cv`), mustFirst: bool(o.mustFirst, `lab.lines[${i}].mustFirst`),
-      turnaroundMin: num(o.turnaroundMin, `lab.lines[${i}].turnaroundMin`), share: num(o.share, `lab.lines[${i}].share`),
+      turnaroundMin: num(o.turnaroundMin, `lab.lines[${i}].turnaroundMin`),
+      turnaroundCv: num(o.turnaroundCv, `lab.lines[${i}].turnaroundCv`), share: num(o.share, `lab.lines[${i}].share`),
     };
   });
   const sources = obj(r.sources ?? {}, 'sources');

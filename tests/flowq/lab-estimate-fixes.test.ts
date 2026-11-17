@@ -23,7 +23,8 @@ describe('history window', () => {
 });
 
 describe('simulated lab estimates', () => {
-  const sc = parseScenario(RAWB);
+  // The lab closes at 19:00 while chambers run to 21:00, so people are still in line after closing.
+  const sc = parseScenario({ ...RAWB, lab: { ...RAWB.lab, close: '19:00' } });
   const close = dhakaClock(sc.day.date, sc.lab.close);
   const day = simulateDay(sc, 4, { route: 'engine' });
 
