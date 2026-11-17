@@ -1,0 +1,109 @@
+{
+  "day": {
+    "date": "2026-11-17"
+  },
+  "doctors": [
+    {
+      "id": "dr-a",
+      "sessionStart": "18:00",
+      "sessionEnd": "21:00",
+      "slotMin": 10,
+      "bookedCount": 16,
+      "startLateMeanMin": 5,
+      "startLateSdMin": 5,
+      "pause": {
+        "at": "19:20",
+        "min": 10
+      }
+    },
+    {
+      "id": "dr-b",
+      "sessionStart": "18:00",
+      "sessionEnd": "21:00",
+      "slotMin": 10,
+      "bookedCount": 16,
+      "startLateMeanMin": 5,
+      "startLateSdMin": 5
+    },
+    {
+      "id": "dr-c",
+      "sessionStart": "18:00",
+      "sessionEnd": "21:00",
+      "slotMin": 10,
+      "bookedCount": 16,
+      "startLateMeanMin": 5,
+      "startLateSdMin": 5
+    }
+  ],
+  "visits": {
+    "newMedianMin": 9,
+    "followUpMedianMin": 6,
+    "cv": 0.4,
+    "followUpShare": 0.3
+  },
+  "patients": {
+    "latenessMeanMin": 0,
+    "latenessSdMin": 10,
+    "noShowP": 0.12,
+    "walkInPerHour": 2,
+    "emergencyShareOfWalkIns": 0.05
+  },
+  "lab": {
+    "orderP": 0.5,
+    "testsPerOrder": [
+      1,
+      3
+    ],
+    "nowP": 0.8,
+    "outsidePerHour": 40,
+    "open": "08:00",
+    "close": "22:00",
+    "lines": [
+      {
+        "id": "blood",
+        "name": "Blood",
+        "typicalMin": 4,
+        "cv": 0.3,
+        "mustFirst": true,
+        "turnaroundMin": 120,
+        "share": 0.45
+      },
+      {
+        "id": "urine",
+        "name": "Urine / stool",
+        "typicalMin": 2,
+        "cv": 0.3,
+        "mustFirst": false,
+        "turnaroundMin": 60,
+        "share": 0.25
+      },
+      {
+        "id": "ecg",
+        "name": "ECG",
+        "typicalMin": 8,
+        "cv": 0.3,
+        "mustFirst": false,
+        "turnaroundMin": 0,
+        "share": 0.15
+      },
+      {
+        "id": "xray",
+        "name": "X-ray",
+        "typicalMin": 6,
+        "cv": 0.3,
+        "mustFirst": false,
+        "turnaroundMin": 60,
+        "share": 0.15
+      }
+    ]
+  },
+  "returns": {
+    "sameDayWillingP": 0.7,
+    "travelBufferMin": 10
+  },
+  "sources": {
+    "visits": "Placeholder from the Clinic dev seed (median 9 min new, 6 min follow-up). Replace with cited outpatient studies in Plan 3.",
+    "patients": "Placeholder. Replace with cited lateness / no-show rates in Plan 3.",
+    "lab": "Stress scenario: busy evening lab (40 outside patients/hour, half of consults order tests). Not calibrated."
+  }
+}

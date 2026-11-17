@@ -19,6 +19,8 @@ export interface DssSettings {
   defaultSlotMin: number;
   durationClampMin: number;
   durationClampMax: number;
+  /** Minutes for a short visit to show a lab report to the doctor. */
+  reportReviewMin: number;
 }
 
 /** B1 defaults (same values as the dss_settings table defaults). */
@@ -34,6 +36,7 @@ export const DEFAULT_SETTINGS: DssSettings = {
   defaultSlotMin: 10,
   durationClampMin: 3,
   durationClampMax: 60,
+  reportReviewMin: 4,
 };
 
 export interface QueueAppointment {
@@ -48,6 +51,8 @@ export interface QueueAppointment {
   consultEndedAt?: number | null;
   priorityLevel: PriorityLevel;
   visitType: VisitType;
+  /** 'report_review' = back with a lab report; takes settings.reportReviewMin. Default 'consult'. */
+  visitReason?: 'consult' | 'report_review';
   visitSource: 'online' | 'walk_in';
   skippedAt?: number | null;
   rejoinedAt?: number | null;

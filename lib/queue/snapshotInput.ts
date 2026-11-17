@@ -53,6 +53,7 @@ export function settingsFromRow(row: RawSnapshot['settings']): DssSettings {
     defaultSlotMin: n('default_slot_min', DEFAULT_SETTINGS.defaultSlotMin),
     durationClampMin: n('duration_clamp_min', DEFAULT_SETTINGS.durationClampMin),
     durationClampMax: n('duration_clamp_max', DEFAULT_SETTINGS.durationClampMax),
+    reportReviewMin: n('report_review_min', DEFAULT_SETTINGS.reportReviewMin),
   };
 }
 

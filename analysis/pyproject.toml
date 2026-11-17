@@ -1,0 +1,13 @@
+[project]
+name = "flowq-analysis"
+version = "0.1.0"
+description = "Process-mining analysis of flowq hospital event logs (XES)."
+requires-python = ">=3.10"
+dependencies = ["pm4py>=2.7", "pandas>=2.0", "matplotlib>=3.7"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
