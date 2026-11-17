@@ -242,3 +242,12 @@ Tools needed: Node/npm, tsx, Vitest (present); `uv` (present) for Python; Supaba
 5. DB tests mirroring `tests/dss/db/*` (access, idempotency, ordering), UI tests, Playwright walk-through; `npm run verify` green.
 6. Exporter Task 11 extended to `lab_events`.
 7. Push migrations to the linked project only after the owner says so.
+
+## Follow-up fix: lab estimate (2026-11-17)
+
+Root causes found by splitting lab ETA error by wait length (busy-lab, 30 days):
+1. Duration estimate came from 20 fixed samples and the simulator never fed today's real durations back, so a small per-patient error was multiplied by long queues. Fix: simulator appends finished visits and collections to history (as the app does); new setting `historyWindow` (default 30, DSS rule unchanged; lab lines 200).
+2. Lab lines past closing time were "ended", so the engine gave no estimate. Fix: a lab counter stays active while people are still in its line.
+3. Adding medians under-estimates long queues (skewed durations). Fix: `DurationStats.mean` and setting `sumWith: 'median' | 'mean'` (default 'median', DSS rule unchanged); lab lines use 'mean'.
+
+Result (200 days): busy-lab engine lab MAE 5.96 → 3.78 min (baseline 3.76, which is given the true typical time), median error 1.67 vs 1.94, bias ≈ 0; default scenario 0.39 vs 0.72. Doctor ETA unchanged (6.9 vs 7.6); doctor range coverage 55% still open.

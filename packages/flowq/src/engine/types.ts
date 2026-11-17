@@ -21,6 +21,10 @@ export interface DssSettings {
   durationClampMax: number;
   /** Minutes for a short visit to show a lab report to the doctor. */
   reportReviewMin: number;
+  /** How many recent visits feed the duration estimate (DSS rule B4: 30). Busy lab lines can use more. */
+  historyWindow: number;
+  /** Which per-visit value is added up for the people ahead. 'median' is DSS rule B5; 'mean' suits long lab lines. */
+  sumWith: 'median' | 'mean';
 }
 
 /** B1 defaults (same values as the dss_settings table defaults). */
@@ -37,6 +41,8 @@ export const DEFAULT_SETTINGS: DssSettings = {
   durationClampMin: 3,
   durationClampMax: 60,
   reportReviewMin: 4,
+  historyWindow: 30,
+  sumWith: 'median',
 };
 
 export interface QueueAppointment {
@@ -78,7 +84,10 @@ export interface SessionInfo {
 }
 
 export interface DurationStats {
+  /** Median: what one visit usually takes (shown to people). */
   typical: number;
+  /** Average: the right value to add up over many visits. Equals typical when there is no history. */
+  mean: number;
   short: number;
   long: number;
   source: 'history' | 'department' | 'slot';

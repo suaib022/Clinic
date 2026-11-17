@@ -54,6 +54,8 @@ export function settingsFromRow(row: RawSnapshot['settings']): DssSettings {
     durationClampMin: n('duration_clamp_min', DEFAULT_SETTINGS.durationClampMin),
     durationClampMax: n('duration_clamp_max', DEFAULT_SETTINGS.durationClampMax),
     reportReviewMin: n('report_review_min', DEFAULT_SETTINGS.reportReviewMin),
+    historyWindow: n('history_window', DEFAULT_SETTINGS.historyWindow),
+    sumWith: row.sum_with === 'mean' ? 'mean' : 'median',
   };
 }
 

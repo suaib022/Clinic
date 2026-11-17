@@ -1,4 +1,5 @@
-import type { ApptStatus, QueueAppointment, QueueResult } from '../engine/types';
+import type { ApptStatus, DssSettings, QueueAppointment, QueueResult } from '../engine/types';
+import { perVisitMin } from '../engine/visit';
 import { computeEstimates } from '../engine/estimates';
 import type { LabItem, LineInput } from './types';
 
@@ -37,8 +38,8 @@ export function computeLineEstimates(input: LineInput): QueueResult {
 }
 
 /** Minutes until a normal-priority patient joining now would be called. Infinity when the line is closed. */
-export function expectedWaitMin(result: QueueResult): number {
+export function expectedWaitMin(result: QueueResult, settings: Pick<DssSettings, 'sumWith'> = { sumWith: 'median' }): number {
   const state = result.session.state;
   if (state === 'ended' || state === 'not_started') return Infinity;
-  return result.doctorFreeInMin + result.line.length * result.durations.new.typical;
+  return result.doctorFreeInMin + result.line.length * perVisitMin(result.durations.new, settings);
 }

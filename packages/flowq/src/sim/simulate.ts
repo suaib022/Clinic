@@ -103,6 +103,9 @@ export function dhakaClock(date: string, hhmm: string): number {
   return Date.UTC(y, m - 1, d, hh - 6, mm);
 }
 
+/** Recent collections used for a lab line's duration estimate (doctors keep the DSS rule of 30). */
+export const LAB_HISTORY_WINDOW = 200;
+
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 
 /**
@@ -178,10 +181,15 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
     });
   }
   const labOpen = clock(sc.lab.open), labClose = clock(sc.lab.close);
-  const labSession = (now: number): SessionInfo => ({
-    state: now < labOpen ? 'not_started' : now >= labClose ? 'ended' : 'active', scheduledStartAt: labOpen, scheduledEndAt: labClose,
-    startedAt: labOpen, pauses: [],
+  // A counter stays open past closing time until everyone already in its line is served.
+  const labSession = (line: Line, now: number): SessionInfo => ({
+    state: now < labOpen ? 'not_started'
+      : now < labClose || line.items.some((x) => x.status === 'queued' || x.status === 'called') ? 'active' : 'ended',
+    scheduledStartAt: labOpen, scheduledEndAt: labClose, startedAt: labOpen, pauses: [],
   });
+  // Lab lines see many patients a day, so their duration estimate may use a longer history than a doctor's 30 visits.
+  // Long lines add up many visits, so they sum averages rather than medians.
+  const labSettings: DssSettings = { ...settings, historyWindow: LAB_HISTORY_WINDOW, sumWith: 'mean' };
   const visits = new Map<string, LabVisit>();
   const lineIds = sc.lab.lines.map((l) => l.id);
   const shares = sc.lab.lines.map((l) => l.share);
@@ -212,7 +220,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
   const doctorSnapshot = (doc: Doctor, now: number) =>
     computeEstimates({ now, settings, session: doc.session, appointments: doc.appts, history: doc.history, slotMinutes: doc.slotMin });
   const lineSnapshot = (line: Line, now: number) =>
-    computeLineEstimates({ now, settings, session: labSession(now), line, items: line.items, history: line.history });
+    computeLineEstimates({ now, settings: labSettings, session: labSession(line, now), line, items: line.items, history: line.history });
 
   function predictDoctor(doc: Doctor, a: QueueAppointment, now: number) {
     const r = doctorSnapshot(doc, now);
@@ -323,7 +331,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
     const v = visits.get(vid)!;
     if (!v.remaining.length) return null;
     const waits: Record<string, number> = {};
-    for (const id of v.remaining) waits[id] = expectedWaitMin(lineSnapshot(lines.get(id)!, now));
+    for (const id of v.remaining) waits[id] = expectedWaitMin(lineSnapshot(lines.get(id)!, now), labSettings);
     const queuedNow: Record<string, number> = {};
     for (const id of v.remaining) queuedNow[id] = lines.get(id)!.items.filter((x) => x.status === 'queued').length;
     const pick = chooseNextLine(p.route, v.remaining.map((id) => ({ lineId: id, mustFirst: lines.get(id)!.mustFirst })), waits, queuedNow, lineIds, routeRng);
@@ -388,6 +396,8 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
         const a = doc.appts.find((x) => x.id === ev.appt)!;
         a.status = 'completed'; a.consultEndedAt = now; doc.current = null;
         doc.busyMin += (now - a.consultStartedAt!) / MIN;
+        // Like the app: finished visits feed the doctor's history (report reviews have their own fixed length).
+        if (a.visitReason !== 'report_review') doc.history[a.visitType].unshift((now - a.consultStartedAt!) / MIN);
         emit('consult_end', now, docRefs(doc, a), { role: 'doctor' });
         const patientId = doc.truth.get(a.id)!.patientId;
         if (a.visitReason !== 'report_review' && rng.bernoulli(sc.lab.orderP)) {
@@ -408,6 +418,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
         const item = line.items.find((x) => x.id === ev.item)!;
         item.status = 'collected'; item.collectedAt = now; line.current = null;
         line.busyMin += (now - item.calledAt!) / MIN; line.lastAt = now;
+        line.history.unshift((now - item.calledAt!) / MIN);
         const vid = itemVisit.get(item.id)!;
         const visit = visits.get(vid)!;
         emit('sample_collected', now, [{ type: 'patient', id: visit.patientId }, { type: 'lab_queue_item', id: item.id }, { type: 'lab_line', id: line.id },

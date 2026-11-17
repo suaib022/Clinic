@@ -18,14 +18,15 @@ function stats(
   values: number[],
   departmentAvgMin: number | null | undefined,
   slotMin: number,
-  s: Pick<DssSettings, 'minDurationSamples' | 'durationClampMin' | 'durationClampMax'>
+  s: Pick<DssSettings, 'minDurationSamples' | 'durationClampMin' | 'durationClampMax' | 'historyWindow'>
 ): DurationStats {
   const c = (v: number) => clamp(v, s.durationClampMin, s.durationClampMax);
-  const last30 = values.filter((v) => Number.isFinite(v) && v > 0).slice(0, 30);
+  const last30 = values.filter((v) => Number.isFinite(v) && v > 0).slice(0, s.historyWindow ?? 30);
   if (last30.length >= s.minDurationSamples) {
     const sorted = [...last30].sort((a, b) => a - b);
     return {
       typical: c(percentile(sorted, 0.5)),
+      mean: c(sorted.reduce((a, b) => a + b, 0) / sorted.length),
       short: c(percentile(sorted, 0.25)),
       long: c(percentile(sorted, 0.75)),
       source: 'history',
@@ -34,7 +35,7 @@ function stats(
   }
   const base = departmentAvgMin && departmentAvgMin > 0 ? departmentAvgMin : slotMin;
   const source = departmentAvgMin && departmentAvgMin > 0 ? 'department' : 'slot';
-  return { typical: c(base), short: c(base * SHORT_FACTOR), long: c(base * LONG_FACTOR), source, samples: last30.length };
+  return { typical: c(base), mean: c(base), short: c(base * SHORT_FACTOR), long: c(base * LONG_FACTOR), source, samples: last30.length };
 }
 
 /**

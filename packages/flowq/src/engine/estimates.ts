@@ -4,7 +4,7 @@ import type {
 } from './types';
 import { computeQueueOrder, countedTime, compareLine } from './order';
 import { computeExpectedDurations } from './durations';
-import { durationOf } from './visit';
+import { durationOf, perVisitMin } from './visit';
 import { activeMinutes, MIN, minutesBetween, round5 } from './time';
 
 /** B6: compare expected (or real) start with the booked time. Boundaries are inclusive towards "on time"/"running late". */
@@ -85,7 +85,8 @@ export function computeEstimates(input: EngineInput): QueueResult {
   if (order.current?.consultStartedAt != null) {
     const d = durationOf(order.current, durations, s);
     const elapsed = activeMinutes(order.current.consultStartedAt, now, pauses, now);
-    freeTyp = elapsed < d.typical ? d.typical - elapsed : 2; // running over: assume 2 more minutes
+    const per = perVisitMin(d, s);
+    freeTyp = elapsed < per ? per - elapsed : 2; // running over: assume 2 more minutes
     freeLow = Math.min(freeTyp, Math.max(0, d.short - elapsed));
     freeHigh = Math.max(freeTyp, d.long - elapsed);
     nowServing = {
@@ -142,7 +143,7 @@ export function computeEstimates(input: EngineInput): QueueResult {
       e.confidence = confidence(durations[a.visitType].samples, i, s);
     }
     const d = durationOf(a, durations, s);
-    sumTyp += d.typical; sumLow += d.short; sumHigh += d.long;
+    sumTyp += perVisitMin(d, s); sumLow += d.short; sumHigh += d.long;
     finish(e, flags);
   });
 
@@ -154,7 +155,7 @@ export function computeEstimates(input: EngineInput): QueueResult {
       const probe: QueueAppointment = { ...a, status: 'checked_in', checkedInAt: Math.max(now, a.bookedAt) };
       const ahead = order.line.filter((x) => compareLine(x, probe, s) < 0);
       e.patientsAhead = ahead.length;
-      const typ = ahead.reduce((m, x) => m + durationOf(x, durations, s).typical, 0);
+      const typ = ahead.reduce((m, x) => m + perVisitMin(durationOf(x, durations, s), s), 0);
       e.expectedStartAt = Math.max(t0 + (freeTyp + typ) * MIN, a.bookedAt);
       e.deltaMin = minutesBetween(a.bookedAt, e.expectedStartAt);
       e.confidence = 'low';

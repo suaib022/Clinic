@@ -53,3 +53,12 @@ describe('lab line estimates', () => {
     expect(expectedWaitMin(computeLineEstimates(input([], 'not_started')))).toBe(Infinity);
   });
 });
+
+describe('lab line with sumWith mean', () => {
+  it('a newcomer waits the sum of means ahead', () => {
+    const inp = input([item('a', 0), item('b', 1)]);
+    inp.settings = { ...DEFAULT_SETTINGS, sumWith: 'mean' };
+    inp.history = [...Array(10).fill(5), ...Array(5).fill(14)]; // median 5, mean 8
+    expect(expectedWaitMin(computeLineEstimates(inp), inp.settings)).toBe(16);
+  });
+});
