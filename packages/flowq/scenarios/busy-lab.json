@@ -105,6 +105,15 @@
     "sameDayWillingP": 0.7,
     "travelBufferMin": 10
   },
+  "staff": {
+    "awayWhenCalledP": 0.05,
+    "awayMedianMin": 8,
+    "awayCv": 0.5,
+    "comesBackP": 0.9,
+    "skipLateP": 0.7,
+    "priorityP": 0.03,
+    "undoCallP": 0.02
+  },
   "sources": {
     "doctors.sessionStart": "[assumption] Evening private chamber 18:00-21:00; see sensitivity sweep.",
     "doctors.slotMin": "[assumption] Clinic DSS default slot length (dss_settings.default_slot_min = 10).",
@@ -138,6 +147,12 @@
     "lab.outsidePerHour": "[assumption] Stress scenario: busy evening lab, 40 test-only patients per hour.",
     "lab.open": "[assumption] Hospital lab hours.",
     "returns.sameDayWillingP": "[assumption] Sensitivity sweep.",
-    "returns.travelBufferMin": "[assumption] Walk back from the lab to the chamber."
+    "returns.travelBufferMin": "[assumption] Walk back from the lab to the chamber.",
+    "staff.awayWhenCalledP": "[assumption] Share of called patients who are not at the door; no published value; sensitivity sweep.",
+    "staff.awayMedianMin": "[assumption] Minutes until a skipped patient is back (log-normal, CV awayCv).",
+    "staff.comesBackP": "[assumption] Share of skipped patients who come back.",
+    "staff.skipLateP": "[assumption] How often staff follow the app suggestion to skip a late booked patient.",
+    "staff.priorityP": "[assumption] Share of patients staff mark as priority (elderly, very ill).",
+    "staff.undoCallP": "[assumption] Mis-taps on Call next that are undone."
   }
 }

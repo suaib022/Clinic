@@ -14,6 +14,13 @@ export interface Scenario {
     lines: { id: string; name: string; typicalMin: number; cv: number; mustFirst: boolean; turnaroundMin: number; turnaroundCv: number; share: number }[];
   };
   returns: { sameDayWillingP: number; travelBufferMin: number };
+  /**
+   * What chamber staff do (all follow the app's rules). awayWhenCalledP: the called patient is not there, so staff skip them;
+   * they come back after Lognormal(awayMedianMin, awayCv) with comesBackP and rejoin. skipLateP: a booked patient not here
+   * at slot + grace is skipped; on arrival they check in and rejoin. priorityP: staff mark a patient priority at check-in.
+   * undoCallP: staff call the wrong patient and undo it.
+   */
+  staff: { awayWhenCalledP: number; awayMedianMin: number; awayCv: number; comesBackP: number; skipLateP: number; priorityP: number; undoCallP: number };
   /** Engine settings to use in this experiment (unset keys keep the defaults; lab lines default to historyWindow 200, sumWith 'mean'). */
   engine: { doctor: Partial<DssSettings>; lab: Partial<DssSettings> };
   /**
@@ -63,6 +70,7 @@ export function parseScenario(json: unknown): Scenario {
       turnaroundCv: num(o.turnaroundCv, `lab.lines[${i}].turnaroundCv`), share: num(o.share, `lab.lines[${i}].share`),
     };
   });
+  const st = obj(r.staff, 'staff');
   const sources = obj(r.sources ?? {}, 'sources');
   const eng = obj(r.engine ?? {}, 'engine');
   const engineSide = (v: unknown, path: string): Partial<DssSettings> => {
@@ -99,6 +107,11 @@ export function parseScenario(json: unknown): Scenario {
       open: hhmm(l.open, 'lab.open'), close: hhmm(l.close, 'lab.close'), lines,
     },
     returns: { sameDayWillingP: prob(ret.sameDayWillingP, 'returns.sameDayWillingP'), travelBufferMin: num(ret.travelBufferMin, 'returns.travelBufferMin') },
+    staff: {
+      awayWhenCalledP: prob(st.awayWhenCalledP, 'staff.awayWhenCalledP'), awayMedianMin: num(st.awayMedianMin, 'staff.awayMedianMin'),
+      awayCv: num(st.awayCv, 'staff.awayCv'), comesBackP: prob(st.comesBackP, 'staff.comesBackP'), skipLateP: prob(st.skipLateP, 'staff.skipLateP'),
+      priorityP: prob(st.priorityP, 'staff.priorityP'), undoCallP: prob(st.undoCallP, 'staff.undoCallP'),
+    },
     engine: { doctor: engineSide(eng.doctor, 'engine.doctor'), lab: engineSide(eng.lab, 'engine.lab') },
     sources: Object.fromEntries(Object.entries(sources).map(([k, x]) => [k, String(x)])),
   };

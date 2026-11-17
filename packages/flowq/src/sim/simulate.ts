@@ -64,7 +64,9 @@ type Ev =
   | { kind: 'lab_arrive'; visit: string; line: string }
   | { kind: 'lab_done'; line: string; item: string }
   | { kind: 'report_ready'; visit: string; line: string }
-  | { kind: 'return_arrive'; visit: string };
+  | { kind: 'return_arrive'; visit: string }
+  | { kind: 'late_check'; doctor: string; appt: string }
+  | { kind: 'rejoin'; doctor: string; appt: string };
 
 class Heap {
   private xs: { t: number; seq: number; ev: Ev }[] = [];
@@ -118,6 +120,9 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
   const rng: Rng = makeRng(seed);
   // Routing draws use their own stream, so route policies see the same patients.
   const routeRng: Rng = makeRng((seed ^ 0x9e3779b9) >>> 0);
+  // Staff behaviour has its own stream too, so switching it on does not change who comes or how long visits take.
+  const staffRng: Rng = makeRng((seed ^ 0x51ed2705) >>> 0);
+  const awayChecked = new Set<string>();
   const heap = new Heap();
   const events: FlowEvent[] = [];
   const predictions: Prediction[] = [];
@@ -152,6 +157,7 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
       doc.appts.push({ id, serialNo: k + 1, status: 'scheduled', bookedAt: slot, slotMinutes: d.slotMin, priorityLevel: 0, visitType, visitSource: 'online' });
       doc.truth.set(id, { patientId, durationMin: drawVisit(visitType, false) });
       emit('book', slot - 6 * 60 * MIN, [{ type: 'patient', id: patientId }, { type: 'appointment', id }, { type: 'doctor', id: d.id }], { role: 'patient', bookedAt: slot });
+      heap.push(slot + settings.graceMin * MIN, { kind: 'late_check', doctor: d.id, appt: id });
       if (rng.bernoulli(sc.patients.noShowP)) {
         heap.push(slot + settings.noShowMin * MIN, { kind: 'no_show_check', doctor: d.id, appt: id });
       } else {
@@ -287,15 +293,35 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
 
   function dispatchDoctor(doc: Doctor, now: number) {
     if (doc.current || doc.session.state !== 'active') return;
-    const next = computeQueueOrder(doc.appts, settings).line[0];
+    let line = computeQueueOrder(doc.appts, settings).line;
+    // The called patient may not be there: staff skip them (app rule) and call the next one.
+    while (line.length && !awayChecked.has(line[0].id)) {
+      const head = line[0];
+      awayChecked.add(head.id);
+      if (!staffRng.bernoulli(sc.staff.awayWhenCalledP)) break;
+      head.skippedAt = now;
+      emit('skip', now, docRefs(doc, head), { role: 'compounder', reason: 'away' });
+      if (staffRng.bernoulli(sc.staff.comesBackP)) {
+        heap.push(now + Math.round(staffRng.lognormalMin(sc.staff.awayMedianMin, sc.staff.awayCv) * MIN), { kind: 'rejoin', doctor: doc.id, appt: head.id });
+      }
+      line = computeQueueOrder(doc.appts, settings).line;
+    }
+    const next = line[0];
     if (!next) { maybeEnd(doc, now); return; }
-    next.status = 'in_consultation'; next.calledAt = now; next.consultStartedAt = now;
+    let at = now;
+    // Mis-tap: the wrong patient is called, then the call is undone 20 s later.
+    if (line[1] && staffRng.bernoulli(sc.staff.undoCallP)) {
+      emit('call', now, docRefs(doc, line[1]), { role: 'compounder' });
+      at = now + 20_000;
+      emit('undo', at, docRefs(doc, line[1]), { role: 'compounder', undone: 'call' });
+    }
+    next.status = 'in_consultation'; next.calledAt = at; next.consultStartedAt = at;
     doc.current = next.id;
-    started(next.id, now);
+    started(next.id, at);
     const refs = docRefs(doc, next);
-    emit('call', now, refs, { role: 'compounder' });
-    emit('consult_start', now, refs, { role: 'doctor', priority: next.priorityLevel, review: next.visitReason === 'report_review' });
-    heap.push(now + Math.round(doc.truth.get(next.id)!.durationMin * MIN), { kind: 'consult_end', doctor: doc.id, appt: next.id });
+    emit('call', at, refs, { role: 'compounder' });
+    emit('consult_start', at, refs, { role: 'doctor', priority: next.priorityLevel, review: next.visitReason === 'report_review' });
+    heap.push(at + Math.round(doc.truth.get(next.id)!.durationMin * MIN), { kind: 'consult_end', doctor: doc.id, appt: next.id });
   }
 
   function maybeEnd(doc: Doctor, now: number) {
@@ -304,9 +330,10 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
     doc.session.state = 'ended'; doc.session.endedAt = now;
     emit('session_end', now, [{ type: 'doctor', id: doc.id }, { type: 'doctor_session', id: `${doc.id}-${sc.day.date}` }], { role: 'doctor' });
     for (const a of doc.appts) {
-      if (a.status === 'scheduled') {
+      if (a.status === 'scheduled' || (a.status === 'checked_in' && a.skippedAt != null)) {
+        const left = a.status === 'checked_in';
         a.status = 'no_show';
-        emit('no_show', now, docRefs(doc, a), { role: 'compounder', reason: 'session_end' });
+        emit('no_show', now, docRefs(doc, a), { role: 'compounder', reason: left ? 'left_after_skip' : 'session_end' });
       }
     }
   }
@@ -389,8 +416,34 @@ export function simulateDay(sc: Scenario, seed: number, p: { route: RoutePolicy 
         } else {
           a.status = 'checked_in';
           emit('check_in', now, docRefs(doc, a), { role: 'compounder' });
+          if (a.skippedAt != null) {
+            // Skipped for being late: on arrival staff check them in and rejoin them (counted from now).
+            a.skippedAt = null; a.rejoinedAt = now;
+            emit('rejoin', now, docRefs(doc, a), { role: 'compounder', reason: 'late_arrival' });
+          }
+        }
+        if (a.priorityLevel === 0 && staffRng.bernoulli(sc.staff.priorityP)) {
+          a.priorityLevel = 1;
+          emit('priority_set', now, docRefs(doc, a), { role: 'compounder', priority: 1 });
         }
         predictDoctor(doc, a, now);
+        break;
+      }
+      case 'late_check': {
+        const doc = doctors.get(ev.doctor)!;
+        const a = doc.appts.find((x) => x.id === ev.appt)!;
+        if (a.status !== 'scheduled' || a.skippedAt != null || doc.session.state === 'ended') break;
+        if (!staffRng.bernoulli(sc.staff.skipLateP)) break;
+        a.skippedAt = now;
+        emit('skip', now, docRefs(doc, a), { role: 'compounder', reason: 'late' });
+        break;
+      }
+      case 'rejoin': {
+        const doc = doctors.get(ev.doctor)!;
+        const a = doc.appts.find((x) => x.id === ev.appt)!;
+        if (a.status !== 'checked_in' || a.skippedAt == null || doc.session.state === 'ended') break;
+        a.skippedAt = null; a.rejoinedAt = now;
+        emit('rejoin', now, docRefs(doc, a), { role: 'compounder', reason: 'back' });
         break;
       }
       case 'no_show_check': {

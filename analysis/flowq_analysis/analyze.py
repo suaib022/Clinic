@@ -18,7 +18,7 @@ STAGES = [
     ("lab_wait", "lab_queue", "lab_call"),
     ("report_to_return", "report_ready", "return_queue"),
 ]
-DEVIATIONS = ["skip", "rejoin", "no_show", "priority_set", "return_queue"]
+DEVIATIONS = ["skip", "rejoin", "no_show", "priority_set", "undo", "return_queue"]
 
 
 def load(xes: Path) -> pd.DataFrame:

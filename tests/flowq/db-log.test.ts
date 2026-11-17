@@ -9,9 +9,10 @@ const APPTS = [{ id: 'a1', patient_id: 'p1', booked_at: '2026-11-17T12:00:00.000
 const acts = (rows: QueueEventRow[]) => mapQueueEvents(rows, APPTS).map((e) => e.activity);
 
 describe('mapQueueEvents', () => {
-  it('undo removes both the undo row and the undone event', () => {
-    expect(acts([row('e1', 'check_in', 1), row('e2', 'skip', 2), row('e3', 'undo', 3, { metadata: { dss: true, undo_of: 'e2' } })]))
-      .toEqual(['book', 'check_in']);
+  it('undo removes the undone event and stays as an undo event', () => {
+    const rows = [row('e1', 'check_in', 1), row('e2', 'skip', 2), row('e3', 'undo', 3, { metadata: { dss: true, undo_of: 'e2', undone_type: 'skip' } })];
+    expect(acts(rows)).toEqual(['book', 'check_in', 'undo']);
+    expect(mapQueueEvents(rows, APPTS).at(-1)!.attrs.undone).toBe('skip');
   });
   it('legacy rows without the dss flag are ignored', () => {
     expect(acts([row('e1', 'checked_in', 1, { metadata: {} }), row('e2', 'check_in', 1)])).toEqual(['book', 'check_in']);

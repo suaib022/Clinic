@@ -4,7 +4,9 @@ export type FlowObjectType = 'patient' | 'appointment' | 'doctor' | 'doctor_sess
 export type FlowActivity =
   | 'book' | 'check_in' | 'walk_in' | 'call' | 'consult_start' | 'consult_end' | 'skip' | 'rejoin' | 'no_show' | 'priority_set'
   | 'session_start' | 'session_pause' | 'session_resume' | 'session_end'
-  | 'lab_order' | 'lab_queue' | 'lab_call' | 'sample_collected' | 'report_ready' | 'return_queue';
+  | 'lab_order' | 'lab_queue' | 'lab_call' | 'sample_collected' | 'report_ready' | 'return_queue'
+  /** Staff took back their own last action (attrs.undone names it). */
+  | 'undo';
 
 export interface FlowObjectRef { type: FlowObjectType; id: string; qualifier?: string }
 

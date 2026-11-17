@@ -22,8 +22,8 @@ const MAP: Record<string, FlowActivity[]> = {
 };
 
 /**
- * Rules: only DSS rows (metadata.dss = true; the legacy Module 4 duplicates are skipped); an 'undo' row removes itself and
- * the row named in metadata.undo_of; a repeated request_key is kept once; each appointment gets a 'book' event at booked_at.
+ * Rules: only DSS rows (metadata.dss = true; the legacy Module 4 duplicates are skipped); an 'undo' row removes the row named
+ * in metadata.undo_of and stays in the log as an 'undo' event (a deviation worth analysing); a repeated request_key is kept once; each appointment gets a 'book' event at booked_at.
  */
 export function mapQueueEvents(rows: QueueEventRow[], appts: ApptRow[]): FlowEvent[] {
   const dss = rows.filter((r) => r.metadata?.dss === true);
@@ -37,13 +37,13 @@ export function mapQueueEvents(rows: QueueEventRow[], appts: ApptRow[]): FlowEve
     out.push({ id: `book-${a.id}`, activity: 'book', time: Date.parse(a.booked_at), objects: [{ type: 'patient', id: a.patient_id }, { type: 'appointment', id: a.id }], attrs: { role: 'patient' } });
   }
   for (const r of [...dss].sort((a, b) => Date.parse(a.occurred_at) - Date.parse(b.occurred_at))) {
-    if (r.event_type === 'undo' || undone.has(r.id)) continue;
+    if (undone.has(r.id)) continue;
     if (r.request_key) {
       const k = `${r.event_type}:${r.request_key}`;
       if (seenKeys.has(k)) continue;
       seenKeys.add(k);
     }
-    const acts = MAP[r.event_type];
+    const acts: FlowActivity[] | undefined = r.event_type === 'undo' ? ['undo'] : MAP[r.event_type];
     if (!acts) continue;
     const objects: FlowObjectRef[] = [{ type: 'doctor', id: r.doctor_id }];
     if (r.session_id) objects.push({ type: 'doctor_session', id: r.session_id });
@@ -53,7 +53,8 @@ export function mapQueueEvents(rows: QueueEventRow[], appts: ApptRow[]): FlowEve
       if (pid) objects.push({ type: 'patient', id: pid });
     }
     acts.forEach((activity, i) => out.push({
-      id: acts.length > 1 ? `${r.id}-${i}` : r.id, activity, time: Date.parse(r.occurred_at), objects, attrs: { role: r.actor_role ?? null },
+      id: acts.length > 1 ? `${r.id}-${i}` : r.id, activity, time: Date.parse(r.occurred_at), objects,
+      attrs: activity === 'undo' ? { role: r.actor_role ?? null, undone: String(r.metadata?.undone_type ?? '') } : { role: r.actor_role ?? null },
     }));
   }
   return out.sort((a, b) => a.time - b.time || a.id.localeCompare(b.id));
