@@ -10,6 +10,9 @@ import ConfirmDialog, { type ConfirmRequest } from './console/ConfirmDialog';
 import { SessionBanner, DaySummary, NowServing } from './console/Panels';
 import { SuggestionsPanel, NextUp, WaitingList, type RowAction } from './console/QueueLists';
 import WalkInPanel from './console/WalkInPanel';
+import { OrderTestsPanel, LabFollowUpPanel } from './console/LabPanels';
+import { labAction } from '@/lib/lab/actions';
+import { labLaterKey, reviewLaterKey } from '@/lib/lab/doctorLab';
 import VisitDetailModal from '@/components/appointments/VisitDetailModal';
 
 type Draft<T> = T extends unknown ? Omit<T, 'requestKey'> : never;
@@ -174,7 +177,23 @@ export default function QueueConsole({ mode, doctors, doctorId, initial }: Queue
       <DaySummary snap={snap} />
       <NowServing snap={snap} receivedAt={lastUpdated} busy={busy} canCall={canCall} onCallNext={() => void callNext()}
         onDone={() => current && void run({ kind: 'end_consult', appointmentId: current })} />
+      <OrderTestsPanel snap={snap} say={(k, t) => { say(k, t); void reload(); }} />
       <UndoBar snap={snap} receivedAt={lastUpdated} busy={busy} onUndo={() => void run({ kind: 'undo', doctorId })} />
+      {mode === 'compounder' && (
+        <LabFollowUpPanel snap={snap} busy={busy}
+          onLabNow={async (v) => {
+            const r = await labAction({ kind: 'enqueue', orderIds: v.undecidedOrderIds, requestKey: newKey() });
+            say(r.ok ? 'ok' : 'warn', r.message);
+            void reload();
+          }}
+          onLater={(v) => void run({ kind: 'dismiss', doctorId, suggestionKey: labLaterKey(v.appointmentId) })}
+          onReview={async (v) => {
+            const ok = await ask({ title: `Report review for serial ${v.serialNo}?`, confirmLabel: 'Add to line',
+              body: v.advice?.kind === 'same_day' ? `Expected about ${fmtTime(v.advice.expectedStartAt)}. Did the patient agree?` : undefined });
+            if (ok != null) await run({ kind: 'return_review', appointmentId: v.appointmentId });
+          }}
+          onBookLater={(v) => void run({ kind: 'dismiss', doctorId, suggestionKey: reviewLaterKey(v.appointmentId) })} />
+      )}
       <NextUp snap={snap} busy={busy} canCall={canCall} onCall={() => void callNext()} onSelectAppt={setDetailAppt} />
       {mode === 'compounder' && (
         <SuggestionsPanel suggestions={snap.suggestions} busy={busy} onConfirm={(s) => void onSuggestion(s)}

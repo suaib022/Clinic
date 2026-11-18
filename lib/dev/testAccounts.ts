@@ -8,6 +8,7 @@ export const DSS_TEST_ACCOUNTS = {
   compB: { email: 'dss.comp.b@clinic.test', name: 'DSS Compounder B', role: 'compounder' },
   patient1: { email: 'dss.patient.1@clinic.test', name: 'DSS Patient One', role: 'patient' },
   patient2: { email: 'dss.patient.2@clinic.test', name: 'DSS Patient Two', role: 'patient' },
+  lab1: { email: 'dss.lab.1@clinic.test', name: 'DSS Lab Staff (Test)', role: 'technician' },
 } as const;
 export type DssTestAccount = keyof typeof DSS_TEST_ACCOUNTS;
 

@@ -96,7 +96,7 @@ export function NowServing({ snap, receivedAt, busy, onCallNext, onDone, canCall
                   <span className="fs-5 fw-semibold text-truncate">{appt.patientName}</span>
                 </div>
                 <div className="small text-muted">
-                  {appt.visitType === 'follow_up' ? 'Follow-up' : 'New patient'} · {appt.patientUhid}
+                  {appt.visitReason === 'report_review' ? 'Report review' : appt.visitType === 'follow_up' ? 'Follow-up' : 'New patient'} · {appt.patientUhid}
                 </div>
                 <div className={`mt-2 fw-semibold ${over ? 'text-danger' : ''}`} aria-live="off">
                   <i className="bi bi-stopwatch me-1" />{mm}:{String(ss).padStart(2, '0')} / ~{fmtMin(ns.expectedMin)}

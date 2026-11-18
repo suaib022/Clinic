@@ -5,8 +5,10 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { todayDhaka } from '@/lib/format';
 import { runEngine, type QueueAppointment, type QueueResult, type Suggestion, type StatusLabel, type Confidence, type Stage } from './engine';
 import { toEngineInput, toSyncPayload, type RawSnapshot } from './snapshotInput';
+import { reviewWaitMin } from './reviewWait';
+import { doctorLabView, type DoctorLabVisit, type RawDoctorLabVisit } from '@/lib/lab/doctorLab';
 
-export type Role = 'admin' | 'doctor' | 'compounder' | 'patient';
+export type Role = 'admin' | 'doctor' | 'compounder' | 'patient' | 'technician';
 
 export class QueueAccessError extends Error {
   constructor(public status: 401 | 403 | 404, message: string) {
@@ -44,6 +46,8 @@ export interface StaffSnapshot {
   myUndo: RawSnapshot['my_undo'];
   lastBroadcast: RawSnapshot['last_broadcast'];
   settings: ReturnType<typeof toEngineInput>['settings'];
+  /** Today's visits with lab orders: Lab now / Later and the report-review offer (empty until the lab module is installed). */
+  lab: DoctorLabVisit[];
 }
 
 /**
@@ -57,6 +61,11 @@ export async function getQueueSnapshot(supabase: SupabaseClient, doctorId: strin
   const raw = data as RawSnapshot;
   const input = toEngineInput(raw);
   const { result, suggestions } = runEngine(input);
+  let lab: DoctorLabVisit[] = [];
+  const { data: labRaw, error: labErr } = await supabase.rpc('lab_doctor_status', { p_doctor_id: doctorId, p_date: date ?? null });
+  if (!labErr && Array.isArray(labRaw)) {
+    lab = doctorLabView(labRaw as RawDoctorLabVisit[], { now: input.now, session: input.session, reviewWaitMin: reviewWaitMin(input), dismissed: raw.dismissed ?? [] });
+  }
   return {
     doctor: { id: raw.doctor.id, name: raw.doctor.name, speciality: raw.doctor.speciality },
     date: raw.date,
@@ -74,6 +83,7 @@ export async function getQueueSnapshot(supabase: SupabaseClient, doctorId: strin
     myUndo: raw.my_undo,
     lastBroadcast: raw.last_broadcast,
     settings: input.settings,
+    lab,
   };
 }
 

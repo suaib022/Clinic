@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
+import { homeFor } from '@/lib/auth/home'
 
 // Simple secret for testing purposes
 const SESSION_SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key'
@@ -115,7 +116,7 @@ export async function staffPinLogin(formData: FormData) {
   })
 
   revalidatePath('/', 'layout')
-  const dashboardPath = role === 'admin' ? '/admin/dashboard' : `/${role}/dashboard`
+  const dashboardPath = homeFor(role)
   redirect(dashboardPath)
 }
 

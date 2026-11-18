@@ -135,6 +135,61 @@ export async function seed(): Promise<Seed> {
   return { users, patients: { p1, p1b, p2, fillers } };
 }
 
+/** Test-only lab lines and tests (codes start with dsst_), so lab tests never touch the hospital's real counters. */
+export interface LabSeed {
+  lines: { blood: string; xray: string; ecg: string };
+  tests: { cbc: string; fbs: string; xray: string; ecg: string };
+}
+export async function seedLab(): Promise<LabSeed> {
+  assertDevSeed();
+  const line = async (code: string, name: string, typical: number) => (await db().query(
+    `insert into lab_lines (code, name, typical_min, active, sort_order) values ($1,$2,$3,true,90)
+     on conflict (code) do update set name = excluded.name, active = true returning id`, [code, name, typical])).rows[0].id as string;
+  const blood = await line('dsst_blood', 'DSS Test Blood', 3), xray = await line('dsst_xray', 'DSS Test X-ray', 4), ecg = await line('dsst_ecg', 'DSS Test ECG', 6);
+  const test = async (code: string, name: string, lineId: string, mustFirst: boolean, tat: number) => (await db().query(
+    `insert into lab_test_types (code, name, line_id, must_first, turnaround_min, active) values ($1,$2,$3,$4,$5,true)
+     on conflict (code) do update set line_id = excluded.line_id, must_first = excluded.must_first, turnaround_min = excluded.turnaround_min, active = true
+     returning id`, [code, name, lineId, mustFirst, tat])).rows[0].id as string;
+  return {
+    lines: { blood, xray, ecg },
+    tests: {
+      cbc: await test('dsst_cbc', 'DSS Test CBC', blood, false, 150), fbs: await test('dsst_fbs', 'DSS Test Fasting sugar', blood, true, 60),
+      xray: await test('dsst_xray', 'DSS Test Chest X-ray', xray, false, 60), ecg: await test('dsst_ecg', 'DSS Test ECG', ecg, false, 0),
+    },
+  };
+}
+
+/**
+ * Removes lab data of the test lines and the test patients only. With `deactivate`, the test lines and tests are also
+ * switched off, so they never show up in the real screens between test runs (call it in afterAll).
+ */
+export async function resetLab(lab: LabSeed, patientIds: string[], opts: { deactivate?: boolean } = {}) {
+  assertDevSeed();
+  const lines = Object.values(lab.lines);
+  const c = await db().connect();
+  try {
+    await c.query('begin');
+    await c.query('set local session_replication_role = replica');
+    await c.query(`delete from lab_events where line_id = any($1) or patient_id = any($2)`, [lines, patientIds]);
+    await c.query(`delete from lab_events where event_type = 'patient_lookup' and actor_user_id in (select id from users where email like 'dss.%@clinic.test')`);
+    await c.query(`delete from patient_notifications where patient_id = any($1) and type = 'lab_report_ready'`, [patientIds]);
+    await c.query(`delete from lab_orders where patient_id = any($1)`, [patientIds]);
+    await c.query(`delete from lab_queue_items where line_id = any($1) or patient_id = any($2)`, [lines, patientIds]);
+    await c.query(`delete from lab_line_pauses where session_id in (select id from lab_line_sessions where line_id = any($1))`, [lines]);
+    await c.query(`delete from lab_line_sessions where line_id = any($1)`, [lines]);
+    if (opts.deactivate) {
+      await c.query(`update lab_test_types set active = false where code like 'dsst\\_%'`);
+      await c.query(`update lab_lines set active = false where code like 'dsst\\_%'`);
+    }
+    await c.query('commit');
+  } catch (e) {
+    await c.query('rollback');
+    throw e;
+  } finally {
+    c.release();
+  }
+}
+
 /** Removes today's (or all) queue data of the test doctors only. queue_events is append-only, so triggers are bypassed here. */
 export async function resetTestDoctors(doctorIds: string[], opts: { allDays?: boolean; history?: boolean } = {}) {
   assertDevSeed();

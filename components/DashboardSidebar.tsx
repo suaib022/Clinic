@@ -8,7 +8,7 @@ import NotificationBell from '@/components/notifications/NotificationBell';
 import { useNotifications } from '@/components/notifications/useNotifications';
 import { useAuth } from '@/components/AuthProvider';
 
-type Role = 'patient' | 'doctor' | 'admin' | 'compounder';
+type Role = 'patient' | 'doctor' | 'admin' | 'compounder' | 'technician';
 
 const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> = {
     patient: [
@@ -44,6 +44,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/admin/reports', label: 'Health Insights', icon: 'bi-bar-chart' },
         { href: '/admin/queue-reports', label: 'Queue Reports', icon: 'bi-graph-up' },
         { href: '/admin/queue-settings', label: 'Queue Settings', icon: 'bi-sliders' },
+        { href: '/admin/lab-settings', label: 'Lab Settings', icon: 'bi-droplet' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
         { href: '/admin/settings', label: 'Settings', icon: 'bi-gear' },
     ],
@@ -54,6 +55,12 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/compounder/walk-in', label: 'Add Walk-in', icon: 'bi-person-plus' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
     ],
+    technician: [
+        { href: '/lab/queue', label: 'Lab Queue', icon: 'bi-droplet' },
+        { href: '/lab/register', label: 'Register / Queue Patient', icon: 'bi-person-plus' },
+        { href: '/lab/reports', label: 'Reports', icon: 'bi-file-earmark-check' },
+        { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
+    ],
 };
 
 const ROLE_TITLES: Record<Role, string> = {
@@ -61,6 +68,7 @@ const ROLE_TITLES: Record<Role, string> = {
     doctor: 'Doctor Panel',
     admin: 'Admin Center',
     compounder: 'Staff Portal',
+    technician: 'Lab Portal',
 };
 
 export default function DashboardSidebar({ role }: { role: Role }) {
