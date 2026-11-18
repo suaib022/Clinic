@@ -164,7 +164,7 @@ export default async function TriageReviewPage() {
     }
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff', minHeight: '100vh' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC', minHeight: '100vh' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 {/* Admin/Doctor Sidebar navigation */}
                 <DashboardSidebar role="doctor" />

@@ -47,13 +47,13 @@ export default async function DoctorProfilePage() {
 
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="doctor" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>My Profile</h2>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
+                            <h2 className="m-0" style={{ color: '#1B2978' }}>My Profile</h2>
                         </div>
                         
                         <div className="card border-0 shadow-sm rounded-0">
@@ -64,7 +64,7 @@ export default async function DoctorProfilePage() {
                                             src={avatar} 
                                             alt={fullName} 
                                             className="rounded-circle mb-3 border" 
-                                            style={{ width: '180px', height: '180px', objectFit: 'cover', borderColor: '#0ab1a9 !important', borderWidth: '3px !important' }} 
+                                            style={{ width: '180px', height: '180px', objectFit: 'cover', borderColor: '#3346B5 !important', borderWidth: '3px !important' }} 
                                         />
                                         <h4 className="fw-bold">{fullName}</h4>
                                         <p className="text-muted mb-1">{designation}</p>
@@ -73,7 +73,7 @@ export default async function DoctorProfilePage() {
                                         </span>
                                     </div>
                                     <div className="col-md-8">
-                                        <h5 className="mb-4" style={{ color: '#0D7D72' }}>Personal Information</h5>
+                                        <h5 className="mb-4" style={{ color: '#1B2978' }}>Personal Information</h5>
                                         <table className="table table-borderless">
                                             <tbody>
                                                 <tr>

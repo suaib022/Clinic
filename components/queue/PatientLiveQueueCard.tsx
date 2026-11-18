@@ -106,7 +106,7 @@ export default function PatientLiveQueueCard({ appointmentId, userId }: { appoin
             <div key={k} className="col-6 col-md-3">
               <div className="bg-light rounded-3 py-2 h-100">
                 <dt className="small text-muted fw-normal">{k}</dt>
-                <dd className="fs-4 fw-bold mb-0" style={{ color: '#0D7D72' }}>{v}</dd>
+                <dd className="fs-4 fw-bold mb-0" style={{ color: '#1B2978' }}>{v}</dd>
               </div>
             </div>
           ))}
@@ -121,7 +121,7 @@ export default function PatientLiveQueueCard({ appointmentId, userId }: { appoin
   }
 
   return (
-    <div className={box} style={{ borderLeft: '4px solid #0D7D72' }} aria-live="polite">
+    <div className={box} style={{ borderLeft: '4px solid #1B2978' }} aria-live="polite">
       <div className="card-body p-3 p-md-4">
         {head}
         {body}

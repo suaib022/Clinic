@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import QuickLinksBar from "@/components/QuickLinksBar";
 import HeroCarousel from "@/components/HeroCarousel";
 import { createClient } from "@/lib/supabase/server";
 
@@ -11,7 +10,6 @@ export default async function IndexPage() {
     <div className="index-page">
       <Header />
       <main className="main">
-        <QuickLinksBar />
         <HeroCarousel />
         {/* Home About Section */}
         <section id="home-about" className="home-about section">

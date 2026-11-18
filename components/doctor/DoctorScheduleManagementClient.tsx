@@ -188,15 +188,15 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
                             }
                             .cancellation-window-btn:hover {
                                 background-color: #f8fafc !important;
-                                color: #0D7D72 !important;
-                                border-color: #0D7D72 !important;
+                                color: #1B2978 !important;
+                                border-color: #1B2978 !important;
                             }
                             .cancellation-window-btn.active {
-                                background-color: #0D7D72 !important;
+                                background-color: #1B2978 !important;
                                 color: #ffffff !important;
-                                border-color: #0D7D72 !important;
+                                border-color: #1B2978 !important;
                                 font-weight: 700 !important;
-                                box-shadow: 0 2px 4px rgba(13, 125, 114, 0.25) !important;
+                                box-shadow: 0 2px 4px rgba(27, 41, 120, 0.25) !important;
                             }
                         `}</style>
 
@@ -351,7 +351,7 @@ export default function DoctorScheduleManagementClient({ doctorName, todayDate, 
 
                 {/* Right Column: Cancelled Schedule History & Leave Status */}
                 <div className="col-lg-6">
-                    <div className="card border-0 shadow-sm rounded-0 p-4 h-100" style={{ borderTop: '4px solid #0D7D72' }}>
+                    <div className="card border-0 shadow-sm rounded-0 p-4 h-100" style={{ borderTop: '4px solid #1B2978' }}>
                         <div className="d-flex align-items-center gap-2 mb-3">
                             <i className="bi bi-clock-history text-secondary fs-3"></i>
                             <div>

@@ -129,14 +129,14 @@ export default function DoctorTodayAppointmentsClient({
                     border: 1px solid #cbd5e1 !important;
                 }
                 .doctor-today-pill.active-all {
-                    background-color: #0D7D72 !important;
+                    background-color: #1B2978 !important;
                     color: #ffffff !important;
-                    border-color: #0D7D72 !important;
+                    border-color: #1B2978 !important;
                 }
                 .doctor-today-pill.active-waiting {
-                    background-color: #0ab1a9 !important;
+                    background-color: #3346B5 !important;
                     color: #ffffff !important;
-                    border-color: #0ab1a9 !important;
+                    border-color: #3346B5 !important;
                 }
                 .doctor-today-pill.active-in-room {
                     background-color: #0d6efd !important;
@@ -156,7 +156,7 @@ export default function DoctorTodayAppointmentsClient({
             `}</style>
 
             {/* Chamber Status Bar */}
-            <div className="card border-0 shadow-sm rounded-0 mb-4" style={{ borderLeft: '5px solid #0D7D72' }}>
+            <div className="card border-0 shadow-sm rounded-0 mb-4" style={{ borderLeft: '5px solid #1B2978' }}>
                 <div className="card-body p-4">
                     <div className="row align-items-center g-3">
                         <div className="col-md-7">
@@ -320,12 +320,12 @@ export default function DoctorTodayAppointmentsClient({
                             <table className="table table-hover mb-0 align-middle">
                                 <thead className="table-light border-bottom">
                                     <tr>
-                                        <th className="px-4 py-3" style={{ color: '#0D7D72' }}>Serial</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Patient Details</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Slot & Arrival</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Visit Type</th>
-                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Download Slips</th>
-                                        <th className="px-4 py-3 text-end" style={{ color: '#0D7D72' }}>Status & Action</th>
+                                        <th className="px-4 py-3" style={{ color: '#1B2978' }}>Serial</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Patient Details</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Slot & Arrival</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Visit Type</th>
+                                        <th className="py-3 text-center" style={{ color: '#1B2978' }}>Download Slips</th>
+                                        <th className="px-4 py-3 text-end" style={{ color: '#1B2978' }}>Status & Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -419,7 +419,7 @@ export default function DoctorTodayAppointmentsClient({
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="btn btn-sm py-1 px-2.5 d-inline-flex align-items-center gap-1 text-white shadow-xs"
-                                                            style={{ backgroundColor: '#0D7D72', fontSize: '11px', borderColor: '#0D7D72' }}
+                                                            style={{ backgroundColor: '#1B2978', fontSize: '11px', borderColor: '#1B2978' }}
                                                             title="Open official prescription ticket"
                                                         >
                                                             <FileText size={12} />
@@ -476,11 +476,11 @@ export default function DoctorTodayAppointmentsClient({
                     <div className="modal-dialog modal-dialog-centered modal-lg my-4" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
                             {/* Modal Header */}
-                            <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                            <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#1B2978' }}>
                                 <div className="d-flex align-items-center gap-3">
                                     <div className="bg-white text-dark rounded px-2.5 py-1 text-center shadow-xs">
                                         <div className="small text-muted" style={{ fontSize: '9px', lineHeight: 1 }}>TOKEN</div>
-                                        <div className="fw-bold fs-6" style={{ color: '#0D7D72', lineHeight: 1.2 }}>
+                                        <div className="fw-bold fs-6" style={{ color: '#1B2978', lineHeight: 1.2 }}>
                                             #{detailModalAppt.serial_no || '-'}
                                         </div>
                                     </div>
@@ -588,7 +588,7 @@ export default function DoctorTodayAppointmentsClient({
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn text-white d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold rounded-2"
-                                        style={{ backgroundColor: '#0D7D72' }}
+                                        style={{ backgroundColor: '#1B2978' }}
                                     >
                                         <FileText size={15} />
                                         <span>Prescription Ticket</span>

@@ -4,7 +4,7 @@ import type { StaffSnapshot } from '@/lib/queue/server';
 import type { QueueAppointment } from '@/lib/queue/engine';
 import { fmtTime, fmtMin, SESSION_TEXT, SESSION_CLASS } from '@/lib/queue/display';
 
-const TEAL = '#0D7D72';
+const TEAL = '#1B2978';
 export const tealBtn = { backgroundColor: TEAL, borderColor: TEAL, color: '#fff' } as const;
 /** The site theme recolours every .btn; these keep secondary / dangerous actions visually distinct. */
 export const outlineBtn = (color: string) => ({ '--dss-c': color }) as React.CSSProperties;

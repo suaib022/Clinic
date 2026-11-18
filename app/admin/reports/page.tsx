@@ -3,7 +3,7 @@ import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
 import { createClient } from '@/lib/supabase/server';
 
-const ACCENT = '#0D7D72';
+const ACCENT = '#1B2978';
 // k-anonymity: groups with fewer patients than this are hidden so no individual can be singled out.
 const MIN_PATIENTS = Math.max(1, Number(process.env.ANALYTICS_MIN_PATIENTS) || 3);
 const TOP = 15;
@@ -54,7 +54,7 @@ export default async function AdminReportsPage() {
     const queryError = [diag, meds, labs, allergies, status].find(r => r.error)?.error;
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="admin" />
                 <div className="flex-grow-1 p-4 p-md-5">

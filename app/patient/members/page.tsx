@@ -18,13 +18,13 @@ export default async function PatientMembersPage() {
     const safePatients = patients || [];
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="patient" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
-                            <h2 className="m-0" style={{ color: '#0D7D72' }}>Registered Patients (Family Members)</h2>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
+                            <h2 className="m-0" style={{ color: '#1B2978' }}>Registered Patients (Family Members)</h2>
                             <button className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">
                                 + Add Patient
                             </button>
@@ -63,7 +63,7 @@ export default async function PatientMembersPage() {
             <div className="modal fade" id="addPatientModal" tabIndex={-1} aria-labelledby="addPatientModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content rounded-0">
-                        <div className="modal-header" style={{ backgroundColor: '#0ab1a9', color: 'white' }}>
+                        <div className="modal-header" style={{ backgroundColor: '#3346B5', color: 'white' }}>
                             <h1 className="modal-title fs-5" id="addPatientModalLabel">Add Family Member</h1>
                             <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>

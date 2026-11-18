@@ -43,25 +43,9 @@ export default async function Header() {
             word-wrap: break-word;
         }
         .department-link:hover {
-            color: #0D7D72 !important;
+            color: #1B2978 !important;
         }
     `}} />
-
-      <div className="topbar d-flex align-items-center dark-background">
-        <div className="container d-flex justify-content-center justify-content-md-between">
-          <div className="contact-info d-flex align-items-center">
-            <i className="bi bi-envelope d-flex align-items-center"><a
-              href="mailto:contact@example.com">contact@example.com</a></i>
-            <i className="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
-          </div>
-          <div className="social-links d-none d-md-flex align-items-center">
-            <a href="#!" className="twitter"><i className="bi bi-twitter-x"></i></a>
-            <a href="#!" className="facebook"><i className="bi bi-facebook"></i></a>
-            <a href="#!" className="instagram"><i className="bi bi-instagram"></i></a>
-            <a href="#!" className="linkedin"><i className="bi bi-linkedin"></i></a>
-          </div>
-        </div>
-      </div>{/* End Top Bar */}
 
       <div className="branding d-flex align-items-cente" style={{ backgroundColor: "var(--background-color, #ffffff)" }}>
 
@@ -123,10 +107,20 @@ export default async function Header() {
               </ul>
             </li> */}
               <HeaderAuthLinks />
-              <li><a href="/contact">Contact</a></li>
+              <li className="cl-nav-cta d-xl-none">
+                <a href="/doctors" className="cl-pill-btn cl-pill-btn-light">
+                  <span>Find Doctors</span>
+                  <span className="cl-pill-btn-icon" aria-hidden="true"><i className="bi bi-arrow-up-right"></i><i className="bi bi-arrow-up-right"></i></span>
+                </a>
+              </li>
             </ul>
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
+
+          <a href="/doctors" className="cl-pill-btn cl-pill-btn-light cl-header-cta d-none d-xl-inline-flex">
+            <span>Find Doctors</span>
+            <span className="cl-pill-btn-icon" aria-hidden="true"><i className="bi bi-arrow-up-right"></i><i className="bi bi-arrow-up-right"></i></span>
+          </a>
 
         </div>
 

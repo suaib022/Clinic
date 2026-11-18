@@ -528,9 +528,9 @@ export default function RecordsClient({ patients, visits, records, userId, healt
     return (
         <div className="container-fluid max-w-1200 mx-auto">
             {/* Header */}
-            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
                 <div>
-                    <h2 className="m-0 fw-bold" style={{ color: '#0D7D72' }}>Medical Records Vault</h2>
+                    <h2 className="m-0 fw-bold" style={{ color: '#1B2978' }}>Medical Records Vault</h2>
                     <p className="text-muted small m-0 mt-1">
                         Central repository for all family members' prescriptions, lab test reports, and clinical documents.
                     </p>
@@ -538,7 +538,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                 <div className="d-flex gap-2">
                     <button 
                         className="btn btn-sm text-white px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1.5 shadow-sm" 
-                        style={{ backgroundColor: '#0D7D72' }} 
+                        style={{ backgroundColor: '#1B2978' }} 
                         onClick={() => handleOpenUploadForPatient(selectedPatientId !== 'ALL' ? selectedPatientId : undefined, undefined)}
                     >
                         <i className="bi bi-upload"></i>
@@ -563,7 +563,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
             <div className="mb-4">
                 <div className="d-flex justify-content-between align-items-center mb-2">
                     <h6 className="fw-bold text-uppercase small text-muted m-0">
-                        <i className="bi bi-people-fill me-1.5" style={{ color: '#0D7D72' }}></i>
+                        <i className="bi bi-people-fill me-1.5" style={{ color: '#1B2978' }}></i>
                         Family Members & Patient Profiles ({patients.length})
                     </h6>
                     <span className="small text-muted">Click any profile to view all documents</span>
@@ -576,9 +576,9 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                             className={`card h-100 border transition-all ${selectedPatientId === 'ALL' ? 'shadow-sm' : ''}`}
                             style={{ 
                                 cursor: 'pointer',
-                                borderColor: selectedPatientId === 'ALL' ? '#0D7D72' : '#dee2e6',
+                                borderColor: selectedPatientId === 'ALL' ? '#1B2978' : '#dee2e6',
                                 borderWidth: selectedPatientId === 'ALL' ? '2px' : '1px',
-                                backgroundColor: selectedPatientId === 'ALL' ? '#f0fdf4' : '#ffffff'
+                                backgroundColor: selectedPatientId === 'ALL' ? '#EDF4FA' : '#ffffff'
                             }}
                             onClick={() => handlePatientCardClick('ALL')}
                         >
@@ -586,7 +586,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                 <div className="d-flex align-items-center gap-2.5 mb-2">
                                     <div 
                                         className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
-                                        style={{ width: '42px', height: '42px', backgroundColor: '#0D7D72', fontSize: '15px' }}
+                                        style={{ width: '42px', height: '42px', backgroundColor: '#1B2978', fontSize: '15px' }}
                                     >
                                         <i className="bi bi-collection-fill"></i>
                                     </div>
@@ -625,9 +625,9 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                     className={`card h-100 border transition-all ${isSelected ? 'shadow-sm' : ''}`}
                                     style={{ 
                                         cursor: 'pointer',
-                                        borderColor: isSelected ? '#0D7D72' : '#dee2e6',
+                                        borderColor: isSelected ? '#1B2978' : '#dee2e6',
                                         borderWidth: isSelected ? '2px' : '1px',
-                                        backgroundColor: isSelected ? '#f0fdf4' : '#ffffff'
+                                        backgroundColor: isSelected ? '#EDF4FA' : '#ffffff'
                                     }}
                                     onClick={() => handlePatientCardClick(p.id)}
                                 >
@@ -640,7 +640,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                                         style={{ 
                                                             width: '42px', 
                                                             height: '42px', 
-                                                            backgroundColor: isSelected ? '#0D7D72' : '#0ab1a9',
+                                                            backgroundColor: isSelected ? '#1B2978' : '#3346B5',
                                                             fontSize: '14px' 
                                                         }}
                                                     >
@@ -656,7 +656,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                                     </div>
                                                 </div>
                                                 {isSelected && (
-                                                    <i className="bi bi-check-circle-fill fs-5" style={{ color: '#0D7D72' }}></i>
+                                                    <i className="bi bi-check-circle-fill fs-5" style={{ color: '#1B2978' }}></i>
                                                 )}
                                             </div>
 
@@ -812,7 +812,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                 ? 'text-white shadow-sm'
                                 : 'btn-outline-secondary bg-white text-secondary'
                         }`}
-                        style={{ backgroundColor: activeTab === 'all' ? '#0D7D72' : undefined, borderColor: activeTab === 'all' ? '#0D7D72' : undefined }}
+                        style={{ backgroundColor: activeTab === 'all' ? '#1B2978' : undefined, borderColor: activeTab === 'all' ? '#1B2978' : undefined }}
                         onClick={() => setActiveTab('all')}
                     >
                         <i className="bi bi-file-earmark-text"></i>
@@ -829,7 +829,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                 ? 'text-white shadow-sm'
                                 : 'btn-outline-secondary bg-white text-secondary'
                         }`}
-                        style={{ backgroundColor: activeTab === 'timeline' ? '#0ab1a9' : undefined, borderColor: activeTab === 'timeline' ? '#0ab1a9' : undefined }}
+                        style={{ backgroundColor: activeTab === 'timeline' ? '#3346B5' : undefined, borderColor: activeTab === 'timeline' ? '#3346B5' : undefined }}
                         onClick={() => setActiveTab('timeline')}
                     >
                         <i className="bi bi-calendar-event"></i>
@@ -863,7 +863,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                                 ? 'text-white shadow-sm'
                                 : 'btn-outline-secondary bg-white text-secondary'
                         }`}
-                        style={{ backgroundColor: activeTab === 'profile' ? '#0D7D72' : undefined, borderColor: activeTab === 'profile' ? '#0D7D72' : undefined }}
+                        style={{ backgroundColor: activeTab === 'profile' ? '#1B2978' : undefined, borderColor: activeTab === 'profile' ? '#1B2978' : undefined }}
                         onClick={() => setActiveTab('profile')}
                     >
                         <i className="bi bi-heart-pulse"></i>
@@ -881,7 +881,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                 <div>
                     {filteredRecords.length === 0 ? (
                         <div className="text-center py-5 bg-white rounded shadow-sm border p-4">
-                            <i className="bi bi-folder-x display-4 text-muted mb-3" style={{ color: '#0D7D72' }}></i>
+                            <i className="bi bi-folder-x display-4 text-muted mb-3" style={{ color: '#1B2978' }}></i>
                             <h5 className="text-dark fw-bold">No medical records found</h5>
                             <p className="text-muted small mb-3">
                                 {selectedPatientId !== 'ALL' || selectedCategory !== 'ALL' || selectedDoctorId !== 'ALL' || searchTerm
@@ -890,7 +890,7 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                             </p>
                             <button 
                                 className="btn btn-sm text-white px-3" 
-                                style={{ backgroundColor: '#0D7D72' }}
+                                style={{ backgroundColor: '#1B2978' }}
                                 onClick={() => handleOpenUploadForPatient(selectedPatientId !== 'ALL' ? selectedPatientId : undefined, undefined)}
                             >
                                 <i className="bi bi-upload me-1"></i> Upload First Document
@@ -971,14 +971,14 @@ export default function RecordsClient({ patients, visits, records, userId, healt
                 <div>
                     {standaloneRecords.length === 0 ? (
                         <div className="text-center py-5 bg-white rounded shadow-sm border p-4">
-                            <i className="bi bi-folder-check display-4 text-muted mb-3" style={{ color: '#0D7D72' }}></i>
+                            <i className="bi bi-folder-check display-4 text-muted mb-3" style={{ color: '#1B2978' }}></i>
                             <h5 className="text-dark fw-bold">No standalone documents found</h5>
                             <p className="text-muted small mb-3">
                                 Documents uploaded directly to patient profiles without being tied to any specific clinic visit will appear here.
                             </p>
                             <button 
                                 className="btn btn-sm text-white px-3" 
-                                style={{ backgroundColor: '#0D7D72' }}
+                                style={{ backgroundColor: '#1B2978' }}
                                 onClick={() => handleOpenUploadForPatient(selectedPatientId !== 'ALL' ? selectedPatientId : undefined, undefined)}
                             >
                                 <i className="bi bi-upload me-1"></i> Upload Standalone Document

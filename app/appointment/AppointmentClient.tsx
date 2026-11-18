@@ -350,19 +350,19 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
 
       return (
           <div className="container py-4">
-              {/* Header Match */}
-              <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+              {/* Header Match (dashboard only; the public page uses the site header) */}
+              {isDashboard && (<div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
                  <a href="/" className="logo d-flex align-items-center text-decoration-none">
-                    <h1 className="sitename m-0" style={{ fontSize: '32px', color: '#0D7D72' }}>Clinic</h1>
+                    <h1 className="sitename m-0" style={{ fontSize: '32px', color: '#1B2978' }}>Clinic</h1>
                  </a>
-                 <h3 className="m-0" style={{ color: '#0D7D72' }}>Book an Appointment</h3>
-              </div>
-              <div className="p-3 text-white mb-2" style={{ backgroundColor: '#0ab1a9', fontSize: '15px' }}>
+                 <h3 className="m-0" style={{ color: '#1B2978' }}>Book an Appointment</h3>
+              </div>)}
+              <div className="p-3 text-white mb-2" style={{ backgroundColor: '#3346B5', fontSize: '15px' }}>
                   Appointment for Speciality: {specName} Doctor: {docName} on {dateFmt} {timeFmt} ( {dayOfWeek} )
               </div>
               
               {!isDashboard && (
-              <div className="p-3 text-white mb-4 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#0ab1a9' }}>
+              <div className="p-3 text-white mb-4 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#3346B5' }}>
                   <h5 className="m-0 fw-bold" style={{ fontSize: '16px' }}>Patient Details</h5>
                   <div>
                       <button className="btn rounded-0 text-white border-0 me-2 px-3 fw-bold" style={{ backgroundColor: patientType === 'OLD' ? '#5c5c5c' : '#737373', fontSize: '14px' }} onClick={() => setPatientType('OLD')}>OLD Patient</button>
@@ -387,8 +387,8 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                               </select>
                               {renderPaymentOptions()}
                               <div className="d-flex justify-content-center">
-                                  <button className="btn text-white rounded-0 px-4 me-2" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
-                                  <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={handleSubmitAppointmentNew} disabled={!selectedOldPatientId || isSubmitting}>
+                                  <button className="btn text-white rounded-0 px-4 me-2" style={{ backgroundColor: '#3346B5' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
+                                  <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#1B2978' }} onClick={handleSubmitAppointmentNew} disabled={!selectedOldPatientId || isSubmitting}>
                                       {isSubmitting ? 'Processing...' : (paymentMethod === 'online' ? 'Proceed to Payment' : 'Confirm Appointment')}
                                   </button>
                               </div>
@@ -412,7 +412,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                       <input type="text" className="form-control rounded-0 border-secondary-subtle" placeholder={oldSearch.type === 'mobile' ? "Enter your mobile number" : "Enter your UHID"} value={oldSearch.q} onChange={(e) => setOldSearch({ ...oldSearch, q: e.target.value })} />
                                   </div>
                                   <div className="col-md-3">
-                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={searchOldPatient}>Go</button>
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#3346B5' }} onClick={searchOldPatient}>Go</button>
                                   </div>
                               </div>
                               
@@ -456,8 +456,8 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                               
                               <div className="row">
                                   <div className="col-md-8 offset-md-4 d-flex justify-content-end">
-                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
-                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={handleSubmitAppointmentNew} disabled={isSubmitting || !selectedOldPatientId}>
+                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#3346B5' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#1B2978' }} onClick={handleSubmitAppointmentNew} disabled={isSubmitting || !selectedOldPatientId}>
                                           {isSubmitting ? 'Processing...' : (paymentMethod === 'online' ? 'Proceed to Payment' : 'Confirm Appointment')}
                                       </button>
                                   </div>
@@ -567,8 +567,8 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                               </div>
                               <div className="row">
                                   <div className="col-md-9 offset-md-3 d-flex justify-content-end">
-                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0ab1a9' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
-                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={handleSubmitAppointmentNew} disabled={isSubmitting}>
+                                      <button className="btn text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#3346B5' }} onClick={() => setStep(1)} disabled={isSubmitting}>Back</button>
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#1B2978' }} onClick={handleSubmitAppointmentNew} disabled={isSubmitting}>
                                           {isSubmitting ? 'Processing...' : (paymentMethod === 'online' ? 'Proceed to Payment' : 'Confirm Appointment')}
                                       </button>
                                   </div>
@@ -582,7 +582,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                   <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                       <div className="modal-dialog modal-dialog-centered">
                           <div className="modal-content rounded-0 border-0">
-                              <div className="modal-header text-white" style={{ backgroundColor: '#0ab1a9' }}>
+                              <div className="modal-header text-white" style={{ backgroundColor: '#3346B5' }}>
                                   <h5 className="modal-title">Booking Successful</h5>
                                   <button type="button" className="btn-close btn-close-white" onClick={() => {
                                       setShowSuccessModal(false);
@@ -631,7 +631,7 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                               Pay Online Now
                                           </button>
                                       )}
-                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#0D7D72' }} onClick={() => {
+                                      <button className="btn text-white rounded-0 px-4" style={{ backgroundColor: '#1B2978' }} onClick={() => {
                                           setShowSuccessModal(false);
                                           window.location.href = isDashboard ? '/patient/appointments' : '/';
                                       }}>View Appointments</button>
@@ -646,10 +646,10 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                   <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1070 }}>
                       <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '420px' }}>
                           <div className="modal-content rounded-0 border-0 p-4 text-center shadow-lg">
-                              <div className="spinner-border mx-auto mb-3" role="status" style={{ width: '3rem', height: '3rem', color: '#0D7D72' }}>
+                              <div className="spinner-border mx-auto mb-3" role="status" style={{ width: '3rem', height: '3rem', color: '#1B2978' }}>
                                   <span className="visually-hidden">Loading...</span>
                               </div>
-                              <h5 className="fw-bold mb-1" style={{ color: '#0D7D72' }}>Redirecting to SSLCommerz</h5>
+                              <h5 className="fw-bold mb-1" style={{ color: '#1B2978' }}>Redirecting to SSLCommerz</h5>
                               <p className="text-muted small mb-0">Connecting to secure payment gateway. Please wait...</p>
                           </div>
                       </div>
@@ -661,22 +661,22 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
   }
   
   return (
-    <div className="container py-4">
-      {/* Header Match */}
-      <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+    <div className="container py-4 cl-book">
+      {/* Header Match (dashboard only; the public page uses the site header) */}
+      {isDashboard && (<div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
          <a href="/" className="logo d-flex align-items-center text-decoration-none">
-            <h1 className="sitename m-0" style={{ fontSize: '32px', color: '#0D7D72' }}>Clinic</h1>
+            <h1 className="sitename m-0" style={{ fontSize: '32px', color: '#1B2978' }}>Clinic</h1>
          </a>
-         <h3 className="m-0" style={{ color: '#0D7D72' }}>Book an Appointment</h3>
-      </div>
+         <h3 className="m-0" style={{ color: '#1B2978' }}>Book an Appointment</h3>
+      </div>)}
       
-      <div className="row">
+      <div className="row g-4">
          {/* Left Panel */}
          <div className="col-md-4">
-            <div className="card border-0 rounded-0 shadow-sm mb-4">
-                <div className="card-header text-white rounded-0 py-3" style={{ backgroundColor: '#0D7D72' }}>
+            <div className="card cl-book-doctor mb-4">
+                <div className="card-header text-white py-4">
                    <div className="d-flex align-items-center">
-                       <div className="bg-white rounded-circle me-3 overflow-hidden d-flex justify-content-center align-items-center flex-shrink-0" style={{ width: '80px', height: '80px' }}>
+                       <div className="bg-white rounded-circle me-3 overflow-hidden d-flex justify-content-center align-items-center flex-shrink-0" style={{ width: '72px', height: '72px' }}>
                            {doctorDetails?.avatar_url ? (
                                <img src={doctorDetails.avatar_url} alt="Doctor" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                            ) : (
@@ -690,16 +690,16 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                    </div>
                 </div>
                 <div className="card-body">
-                   <h6 className="fw-bold mb-3 small">LABAID CARDIAC HOSPITAL :</h6>
+                   <h6 className="cl-book-eyebrow mb-3"><i className="bi bi-hospital me-2"></i>LABAID CARDIAC HOSPITAL :</h6>
                    {doctorDetails?.schedules && doctorDetails.schedules.length > 0 ? (
-                       <ul className="list-unstyled mb-0" style={{ fontSize: '13px' }}>
+                       <ul className="list-unstyled mb-0 cl-book-schedule">
                           {doctorDetails.schedules.map((s: any, i: number) => {
                               const formatTime = (t: string) => format(parse(t, 'HH:mm:ss', new Date()), 'h:mm a');
                               const start = formatTime(s.start_time);
                               const end = formatTime(s.end_time);
                               return (
-                                  <li key={i} className="mb-1">
-                                     {daysMap[s.day_of_week]}: {start} - {end}
+                                  <li key={i}>
+                                     <i className="bi bi-clock me-2"></i>{daysMap[s.day_of_week]}: {start} - {end}
                                   </li>
                               );
                           })}
@@ -712,9 +712,10 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
          </div>
          
          {/* Right Panel */}
-         <div className="col-md-8 pl-md-4">
-            {error && <div className="alert alert-danger rounded-0 py-2">{error}</div>}
-            {success && <div className="alert alert-success rounded-0 py-2">{success}</div>}
+         <div className="col-md-8">
+          <div className="card cl-book-form">
+            {error && <div className="alert alert-danger py-2">{error}</div>}
+            {success && <div className="alert alert-success py-2">{success}</div>}
          
             <div className="row g-3 mb-4">
                <div className="col-md-6">
@@ -763,13 +764,13 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                      ))}
                   </select>
                </div>
-               <div className="col-md-4">
+               <div className="col-md-6">
                   <label className="form-label small mb-1">Appointment Date <span className="text-danger">*</span></label>
                   <input suppressHydrationWarning type="date" className="form-control rounded-0 border-secondary-subtle" value={selectedDate} min={todayStr} onChange={e => setSelectedDate(e.target.value)} />
                </div>
-               <div className="col-md-2">
+               <div className="col-md-6">
                   <label className="form-label small mb-1">Consultation<span className="text-danger">*</span></label>
-                  <div className="form-control bg-light text-danger fw-bold text-center rounded-0 border-0" style={{ fontSize: '12px', padding: '0.375rem 0.2rem' }}>
+                  <div className="form-control cl-book-fee">
                      {doctorDetails ? `Taka. ${doctorDetails.consultation_fee}` : ''}
                   </div>
                </div>
@@ -785,16 +786,13 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                                 key={i}
                                 disabled={!slot.available}
                                 onClick={() => setSelectedSlot(slot.start_time)}
-                                className={`border rounded-0 ${
+                                className={`cl-book-slot ${
                                     slot.start_time === selectedSlot ? 'text-white fw-bold' : 
                                     slot.available ? 'bg-white' : 'bg-light text-muted text-decoration-line-through opacity-50'
                                 }`}
                                 style={{ 
-                                    width: '80px', 
-                                    fontSize: '13px', 
-                                    padding: '0.4rem 0',
-                                    ...(slot.start_time === selectedSlot ? { backgroundColor: '#0D7D72', borderColor: '#0D7D72' } : 
-                                        slot.available ? { borderColor: '#0D7D72', color: '#0D7D72' } : 
+                                    ...(slot.start_time === selectedSlot ? { backgroundColor: '#1B2978', borderColor: '#1B2978' } : 
+                                        slot.available ? { borderColor: '#1B2978', color: '#1B2978' } : 
                                         {})
                                 }}
                             >
@@ -803,17 +801,18 @@ export default function AppointmentClient({ userPatients, isDashboard }: { userP
                         ))}
                     </div>
                 ) : (
-                    <p className="text-danger fw-bold mt-2" style={{ fontSize: '14px' }}>Please call at 10606 for appointment booking.</p>
+                    <p className="cl-book-notice"><i className="bi bi-telephone me-2"></i>Please call at 10606 for appointment booking.</p>
                 )
             ) : (
-                <p className="text-danger fw-bold mt-2" style={{ fontSize: '14px' }}>Please call at 10606 for appointment booking.</p>
+                <p className="cl-book-notice"><i className="bi bi-telephone me-2"></i>Please call at 10606 for appointment booking.</p>
             )}
             
             {/* Bottom Actions */}
-            <div className="d-flex justify-content-start mt-5 pt-3 pb-5 mb-5">
-               <button className="btn btn-info text-white rounded-0 me-2 px-4" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }} onClick={handleReset}>Reset</button>
-               <button className={`btn btn-info text-white rounded-0 px-4 ${(!selectedDoctorId || !selectedDate || !selectedSlot) ? 'opacity-50' : ''}`} style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }} disabled={!selectedDoctorId || !selectedDate || !selectedSlot} onClick={handleNext}>Next</button>
+            <div className="d-flex justify-content-end gap-2 mt-4 pt-4 cl-book-actions">
+               <button className="btn dss-outline px-4" onClick={handleReset}>Reset</button>
+               <button className={`btn text-white px-4 ${(!selectedDoctorId || !selectedDate || !selectedSlot) ? 'opacity-50' : ''}`} style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }} disabled={!selectedDoctorId || !selectedDate || !selectedSlot} onClick={handleNext}>Next</button>
             </div>
+          </div>
          </div>
       </div>
     </div>

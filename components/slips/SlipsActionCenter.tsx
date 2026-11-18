@@ -110,7 +110,7 @@ export default function SlipsActionCenter({
                     type="button"
                     onClick={() => setActiveModal('booking')}
                     className="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold"
-                    style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}
+                    style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}
                 >
                     <Printer size={16} />
                     <span>Print Booking Slip</span>
@@ -173,7 +173,7 @@ export default function SlipsActionCenter({
                     >
                         <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
                             {/* Modal Header */}
-                            <div className="modal-header text-white d-flex align-items-center justify-content-between px-4 py-3" style={{ backgroundColor: '#0D7D72' }}>
+                            <div className="modal-header text-white d-flex align-items-center justify-content-between px-4 py-3" style={{ backgroundColor: '#1B2978' }}>
                                 <div className="d-flex align-items-center gap-2">
                                     {activeModal === 'prescription' && <FileText size={18} />}
                                     {activeModal === 'payment' && <CreditCard size={18} />}

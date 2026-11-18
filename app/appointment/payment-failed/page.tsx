@@ -52,7 +52,7 @@ export default async function PaymentFailedPage({
                                 <Link
                                     href={`/patient/appointments`}
                                     className="btn btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-2"
-                                    style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}
+                                    style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}
                                 >
                                     <RefreshCw size={16} />
                                     <span>View & Pay in Appointments</span>
@@ -61,7 +61,7 @@ export default async function PaymentFailedPage({
                                 <Link
                                     href="/appointment"
                                     className="btn btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-2"
-                                    style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}
+                                    style={{ backgroundColor: '#1B2978', borderColor: '#1B2978' }}
                                 >
                                     <Calendar size={16} />
                                     <span>Book Appointment Again</span>

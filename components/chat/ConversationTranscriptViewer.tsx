@@ -148,7 +148,7 @@ export default function ConversationTranscriptViewer({
                             className={`btn btn-sm py-1 px-2.5 ${
                                 viewMode === 'bubbles' ? 'btn-primary text-white' : 'btn-outline-secondary'
                             }`}
-                            style={viewMode === 'bubbles' ? { backgroundColor: '#0D7D72', borderColor: '#0D7D72' } : {}}
+                            style={viewMode === 'bubbles' ? { backgroundColor: '#1B2978', borderColor: '#1B2978' } : {}}
                             title="Chat Bubble View"
                         >
                             <MessageSquare size={14} className="me-1 inline" />
@@ -160,7 +160,7 @@ export default function ConversationTranscriptViewer({
                             className={`btn btn-sm py-1 px-2.5 ${
                                 viewMode === 'raw' ? 'btn-primary text-white' : 'btn-outline-secondary'
                             }`}
-                            style={viewMode === 'raw' ? { backgroundColor: '#0D7D72', borderColor: '#0D7D72' } : {}}
+                            style={viewMode === 'raw' ? { backgroundColor: '#1B2978', borderColor: '#1B2978' } : {}}
                             title="Raw Script View"
                         >
                             <Code size={14} className="me-1 inline" />
@@ -175,7 +175,7 @@ export default function ConversationTranscriptViewer({
                             onClick={onSyncSession}
                             disabled={isSyncing}
                             className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 py-1 px-2.5 text-xs font-semibold"
-                            style={{ borderColor: '#0D7D72', color: '#0D7D72' }}
+                            style={{ borderColor: '#1B2978', color: '#1B2978' }}
                             title="Sync session transcripts and attachments from ElevenLabs"
                         >
                             <RefreshCw size={13} className={isSyncing ? 'animate-spin' : ''} />
@@ -221,7 +221,7 @@ export default function ConversationTranscriptViewer({
                                 ? 'bg-teal-700 text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
-                        style={speakerFilter === 'all' ? { backgroundColor: '#0D7D72' } : {}}
+                        style={speakerFilter === 'all' ? { backgroundColor: '#1B2978' } : {}}
                     >
                         All ({transcript.length})
                     </button>
@@ -233,7 +233,7 @@ export default function ConversationTranscriptViewer({
                                 ? 'bg-teal-700 text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
-                        style={speakerFilter === 'user' ? { backgroundColor: '#0D7D72' } : {}}
+                        style={speakerFilter === 'user' ? { backgroundColor: '#1B2978' } : {}}
                     >
                         Patient
                     </button>
@@ -245,7 +245,7 @@ export default function ConversationTranscriptViewer({
                                 ? 'bg-teal-700 text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
-                        style={speakerFilter === 'agent' ? { backgroundColor: '#0D7D72' } : {}}
+                        style={speakerFilter === 'agent' ? { backgroundColor: '#1B2978' } : {}}
                     >
                         Aura (AI)
                     </button>

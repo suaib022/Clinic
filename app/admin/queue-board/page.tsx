@@ -22,13 +22,13 @@ export default async function QueueBoardPage() {
     .filter((b): b is NonNullable<typeof b> => !!b)
     .sort((a, b) => b.result.summary.delayMin - a.result.summary.delayMin);
   return (
-    <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+    <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
       <AutoRefresh seconds={30} />
       <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
         <DashboardSidebar role="admin" />
         <div className="flex-grow-1 p-3 p-md-5" style={{ minWidth: 0 }}>
           <div className="container-fluid" style={{ maxWidth: 1200 }}>
-            <h2 className="mb-4 pb-3" style={{ color: '#0D7D72', borderBottom: '3px solid #0D7D72' }}><i className="bi bi-broadcast me-2" aria-hidden="true"></i>Live Clinic Board · {today}</h2>
+            <h2 className="mb-4 pb-3" style={{ color: '#1B2978', borderBottom: '1px solid #E3EAF3' }}><i className="bi bi-broadcast me-2" aria-hidden="true"></i>Live Clinic Board · {today}</h2>
             <div className="table-responsive card border-0 shadow-sm">
               <table className="table align-middle mb-0">
                 <thead><tr><th>Doctor</th><th>Session</th><th>Now serving</th><th className="text-end">Delay</th><th className="text-end">Waiting</th><th className="text-end">Not arrived</th><th className="text-end">Seen</th><th className="text-end">No-shows</th></tr></thead>

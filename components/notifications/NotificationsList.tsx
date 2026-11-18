@@ -51,8 +51,8 @@ function getNotificationMeta(type: string): NotificationMeta {
     case 'checked_in':
       return {
         icon: 'bi-check-circle-fill',
-        color: '#0D7D72',
-        bg: '#ccfbf1',
+        color: '#1B2978',
+        bg: '#DDE6F7',
         badgeText: 'Checked In',
       };
     case 'doctor_cancellation':
@@ -80,8 +80,8 @@ function getNotificationMeta(type: string): NotificationMeta {
     case 'session_started':
       return {
         icon: 'bi-door-open-fill',
-        color: '#0D7D72',
-        bg: '#ccfbf1',
+        color: '#1B2978',
+        bg: '#DDE6F7',
         badgeText: 'Session Started',
       };
     case 'eta_changed':
@@ -94,8 +94,8 @@ function getNotificationMeta(type: string): NotificationMeta {
     default:
       return {
         icon: 'bi-bell-fill',
-        color: '#0D7D72',
-        bg: '#e6f7f5',
+        color: '#1B2978',
+        bg: '#EDF4FA',
         badgeText: 'Update',
       };
   }
@@ -165,7 +165,7 @@ export default function NotificationsList({ userId }: { userId: string }) {
           className={`btn px-4 py-2 rounded-pill transition-all ${tab === 'all' ? 'fw-bold text-white shadow-sm' : 'text-muted fw-semibold'}`}
           style={{
             fontSize: '14px',
-            backgroundColor: tab === 'all' ? '#0D7D72' : 'transparent',
+            backgroundColor: tab === 'all' ? '#1B2978' : 'transparent',
             border: 'none',
           }}
           onClick={() => setTab('all')}
@@ -177,7 +177,7 @@ export default function NotificationsList({ userId }: { userId: string }) {
           className={`btn px-4 py-2 rounded-pill transition-all ${tab === 'unread' ? 'fw-bold text-white shadow-sm' : 'text-muted fw-semibold'}`}
           style={{
             fontSize: '14px',
-            backgroundColor: tab === 'unread' ? '#0D7D72' : 'transparent',
+            backgroundColor: tab === 'unread' ? '#1B2978' : 'transparent',
             border: 'none',
           }}
           onClick={() => setTab('unread')}
@@ -202,7 +202,7 @@ export default function NotificationsList({ userId }: { userId: string }) {
       <div className="list-group list-group-flush p-3 p-md-4 gap-3">
         {loading && (
           <div className="py-5 text-center text-muted">
-            <div className="spinner-border spinner-border-sm mb-2" role="status" style={{ color: '#0D7D72', width: 26, height: 26 }} />
+            <div className="spinner-border spinner-border-sm mb-2" role="status" style={{ color: '#1B2978', width: 26, height: 26 }} />
             <div style={{ fontSize: '15px' }}>Loading notifications…</div>
           </div>
         )}
@@ -253,7 +253,7 @@ export default function NotificationsList({ userId }: { userId: string }) {
                   bottom: 0,
                   left: 0,
                   width: '6px',
-                  backgroundColor: isUnread ? '#0D7D72' : '#cbd5e1',
+                  backgroundColor: isUnread ? '#1B2978' : '#cbd5e1',
                 }}
               />
 
@@ -321,9 +321,9 @@ export default function NotificationsList({ userId }: { userId: string }) {
                       className="btn btn-sm d-inline-flex align-items-center gap-1.5 fw-semibold px-3 py-1.5"
                       style={{
                         fontSize: '13.5px',
-                        color: '#0D7D72',
-                        backgroundColor: '#e6f7f5',
-                        border: '1px solid #99f6e4',
+                        color: '#1B2978',
+                        backgroundColor: '#EDF4FA',
+                        border: '1px solid #C9D6F5',
                         borderRadius: '8px',
                       }}
                       onClick={() => {
@@ -361,7 +361,7 @@ export default function NotificationsList({ userId }: { userId: string }) {
             style={{
               backgroundColor: '#f8fafc',
               border: '1px solid #cbd5e1',
-              color: '#0D7D72',
+              color: '#1B2978',
               borderRadius: '10px',
               fontSize: '14px',
             }}

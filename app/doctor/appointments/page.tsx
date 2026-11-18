@@ -55,14 +55,14 @@ export default async function DoctorAppointmentsPage() {
         .single();
 
     return (
-        <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+        <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
             <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
                 <DashboardSidebar role="doctor" />
                 <div className="flex-grow-1 p-4 p-md-5">
                     <div className="container-fluid max-w-1200 mx-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '3px solid #0D7D72' }}>
+                        <div className="d-flex justify-content-between align-items-center mb-4 pb-3" style={{ borderBottom: '1px solid #E3EAF3' }}>
                             <div>
-                                <h2 className="m-0" style={{ color: '#0D7D72' }}>
+                                <h2 className="m-0" style={{ color: '#1B2978' }}>
                                     <i className="bi bi-calendar-check me-2"></i>Today&apos;s Appointments & Chamber Queue
                                 </h2>
                                 <small className="text-muted">Live serial tracking, queue management and consultation slips</small>

@@ -40,7 +40,7 @@ export default function DoctorLoginClient() {
     return (
         <div className="container py-5" style={{ maxWidth: '500px' }}>
             <div className="card shadow-sm border-0 rounded-0">
-                <div className="card-header text-white text-center py-3" style={{ backgroundColor: '#0D7D72' }}>
+                <div className="card-header text-white text-center py-3" style={{ backgroundColor: '#1B2978' }}>
                     <h4 className="mb-0">Staff Login</h4>
                 </div>
                 <div className="card-body p-4">
@@ -69,7 +69,7 @@ export default function DoctorLoginClient() {
                         <button 
                             type="submit" 
                             className="btn text-white w-100 rounded-0 py-2 fw-bold" 
-                            style={{ backgroundColor: '#0ab1a9' }}
+                            style={{ backgroundColor: '#3346B5' }}
                             disabled={loading}
                         >
                             {loading ? 'Logging in...' : 'Login'}

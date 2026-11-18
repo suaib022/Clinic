@@ -49,7 +49,7 @@ export default function BookingSlip({
             {/* 1. Header with Hospital Crest and Details */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '2px solid #000000' }}>
                 <div>
-                    <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#0D7D72', letterSpacing: '-0.3px' }}>
+                    <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#1B2978', letterSpacing: '-0.3px' }}>
                         Clinic Multicare Specialized Hospital
                     </h2>
                     <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: '#475569' }}>
@@ -58,7 +58,7 @@ export default function BookingSlip({
                 </div>
 
                 <div style={{ textAlign: 'right' }}>
-                    <span style={{ backgroundColor: '#0D7D72', color: '#ffffff', fontWeight: 700, fontSize: '11px', padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                    <span style={{ backgroundColor: '#1B2978', color: '#ffffff', fontWeight: 700, fontSize: '11px', padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
                         Official Booking Pass
                     </span>
                     <div style={{ fontSize: '11px', color: '#64748b', marginTop: '3px' }}>Ref: {bookingRef}</div>
@@ -66,11 +66,11 @@ export default function BookingSlip({
             </div>
 
             {/* 2. Prominent Queue Serial Token */}
-            <div style={{ backgroundColor: '#f0fdf4', border: '2px solid #0D7D72', borderRadius: '10px', padding: '16px', margin: '18px 0', textAlign: 'center' }}>
-                <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#0D7D72', display: 'block' }}>
+            <div style={{ backgroundColor: '#f0fdf4', border: '2px solid #1B2978', borderRadius: '10px', padding: '16px', margin: '18px 0', textAlign: 'center' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#1B2978', display: 'block' }}>
                     Chamber Queue Serial Token
                 </span>
-                <div style={{ fontSize: '48px', fontWeight: 900, color: '#0D7D72', lineHeight: '1.1', margin: '4px 0' }}>
+                <div style={{ fontSize: '48px', fontWeight: 900, color: '#1B2978', lineHeight: '1.1', margin: '4px 0' }}>
                     #{serialNo}
                 </div>
                 <div style={{ fontSize: '13px', fontWeight: 600, color: '#166534' }}>
@@ -82,18 +82,18 @@ export default function BookingSlip({
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px', fontSize: '12.5px' }}>
                 {/* Doctor Box */}
                 <div style={{ border: '1.5px solid #cbd5e1', borderRadius: '8px', padding: '12px', backgroundColor: '#f8fafc' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0D7D72', fontWeight: 700, fontSize: '11.5px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1B2978', fontWeight: 700, fontSize: '11.5px', textTransform: 'uppercase', marginBottom: '6px' }}>
                         <Stethoscope size={15} />
                         <span>Doctor & Chamber</span>
                     </div>
                     <strong style={{ fontSize: '13.5px', color: '#0f172a', display: 'block' }}>{doctorName}</strong>
                     <div style={{ color: '#475569', fontSize: '12px', marginTop: '2px' }}>{specialityName}</div>
-                    <div style={{ color: '#0D7D72', fontWeight: 600, fontSize: '12px', marginTop: '4px' }}>Room 304 (3rd Floor)</div>
+                    <div style={{ color: '#1B2978', fontWeight: 600, fontSize: '12px', marginTop: '4px' }}>Room 304 (3rd Floor)</div>
                 </div>
 
                 {/* Date & Time Box */}
                 <div style={{ border: '1.5px solid #cbd5e1', borderRadius: '8px', padding: '12px', backgroundColor: '#f8fafc' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0D7D72', fontWeight: 700, fontSize: '11.5px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1B2978', fontWeight: 700, fontSize: '11.5px', textTransform: 'uppercase', marginBottom: '6px' }}>
                         <Calendar size={15} />
                         <span>Appointment Time</span>
                     </div>

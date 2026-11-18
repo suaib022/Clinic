@@ -24,12 +24,12 @@ export default async function DoctorLeavePage() {
         .order('created_at', { ascending: false });
 
   return (
-    <main className="main pt-5" style={{ backgroundColor: '#f6f9ff' }}>
+    <main className="main pt-5" style={{ backgroundColor: '#F5F9FC' }}>
       <div className="d-flex align-items-stretch" style={{ minHeight: 'calc(100vh - 100px)' }}>
         <DashboardSidebar role="doctor" />
         <div className="flex-grow-1 p-4 p-md-5">
           <div className="container-fluid max-w-1200 mx-auto">
-            <h2 className="mb-4" style={{ color: '#0D7D72' }}>Doctor: Leave & Break Requests</h2>
+            <h2 className="mb-4" style={{ color: '#1B2978' }}>Doctor: Leave & Break Requests</h2>
         
         <div className="row">
            <div className="col-md-5">

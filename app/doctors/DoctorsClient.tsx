@@ -179,7 +179,7 @@ export default function DoctorsClient({
                 <>
                   <div className="card border-0 shadow-sm rounded-0 mb-4 bg-white" data-aos="fade-up">
                     <div className="card-body p-4">
-                      <h3 className="fw-bold" style={{ color: '#0D7D72' }}>{activeDepartment} Department</h3>
+                      <h3 className="fw-bold" style={{ color: '#1B2978' }}>{activeDepartment} Department</h3>
                       {hasOverview && (
                         <p className="text-muted mb-0 mt-3" style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
                           {activeDepartmentConfig.overview}

@@ -52,8 +52,8 @@ function getNotificationMeta(type: string): NotificationMeta {
     case 'checked_in':
       return {
         icon: 'bi-check-circle-fill',
-        color: '#0D7D72',
-        bg: '#ccfbf1',
+        color: '#1B2978',
+        bg: '#DDE6F7',
         badgeText: 'Checked In',
       };
     case 'doctor_cancellation':
@@ -81,8 +81,8 @@ function getNotificationMeta(type: string): NotificationMeta {
     case 'session_started':
       return {
         icon: 'bi-door-open-fill',
-        color: '#0D7D72',
-        bg: '#ccfbf1',
+        color: '#1B2978',
+        bg: '#DDE6F7',
         badgeText: 'Session Started',
       };
     case 'eta_changed':
@@ -95,8 +95,8 @@ function getNotificationMeta(type: string): NotificationMeta {
     default:
       return {
         icon: 'bi-bell-fill',
-        color: '#0D7D72',
-        bg: '#e6f7f5',
+        color: '#1B2978',
+        bg: '#EDF4FA',
         badgeText: 'Update',
       };
   }
@@ -222,7 +222,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
             <div className="d-flex align-items-center gap-2.5">
               <div
                 className="rounded-circle d-flex align-items-center justify-content-center"
-                style={{ width: 38, height: 38, backgroundColor: '#e6f7f5', color: '#0D7D72' }}
+                style={{ width: 38, height: 38, backgroundColor: '#EDF4FA', color: '#1B2978' }}
               >
                 <i className="bi bi-bell-fill fs-5" />
               </div>
@@ -240,7 +240,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
               <button
                 type="button"
                 className="btn btn-sm btn-link text-decoration-none fw-semibold p-1"
-                style={{ color: '#0D7D72', fontSize: '13px' }}
+                style={{ color: '#1B2978', fontSize: '13px' }}
                 onClick={markAllRead}
               >
                 <i className="bi bi-check2-all me-1 fs-6" />
@@ -259,7 +259,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
               className={`btn px-3.5 py-1.5 rounded-pill transition-all ${tab === 'all' ? 'fw-bold text-white shadow-xs' : 'text-muted fw-semibold'}`}
               style={{
                 fontSize: '13px',
-                backgroundColor: tab === 'all' ? '#0D7D72' : 'transparent',
+                backgroundColor: tab === 'all' ? '#1B2978' : 'transparent',
                 border: 'none',
               }}
               onClick={() => setTab('all')}
@@ -271,7 +271,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
               className={`btn px-3.5 py-1.5 rounded-pill transition-all ${tab === 'unread' ? 'fw-bold text-white shadow-xs' : 'text-muted fw-semibold'}`}
               style={{
                 fontSize: '13px',
-                backgroundColor: tab === 'unread' ? '#0D7D72' : 'transparent',
+                backgroundColor: tab === 'unread' ? '#1B2978' : 'transparent',
                 border: 'none',
               }}
               onClick={() => setTab('unread')}
@@ -299,7 +299,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
                 <div
                   className="spinner-border spinner-border-sm mb-2"
                   role="status"
-                  style={{ color: '#0D7D72', width: 24, height: 24 }}
+                  style={{ color: '#1B2978', width: 24, height: 24 }}
                 />
                 <div style={{ fontSize: '14px' }}>Loading updates…</div>
               </div>
@@ -354,7 +354,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
                         bottom: 0,
                         left: 0,
                         width: '5px',
-                        backgroundColor: '#0D7D72',
+                        backgroundColor: '#1B2978',
                       }}
                     />
                   )}
@@ -456,7 +456,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
               style={{
                 backgroundColor: '#ffffff',
                 border: '1.5px solid #cbd5e1',
-                color: '#0D7D72',
+                color: '#1B2978',
                 borderRadius: '10px',
                 fontSize: '14px',
                 padding: '9px 16px',
@@ -476,27 +476,27 @@ export default function NotificationBell({ userId }: { userId: string }) {
         .dss-bell-btn {
           background-color: #ffffff !important;
           border: 1.5px solid #cbd5e1 !important;
-          color: #0D7D72 !important;
+          color: #1B2978 !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         .dss-bell-btn i {
-          color: #0D7D72 !important;
+          color: #1B2978 !important;
         }
         .dss-bell-btn:hover {
-          background-color: #0D7D72 !important;
-          border-color: #0D7D72 !important;
+          background-color: #1B2978 !important;
+          border-color: #1B2978 !important;
           color: #ffffff !important;
-          box-shadow: 0 6px 18px rgba(13, 125, 114, 0.35) !important;
+          box-shadow: 0 6px 18px rgba(27, 41, 120, 0.35) !important;
           transform: translateY(-2px) scale(1.04) !important;
         }
         .dss-bell-btn:hover i {
           color: #ffffff !important;
         }
         .dss-bell-btn.is-open {
-          background-color: #0D7D72 !important;
-          border-color: #0D7D72 !important;
+          background-color: #1B2978 !important;
+          border-color: #1B2978 !important;
           color: #ffffff !important;
-          box-shadow: 0 4px 14px rgba(13, 125, 114, 0.3) !important;
+          box-shadow: 0 4px 14px rgba(27, 41, 120, 0.3) !important;
         }
         .dss-bell-btn.is-open i {
           color: #ffffff !important;
@@ -508,7 +508,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
           background-color: #eef7f6 !important;
         }
         .dss-mark-read-btn:hover {
-          color: #0D7D72 !important;
+          color: #1B2978 !important;
           font-weight: 600;
         }
         @keyframes dssDropdownFade {

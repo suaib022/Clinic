@@ -204,7 +204,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
           {/* Header */}
           <div
             className="modal-header border-0 px-4 py-3 text-white d-flex align-items-center justify-content-between"
-            style={{ background: 'linear-gradient(135deg, #0D7D72 0%, #08554e 100%)' }}
+            style={{ background: 'linear-gradient(135deg, #1B2978 0%, #08554e 100%)' }}
           >
             <div className="d-flex align-items-center gap-2">
               <div
@@ -240,7 +240,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
                     style={{
                       width: 52,
                       height: 52,
-                      backgroundColor: '#0D7D72',
+                      backgroundColor: '#1B2978',
                       fontSize: '1.25rem',
                       letterSpacing: '0.5px',
                     }}
@@ -279,7 +279,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
                   <span
                     className="badge rounded-pill px-3 py-2 fw-bold fs-6 shadow-xs"
                     style={{
-                      backgroundColor: status === 'in_consultation' ? '#0D7D72' : status === 'completed' || status === 'prescription_pending' ? '#059669' : '#0f172a',
+                      backgroundColor: status === 'in_consultation' ? '#1B2978' : status === 'completed' || status === 'prescription_pending' ? '#059669' : '#0f172a',
                       color: '#ffffff',
                     }}
                   >
@@ -299,7 +299,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
               <div className="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white">
                 <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
                   <div className="d-flex align-items-center gap-2 text-muted small">
-                    <i className="bi bi-hospital fs-5" style={{ color: '#0D7D72' }} />
+                    <i className="bi bi-hospital fs-5" style={{ color: '#1B2978' }} />
                     <div>
                       Consulting: <strong className="text-dark">Dr. {doctorName || 'Assigned Doctor'}</strong>
                       {specialityName && <span className="ms-1 text-muted">({specialityName})</span>}
@@ -330,7 +330,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
                 <div className="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white">
                   <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
                     <h6 className="fw-bold text-muted text-uppercase small m-0">
-                      <i className="bi bi-calendar-event me-1.5" style={{ color: '#0D7D72' }} />
+                      <i className="bi bi-calendar-event me-1.5" style={{ color: '#1B2978' }} />
                       Schedule & Details
                     </h6>
                     <span className="badge bg-light text-secondary border font-monospace" style={{ fontSize: '0.75rem' }}>
@@ -377,7 +377,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
                 <div className="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white">
                   <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
                     <h6 className="fw-bold text-muted text-uppercase small m-0">
-                      <i className="bi bi-diagram-3-fill me-1.5" style={{ color: '#0D7D72' }} />
+                      <i className="bi bi-diagram-3-fill me-1.5" style={{ color: '#1B2978' }} />
                       Encounter Journey
                     </h6>
                     {consultDurationMin && (
@@ -505,7 +505,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
             <div className="card border-0 shadow-sm rounded-3 mt-3 p-3 bg-white">
               <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 pb-2 border-bottom">
                 <div className="d-flex align-items-center gap-2">
-                  <i className="bi bi-file-earmark-medical-fill fs-5" style={{ color: '#0D7D72' }} />
+                  <i className="bi bi-file-earmark-medical-fill fs-5" style={{ color: '#1B2978' }} />
                   <h6 className="fw-bold text-dark m-0" style={{ fontSize: '0.95rem' }}>
                     Uploaded Documents & Prescriptions
                   </h6>
@@ -663,7 +663,7 @@ export default function VisitDetailModal({ appt, onClose, doctorName, speciality
               <button
                 type="button"
                 className="btn px-4 fw-semibold text-white"
-                style={{ backgroundColor: '#0D7D72' }}
+                style={{ backgroundColor: '#1B2978' }}
                 onClick={onClose}
               >
                 Close

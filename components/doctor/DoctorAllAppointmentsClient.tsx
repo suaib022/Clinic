@@ -162,19 +162,19 @@ export default function DoctorAllAppointmentsClient({
                     border: 1px solid #cbd5e1 !important;
                 }
                 .doctor-time-pill.active-all {
-                    background-color: #0D7D72 !important;
+                    background-color: #1B2978 !important;
                     color: #ffffff !important;
-                    border-color: #0D7D72 !important;
+                    border-color: #1B2978 !important;
                 }
                 .doctor-time-pill.active-upcoming {
-                    background-color: #0ab1a9 !important;
+                    background-color: #3346B5 !important;
                     color: #ffffff !important;
-                    border-color: #0ab1a9 !important;
+                    border-color: #3346B5 !important;
                 }
                 .doctor-time-pill.active-today {
-                    background-color: #0D7D72 !important;
+                    background-color: #1B2978 !important;
                     color: #ffffff !important;
-                    border-color: #0D7D72 !important;
+                    border-color: #1B2978 !important;
                 }
                 .doctor-time-pill.active-prev {
                     background-color: #475569 !important;
@@ -312,13 +312,13 @@ export default function DoctorAllAppointmentsClient({
                             <table className="table table-hover mb-0 align-middle">
                                 <thead className="table-light border-bottom">
                                     <tr>
-                                        <th className="px-4 py-3" style={{ color: '#0D7D72' }}>Serial</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Patient Details</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Date & Slot</th>
-                                        <th className="py-3" style={{ color: '#0D7D72' }}>Visit Type</th>
-                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Rating & Feedback</th>
-                                        <th className="py-3 text-center" style={{ color: '#0D7D72' }}>Download Slips</th>
-                                        <th className="px-4 py-3 text-end" style={{ color: '#0D7D72' }}>Status & Action</th>
+                                        <th className="px-4 py-3" style={{ color: '#1B2978' }}>Serial</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Patient Details</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Date & Slot</th>
+                                        <th className="py-3" style={{ color: '#1B2978' }}>Visit Type</th>
+                                        <th className="py-3 text-center" style={{ color: '#1B2978' }}>Rating & Feedback</th>
+                                        <th className="py-3 text-center" style={{ color: '#1B2978' }}>Download Slips</th>
+                                        <th className="px-4 py-3 text-end" style={{ color: '#1B2978' }}>Status & Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -416,7 +416,7 @@ export default function DoctorAllAppointmentsClient({
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="btn btn-sm py-1 px-2.5 d-inline-flex align-items-center gap-1 text-white shadow-xs"
-                                                            style={{ backgroundColor: '#0D7D72', fontSize: '11px', borderColor: '#0D7D72' }}
+                                                            style={{ backgroundColor: '#1B2978', fontSize: '11px', borderColor: '#1B2978' }}
                                                             title="Download prescription ticket"
                                                         >
                                                             <FileText size={12} />
@@ -477,11 +477,11 @@ export default function DoctorAllAppointmentsClient({
                         <div className="modal-dialog modal-dialog-centered modal-lg my-4" onClick={(e) => e.stopPropagation()}>
                             <div className="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
                                 {/* Modal Header */}
-                                <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#0D7D72' }}>
+                                <div className="modal-header text-white py-3 px-4" style={{ backgroundColor: '#1B2978' }}>
                                     <div className="d-flex align-items-center gap-3">
                                         <div className="bg-white text-dark rounded px-2.5 py-1 text-center shadow-xs">
                                             <div className="small text-muted" style={{ fontSize: '9px', lineHeight: 1 }}>TOKEN</div>
-                                            <div className="fw-bold fs-6" style={{ color: '#0D7D72', lineHeight: 1.2 }}>
+                                            <div className="fw-bold fs-6" style={{ color: '#1B2978', lineHeight: 1.2 }}>
                                                 #{detailModalAppt.serial_no || '-'}
                                             </div>
                                         </div>
@@ -609,7 +609,7 @@ export default function DoctorAllAppointmentsClient({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="btn text-white d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold rounded-2"
-                                            style={{ backgroundColor: '#0D7D72' }}
+                                            style={{ backgroundColor: '#1B2978' }}
                                         >
                                             <FileText size={15} />
                                             <span>Prescription Ticket</span>

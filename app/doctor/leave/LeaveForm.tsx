@@ -43,7 +43,7 @@ export default function LeaveForm() {
                <label className="form-label">Reason</label>
                <textarea name="reason" className="form-control" rows={3}></textarea>
             </div>
-            <button type="submit" className="btn btn-primary text-white" style={{ backgroundColor: '#0ab1a9', border: 'none' }}>Submit Request</button>
+            <button type="submit" className="btn btn-primary text-white" style={{ backgroundColor: '#3346B5', border: 'none' }}>Submit Request</button>
          </form>
     );
 }

@@ -261,7 +261,7 @@ export default function UploadDocumentModal({
                         ) : (
                             <>
                                 <button type="button" className="btn btn-light rounded-pill" onClick={onClose} disabled={isUploading}>Cancel</button>
-                                <button type="button" className="btn text-white px-4 rounded-pill" style={{ backgroundColor: '#0ab1a9' }} onClick={handleUploadAll} disabled={isUploading || files.length === 0 || !selectedPatientId}>
+                                <button type="button" className="btn text-white px-4 rounded-pill" style={{ backgroundColor: '#3346B5' }} onClick={handleUploadAll} disabled={isUploading || files.length === 0 || !selectedPatientId}>
                                     {isUploading ? 'Uploading...' : 'Upload All'}
                                 </button>
                             </>
