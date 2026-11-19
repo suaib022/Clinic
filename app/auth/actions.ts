@@ -144,6 +144,7 @@ export async function login(formData: FormData) {
   if (role === 'admin') redirect('/admin/dashboard');
   if (role === 'doctor') redirect('/doctor/dashboard');
   if (role === 'compounder') redirect('/compounder/dashboard');
+  if (role === 'technician') redirect(homeFor(role));
   redirect('/patient/dashboard');
 }
 

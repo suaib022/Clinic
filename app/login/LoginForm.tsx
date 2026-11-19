@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { homeFor } from "@/lib/auth/home";
 
-type Role = 'patient' | 'doctor' | 'compounder' | 'admin';
+type Role = 'patient' | 'doctor' | 'compounder' | 'technician' | 'admin';
 
 const DEFAULT_CREDENTIALS: Record<Role, { identifier: string; pin: string }> = {
   compounder: {
@@ -15,6 +16,8 @@ const DEFAULT_CREDENTIALS: Record<Role, { identifier: string; pin: string }> = {
     identifier: "doc-532373@staff.clinic.local",
     pin: "123456"
   },
+  // Lab staff: no demo credentials, ever.
+  technician: { identifier: "", pin: "" },
   admin: {
     identifier: "admin@gmail.com",
     pin: "123456"
@@ -39,6 +42,7 @@ export default function LoginForm({ error: initialError, message }: { error?: st
     patient: quick ? { ...DEFAULT_CREDENTIALS.patient } : { ...blank },
     doctor: quick ? { ...DEFAULT_CREDENTIALS.doctor } : { ...blank },
     compounder: quick ? { ...DEFAULT_CREDENTIALS.compounder } : { ...blank },
+    technician: { ...blank },
     admin: quick ? { ...DEFAULT_CREDENTIALS.admin } : { ...blank }
   });
 
@@ -96,7 +100,7 @@ export default function LoginForm({ error: initialError, message }: { error?: st
       if (res.ok) {
           router.refresh();
           const roleStr = data.user?.role;
-          router.push(roleStr === 'admin' ? '/admin/dashboard' : `/${roleStr}/dashboard`);
+          router.push(homeFor(roleStr));
       } else {
           setError(data.error || 'Login failed');
           setLoading(false);
@@ -155,6 +159,16 @@ export default function LoginForm({ error: initialError, message }: { error?: st
             onClick={() => handleRoleChange('compounder')}
           >
             Compounder
+          </button>
+        </li>
+        <li className="nav-item">
+          <button 
+            type="button"
+            className={`nav-link ${role === 'technician' ? 'active' : ''}`} 
+            style={{ borderRadius: "8px", fontWeight: "600", backgroundColor: role === 'technician' ? 'var(--accent-color)' : '#f8f9fa', color: role === 'technician' ? '#fff' : '#333' }}
+            onClick={() => handleRoleChange('technician')}
+          >
+            Lab
           </button>
         </li>
         <li className="nav-item">
@@ -328,6 +342,61 @@ export default function LoginForm({ error: initialError, message }: { error?: st
                   style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}
                 >
                   {loading ? 'Logging in...' : 'Login as Compounder'}
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {/* Lab Staff Form */}
+        {role === 'technician' && (
+          <form onSubmit={handleStaffLogin}>
+            <input type="hidden" name="role" value="technician" />
+            <div className="row gy-4">
+              <div className="col-12">
+                <label className="form-label" style={{ fontWeight: "600" }}>Lab Staff Email</label>
+                <input 
+                  type="email" 
+                  name="identifier" 
+                  className="form-control" 
+                  placeholder="Lab Staff Email Address" 
+                  value={formData.technician.identifier}
+                  onChange={(e) => setFormData(prev => ({ ...prev, technician: { ...prev.technician, identifier: e.target.value } }))}
+                  required 
+                />
+              </div>
+              <div className="col-12">
+                <label className="form-label" style={{ fontWeight: "600" }}>Password / PIN</label>
+                <div className="position-relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="pin" 
+                    className="form-control pe-5" 
+                    placeholder="Password" 
+                    value={formData.technician.pin}
+                    onChange={(e) => setFormData(prev => ({ ...prev, technician: { ...prev.technician, pin: e.target.value } }))}
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted text-decoration-none pe-3"
+                    style={{ zIndex: 5 }}
+                    tabIndex={-1}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div className="col-12 mt-4">
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn-book" 
+                  style={{ width: "100%", padding: "12px 20px", border: "none", borderRadius: "4px", background: "var(--accent-color)", color: "#fff", fontWeight: "600" }}
+                >
+                  {loading ? 'Logging in...' : 'Login as Lab Staff'}
                 </button>
               </div>
             </div>
