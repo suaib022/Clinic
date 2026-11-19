@@ -3,8 +3,9 @@ import type {
   Stage, StatusLabel,
 } from './types';
 import { computeQueueOrder, countedTime, compareLine } from './order';
-import { computeExpectedDurations } from './durations';
-import { activeMinutes, MIN, minutesBetween, round5 } from './time';
+import { computeExpectedDurations, residualMin } from './durations';
+import { durationOf, perVisitMin } from './visit';
+import { activeMinutes, MIN, minutesBetween, normalCdf, normalQuantile, round5 } from './time';
 
 /** B6: compare expected (or real) start with the booked time. Boundaries are inclusive towards "on time"/"running late". */
 export function statusLabel(deltaMin: number, s: Pick<DssSettings, 'onTimeBandMin' | 'lateBandMin'>): StatusLabel {
@@ -59,6 +60,61 @@ export function reasonText(flags: Flag[], lateStartMin: number, label: StatusLab
 }
 
 /**
+ * Minutes of visits expected to be seen before `a` by people not in line yet. Only arrivals before `a` is called matter,
+ * so the window ends at the earlier of a's counted time and a's expected call time (`callAt`):
+ * booked patients with an earlier slot who can still arrive within grace, weighted by the chance they arrive in the window,
+ * plus walk-ins expected in the window (walk-ins count from arrival, so they go ahead of a).
+ */
+export function expectedArrivalsAheadMin(
+  a: QueueAppointment, notArrived: QueueAppointment[], durations: Durations, s: DssSettings, now: number, callAt = Infinity,
+): number {
+  return expectedArrivalsAhead(a, notArrived, durations, s, now, callAt).min;
+}
+
+/**
+ * Probability that a booked patient who is not here at `now` arrives by `until` (Bayes on Normal(slot + mean, sd)):
+ * showP x (F(until) - F(now)) / ((1 - showP) + showP x (1 - F(now))). Without a lateness model: showP if slot <= until.
+ */
+export function arrivesBeforeP(
+  slot: number, now: number, until: number, s: Pick<DssSettings, 'showP' | 'latenessMeanMin' | 'latenessSdMin'>,
+): number {
+  if (until <= now) return 0;
+  if (!(s.latenessSdMin > 0)) return slot <= until ? s.showP : 0;
+  const F = (t: number) => normalCdf(((t - slot) / MIN - s.latenessMeanMin) / s.latenessSdMin);
+  return (s.showP * (F(until) - F(now))) / ((1 - s.showP) + s.showP * (1 - F(now)));
+}
+
+/**
+ * Probability that a booked patient who is not here at `now` still comes (Bayes):
+ * P(show) x P(arrival > now | show) / (P(no-show) + P(show) x P(arrival > now | show)), arrival ~ Normal(slot + mean, sd).
+ */
+export function stillComesP(slot: number, now: number, s: Pick<DssSettings, 'showP' | 'latenessMeanMin' | 'latenessSdMin'>): number {
+  if (!(s.latenessSdMin > 0)) return s.showP;
+  const pLater = 1 - normalCdf(((now - slot) / MIN - s.latenessMeanMin) / s.latenessSdMin);
+  const num = s.showP * pLater;
+  return num / ((1 - s.showP) + num);
+}
+
+/** Same as expectedArrivalsAheadMin, plus the variance of that total (Bernoulli arrivals, Poisson walk-ins). */
+function expectedArrivalsAhead(
+  a: QueueAppointment, notArrived: QueueAppointment[], durations: Durations, s: DssSettings, now: number, callAt: number,
+): { min: number; variance: number } {
+  const mine = countedTime(a, s);
+  const until = Math.min(mine, callAt);
+  let min = 0, variance = 0;
+  for (const x of notArrived) {
+    if (x.bookedAt < mine && x.bookedAt + s.graceMin * MIN >= now) {
+      const d = durationOf(x, durations, s), m = perVisitMin(d, s), q = arrivesBeforeP(x.bookedAt, now, until, s);
+      min += q * m;
+      variance += q * (d.sd * d.sd + m * m) - (q * m) ** 2;
+    }
+  }
+  const walkIns = s.walkInPerHour * Math.max(0, until - now) / (60 * MIN);
+  const w = durations.new, wm = perVisitMin(w, s);
+  return { min: min + walkIns * wm, variance: variance + walkIns * (w.sd * w.sd + wm * wm) };
+}
+
+/**
  * B5 + B6: expected start, range, patients ahead, confidence and label for every appointment of the day.
  * expected start = start point + time until the doctor is free + typical durations of the checked-in patients ahead.
  */
@@ -80,13 +136,18 @@ export function computeEstimates(input: EngineInput): QueueResult {
 
   // Time until the doctor is free (typical / short / long).
   let nowServing: NowServing | null = null;
-  let freeTyp = 0, freeLow = 0, freeHigh = 0;
+  let freeTyp = 0, freeLow = 0, freeHigh = 0, freeVar = 0;
   if (order.current?.consultStartedAt != null) {
-    const d = durations[order.current.visitType];
+    const d = durationOf(order.current, durations, s);
     const elapsed = activeMinutes(order.current.consultStartedAt, now, pauses, now);
-    freeTyp = elapsed < d.typical ? d.typical - elapsed : 2; // running over: assume 2 more minutes
+    const per = perVisitMin(d, s);
+    // Mean mode: expected time left given the time already spent, from the same history window (long visits run on).
+    const residual = s.sumWith === 'mean' && order.current.visitReason !== 'report_review'
+      ? residualMin((input.history[order.current.visitType] ?? []).slice(0, s.historyWindow), elapsed) : null;
+    freeTyp = residual ?? (elapsed < per ? per - elapsed : 2); // DSS rule: running over -> assume 2 more minutes
     freeLow = Math.min(freeTyp, Math.max(0, d.short - elapsed));
     freeHigh = Math.max(freeTyp, d.long - elapsed);
+    freeVar = d.sd * d.sd;
     nowServing = {
       appointmentId: order.current.id, serialNo: order.current.serialNo, startedAt: order.current.consultStartedAt,
       elapsedMin: elapsed, expectedMin: d.typical, overrun: elapsed > d.typical,
@@ -121,7 +182,8 @@ export function computeEstimates(input: EngineInput): QueueResult {
   };
 
   // Waiting line.
-  let sumTyp = 0, sumLow = 0, sumHigh = 0;
+  let sumTyp = 0, sumLow = 0, sumHigh = 0, sumVar = 0;
+  const z = s.rangeMethod === 'normal_sum' ? normalQuantile((1 + s.rangeCoverage) / 2) : 0;
   const ended = session.state === 'ended';
   order.line.forEach((a, i) => {
     const e = blank(a, 'waiting');
@@ -131,17 +193,25 @@ export function computeEstimates(input: EngineInput): QueueResult {
     if (order.line.slice(0, i).some((x) => x.priorityLevel > a.priorityLevel)) flags.push('emergency_ahead');
     if (order.notArrived.some((x) => countedTime(x, s) < countedTime(a, s))) flags.push('not_arrived_ahead_may_come');
     if (!ended) {
-      e.expectedStartAt = t0 + (freeTyp + sumTyp) * MIN;
-      e.lowAt = t0 + (freeLow + sumLow) * MIN;
-      e.highAt = t0 + (freeHigh + sumHigh) * MIN;
+      const callAt = t0 + (freeTyp + sumTyp) * MIN;
+      const arr = s.expectArrivals ? expectedArrivalsAhead(a, order.notArrived, durations, s, now, callAt) : { min: 0, variance: 0 };
+      e.expectedStartAt = t0 + (freeTyp + sumTyp + arr.min) * MIN;
+      if (s.rangeMethod === 'normal_sum') {
+        const half = z * Math.sqrt(freeVar + sumVar + arr.variance);
+        e.lowAt = Math.max(now, e.expectedStartAt - half * MIN);
+        e.highAt = e.expectedStartAt + half * MIN;
+      } else {
+        e.lowAt = t0 + (freeLow + sumLow) * MIN;
+        e.highAt = t0 + (freeHigh + sumHigh + arr.min) * MIN;
+      }
       e.waitMinLow = round5(minutesBetween(now, e.lowAt));
       e.waitMinHigh = Math.max(e.waitMinLow, round5(minutesBetween(now, e.highAt)));
       e.deltaMin = minutesBetween(a.bookedAt, e.expectedStartAt);
       e.label = statusLabel(e.deltaMin, s);
       e.confidence = confidence(durations[a.visitType].samples, i, s);
     }
-    const d = durations[a.visitType];
-    sumTyp += d.typical; sumLow += d.short; sumHigh += d.long;
+    const d = durationOf(a, durations, s);
+    sumTyp += perVisitMin(d, s); sumLow += d.short; sumHigh += d.long; sumVar += d.sd * d.sd;
     finish(e, flags);
   });
 
@@ -153,7 +223,7 @@ export function computeEstimates(input: EngineInput): QueueResult {
       const probe: QueueAppointment = { ...a, status: 'checked_in', checkedInAt: Math.max(now, a.bookedAt) };
       const ahead = order.line.filter((x) => compareLine(x, probe, s) < 0);
       e.patientsAhead = ahead.length;
-      const typ = ahead.reduce((m, x) => m + durations[x.visitType].typical, 0);
+      const typ = ahead.reduce((m, x) => m + perVisitMin(durationOf(x, durations, s), s), 0);
       e.expectedStartAt = Math.max(t0 + (freeTyp + typ) * MIN, a.bookedAt);
       e.deltaMin = minutesBetween(a.bookedAt, e.expectedStartAt);
       e.confidence = 'low';

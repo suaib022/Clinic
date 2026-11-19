@@ -1,0 +1,9 @@
+{
+  "name": "flowq",
+  "version": "0.1.0",
+  "description": "Patient-flow decision support for hospital queues: wait-time engine, lab routing, hospital-day simulator and OCEL/XES event-log export.",
+  "type": "module",
+  "private": true,
+  "main": "src/index.ts",
+  "license": "MIT"
+}

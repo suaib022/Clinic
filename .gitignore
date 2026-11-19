@@ -56,3 +56,8 @@ AGENTS.md
 prompt
 skills-lock.json
 artifacts/
+
+# flowq analysis
+analysis/.venv/
+analysis/**/__pycache__/
+out/

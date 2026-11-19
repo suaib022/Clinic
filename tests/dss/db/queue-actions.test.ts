@@ -166,7 +166,8 @@ describe('queue actions', () => {
   });
 
   it('Module 4 check-in and undo still work (the old undo was blocked by the status trigger)', async () => {
-    const m4 = await book(s.patients.fillers[6], s.users.doctorA, 10, new Date());
+    // A slot time no other test in this file books (an equal start time breaks the one-online-booking-per-slot rule).
+    const m4 = await book(s.patients.fillers[6], s.users.doctorA, 10, new Date(Date.now() - 45 * min));
     expect((await compA1.rpc('check_in_appointment', { p_id: m4 })).error).toBeNull();
     expect((await compA1.rpc('undo_check_in', { p_id: m4 })).error).toBeNull();
     expect((await status(m4)).status).toBe('scheduled');

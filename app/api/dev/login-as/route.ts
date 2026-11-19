@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { DSS_TEST_ACCOUNTS, devLoginEnabled, type DssTestAccount } from '@/lib/dev/testAccounts';
+import { homeFor } from '@/lib/auth/home';
 
 /**
  * DEV ONLY quick login for the DSS test accounts: /api/dev/login-as?as=compA1
@@ -16,6 +17,6 @@ export async function GET(req: NextRequest) {
   const { error } = await supabase.auth.signInWithPassword({ email: acc.email, password: process.env.DSS_TEST_PASSWORD! });
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   const next = req.nextUrl.searchParams.get('next');
-  const dest = next && next.startsWith('/') && !next.startsWith('//') ? next : `/${acc.role}/dashboard`;
+  const dest = next && next.startsWith('/') && !next.startsWith('//') ? next : homeFor(acc.role);
   return NextResponse.redirect(new URL(dest, req.url));
 }

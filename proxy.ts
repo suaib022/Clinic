@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { homeFor } from '@/lib/auth/home'
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -50,7 +51,7 @@ export async function proxy(request: NextRequest) {
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = role === 'admin' ? '/admin/dashboard' : role ? `/${role}/dashboard` : '/'
+    url.pathname = homeFor(role)
     return NextResponse.redirect(url)
   }
 
@@ -60,6 +61,7 @@ export async function proxy(request: NextRequest) {
     { prefix: '/doctor', roles: ['doctor'], loginUrl: '/doctor/login' },
     { prefix: '/compounder', roles: ['compounder'], loginUrl: '/login' },
     { prefix: '/patient', roles: ['patient'], loginUrl: '/patient/login' },
+    { prefix: '/lab', roles: ['technician'], loginUrl: '/login' },
   ];
 
   for (const route of protectedRoutes) {
@@ -71,7 +73,7 @@ export async function proxy(request: NextRequest) {
       }
       if (role && !route.roles.includes(role)) {
         const url = request.nextUrl.clone()
-        url.pathname = role === 'admin' ? '/admin/dashboard' : `/${role}/dashboard`
+        url.pathname = homeFor(role)
         return NextResponse.redirect(url)
       }
       

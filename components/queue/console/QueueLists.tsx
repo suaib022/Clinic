@@ -137,7 +137,8 @@ export function NextUp({ snap, busy, canCall, onCall, onSelectAppt }: {
                   title="Click to view visit details"
                 >
                   <div style={{ minWidth: 0 }}>
-                    <div className="fw-bold">#{a.serialNo} <span className="fw-normal text-truncate">{a.patientName}</span></div>
+                    <div className="fw-bold">#{a.serialNo} <span className="fw-normal text-truncate">{a.patientName}</span>
+                      {a.visitReason === 'report_review' && <span className="badge bg-info text-dark ms-1">Report review</span>}</div>
                     <div className="small">
                       {arrived ? <span className="text-success"><i className="bi bi-check-circle-fill me-1" />Arrived</span>
                         : <span className="text-muted"><i className="bi bi-clock me-1" />Not arrived</span>}
@@ -205,7 +206,8 @@ export function WaitingList({ snap, busy, onRow, onSelectAppt, readOnly = false 
                 <div className="fw-bold fs-5" style={{ width: 56 }}>#{a.serialNo}</div>
                 <div className="flex-grow-1" style={{ minWidth: 160 }}>
                   <div className="fw-semibold">{a.patientName}
-                    {a.visitSource === 'walk_in' && <span className="badge bg-light text-dark border ms-2">Walk-in</span>}
+                    {a.visitReason === 'report_review' ? <span className="badge bg-info text-dark ms-2">Report review</span>
+                      : a.visitSource === 'walk_in' && <span className="badge bg-light text-dark border ms-2">Walk-in</span>}
                     {a.priorityLevel > 0 && <span className={`badge ms-2 ${a.priorityLevel === 2 ? 'bg-danger' : 'bg-warning text-dark'}`}>{PRIORITY_TEXT[a.priorityLevel]}</span>}
                   </div>
                   <div className="small text-muted">

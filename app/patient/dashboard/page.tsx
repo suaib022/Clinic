@@ -5,6 +5,8 @@ import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
 import { todayDhaka } from '@/lib/format';
 import PatientLiveQueueCard from '@/components/queue/PatientLiveQueueCard';
+import PatientLabCard from '@/components/lab/PatientLabCard';
+import { getMyLab } from '@/lib/lab/myLab';
 
 export default async function PatientDashboard() {
     const { user } = await requireRole(['patient']);
@@ -27,6 +29,8 @@ export default async function PatientDashboard() {
     let todayAppts: { id: string }[] = [];
     let unreviewedVisit: any = null;
     let recentDoctorCancellation: any = null;
+    // Lab places and reports today; never blocks the dashboard (empty until the lab module is installed).
+    const myLab = await getMyLab(supabase, user.id).catch(() => ({ places: [], reports: [] }));
 
     if (patientIds.length > 0) {
         const { count } = await supabase
@@ -152,6 +156,9 @@ export default async function PatientDashboard() {
                                 {todayAppts.map((a) => <PatientLiveQueueCard key={a.id} appointmentId={a.id} userId={user.id} />)}
                             </div>
                         )}
+
+                        {/* Today's lab places and reports (also for patients who came only for tests) */}
+                        <PatientLabCard initial={myLab} />
                         
                         <div className="row g-4 mb-4">
                             <div className="col-md-6 col-lg-4">

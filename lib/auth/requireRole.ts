@@ -23,6 +23,7 @@ export async function requireRole(allowedRoles: string[]) {
         if (role === 'doctor') redirect('/doctor/dashboard');
         if (role === 'compounder') redirect('/compounder/dashboard');
         if (role === 'patient') redirect('/patient/dashboard');
+        if (role === 'technician') redirect('/lab/dashboard');
         redirect('/login');
     }
 

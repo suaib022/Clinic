@@ -1,0 +1,158 @@
+{
+  "day": {
+    "date": "2026-11-17"
+  },
+  "doctors": [
+    {
+      "id": "dr-a",
+      "sessionStart": "18:00",
+      "sessionEnd": "21:00",
+      "slotMin": 10,
+      "bookedCount": 16,
+      "startLateMeanMin": 5,
+      "startLateSdMin": 5,
+      "pause": {
+        "at": "19:20",
+        "min": 10
+      }
+    },
+    {
+      "id": "dr-b",
+      "sessionStart": "18:00",
+      "sessionEnd": "21:00",
+      "slotMin": 10,
+      "bookedCount": 16,
+      "startLateMeanMin": 5,
+      "startLateSdMin": 5
+    },
+    {
+      "id": "dr-c",
+      "sessionStart": "18:00",
+      "sessionEnd": "21:00",
+      "slotMin": 10,
+      "bookedCount": 16,
+      "startLateMeanMin": 5,
+      "startLateSdMin": 5
+    }
+  ],
+  "visits": {
+    "newMedianMin": 8.2,
+    "followUpMedianMin": 8.2,
+    "cv": 0.49,
+    "followUpShare": 0.3
+  },
+  "patients": {
+    "latenessMeanMin": -10,
+    "latenessSdMin": 10,
+    "noShowP": 0.23,
+    "walkInPerHour": 2,
+    "emergencyShareOfWalkIns": 0.05
+  },
+  "lab": {
+    "orderP": 0.35,
+    "testsPerOrder": [
+      1,
+      3
+    ],
+    "nowP": 0.8,
+    "outsidePerHour": 6,
+    "open": "08:00",
+    "close": "22:00",
+    "lines": [
+      {
+        "id": "blood",
+        "name": "Blood",
+        "typicalMin": 3.3,
+        "cv": 0.2,
+        "mustFirst": true,
+        "turnaroundMin": 150,
+        "turnaroundCv": 0.5,
+        "share": 0.45
+      },
+      {
+        "id": "urine",
+        "name": "Urine / stool",
+        "typicalMin": 2,
+        "cv": 0.3,
+        "mustFirst": false,
+        "turnaroundMin": 60,
+        "turnaroundCv": 0.5,
+        "share": 0.25
+      },
+      {
+        "id": "ecg",
+        "name": "ECG",
+        "typicalMin": 6,
+        "cv": 0.3,
+        "mustFirst": false,
+        "turnaroundMin": 0,
+        "turnaroundCv": 0,
+        "share": 0.15
+      },
+      {
+        "id": "xray",
+        "name": "X-ray",
+        "typicalMin": 4,
+        "cv": 0.3,
+        "mustFirst": false,
+        "turnaroundMin": 60,
+        "turnaroundCv": 0.5,
+        "share": 0.15
+      }
+    ]
+  },
+  "returns": {
+    "sameDayWillingP": 0.7,
+    "travelBufferMin": 10
+  },
+  "staff": {
+    "awayWhenCalledP": 0.05,
+    "awayMedianMin": 8,
+    "awayCv": 0.5,
+    "comesBackP": 0.9,
+    "skipLateP": 0.7,
+    "priorityP": 0.03,
+    "undoCallP": 0.02
+  },
+  "sources": {
+    "doctors.sessionStart": "[assumption] Evening private chamber 18:00-21:00; see sensitivity sweep.",
+    "doctors.slotMin": "[assumption] Clinic DSS default slot length (dss_settings.default_slot_min = 10).",
+    "doctors.bookedCount": "[assumption] Fully booked 3-hour session at 10-minute slots (= 18 slots, 16 booked).",
+    "doctors.startLateMeanMin": "[assumption] No published data for Bangladesh chambers; sensitivity sweep.",
+    "doctors.pause": "[assumption] One 10-minute break (prayer/tea) per evening session.",
+    "visits.newMedianMin": "[derived] Das et al. 2021, Healthcare 9(9):1164, doi:10.3390/healthcare9091164: mean 9.10 min, SD 4.44 (n=763, six district/upazila hospitals, Bangladesh). Log-normal median = mean / sqrt(1+CV^2) = 8.2.",
+    "visits.cv": "[derived] Das et al. 2021: SD/mean = 4.44/9.10 = 0.49.",
+    "visits.followUpMedianMin": "[assumption] Das et al. 2021 report follow-up visits are longer (beta=0.13) without a size; same as new visits here.",
+    "visits.followUpShare": "[assumption] Sensitivity sweep.",
+    "patients.latenessMeanMin": "[derived] Cerruti et al. 2023, BMC Health Serv Res 23:1385, doi:10.1186/s12913-023-10379-w: 84.4% check in early, mostly within 15 min of the slot (n=410,808 visits, Milan). Normal with P(early)=0.844 and most mass in +-15 min gives mean -10, SD 10.",
+    "patients.latenessSdMin": "[derived] Cerruti et al. 2023 (see latenessMeanMin).",
+    "patients.noShowP": "[cited] Dantas et al. 2018, Health Policy 122(4):412-421, doi:10.1016/j.healthpol.2018.02.002: average no-show rate about 23% (range by continent 13.2%-43.0%). Sensitivity 10%-35%.",
+    "patients.walkInPerHour": "[assumption] No Bangladesh data; reported walk-in shares range from <=20% (Malaysia) to 72% (Taiwan). Sensitivity sweep.",
+    "patients.emergencyShareOfWalkIns": "[assumption] Sensitivity sweep.",
+    "lab.lines.blood.typicalMin": "[cited] Toomukuntla et al. 2023, Cureus 15(8):e43323, doi:10.7759/cureus.43323: registration 1.1 min + phlebotomy 2.2 min (n=1,200, India).",
+    "lab.lines.blood.cv": "[derived] Toomukuntla et al. 2023 report '2SD' 0.75 (registration) and 0.81 (draw); combined SD about 0.55 / 3.3 = 0.17, rounded up to 0.2.",
+    "lab.lines.blood.turnaroundMin": "[derived] Lockhat et al. 2021 (Afr J Lab Med 10(1):1318, doi:10.4102/ajlm.v10i1.1318): outpatient FBC collection-to-registration median 96 min + intra-lab median 55 min = about 150 min. Bangladesh aggregators list 2-24 h.",
+    "lab.lines.blood.turnaroundCv": "[derived] Same source: IQRs 73-133 and 40-81 min give a log-normal spread of about 0.5.",
+    "lab.lines.blood.mustFirst": "[assumption] Fasting blood tests are drawn before other tests.",
+    "lab.lines.urine.typicalMin": "[assumption] Sample hand-over only.",
+    "lab.lines.ecg.typicalMin": "[assumption] 12-lead resting ECG incl. preparation; no time-motion study found.",
+    "lab.lines.ecg.turnaroundMin": "[assumption] ECG printout is available at once.",
+    "lab.lines.xray.typicalMin": "[assumption] Two-view chest radiograph takes a few minutes of technologist time (Reiner et al. 2005, Radiology 236(2):413-419, doi:10.1148/radiol.2362040671); exact figure not verified.",
+    "lab.lines.urine.turnaroundMin": "[assumption] Sensitivity sweep.",
+    "lab.lines.xray.turnaroundMin": "[assumption] Sensitivity sweep.",
+    "lab.lines.share": "[assumption] Sensitivity sweep.",
+    "lab.orderP": "[assumption] Share of consultations that order tests; sensitivity sweep.",
+    "lab.testsPerOrder": "[assumption] Sensitivity sweep.",
+    "lab.nowP": "[assumption] Share of patients who go to the lab right after the consultation.",
+    "lab.outsidePerHour": "[assumption] Patients coming only for tests; sensitivity sweep.",
+    "lab.open": "[assumption] Hospital lab hours.",
+    "returns.sameDayWillingP": "[assumption] Sensitivity sweep.",
+    "returns.travelBufferMin": "[assumption] Walk back from the lab to the chamber.",
+    "staff.awayWhenCalledP": "[assumption] Share of called patients who are not at the door; no published value; sensitivity sweep.",
+    "staff.awayMedianMin": "[assumption] Minutes until a skipped patient is back (log-normal, CV awayCv).",
+    "staff.comesBackP": "[assumption] Share of skipped patients who come back.",
+    "staff.skipLateP": "[assumption] How often staff follow the app suggestion to skip a late booked patient.",
+    "staff.priorityP": "[assumption] Share of patients staff mark as priority (elderly, very ill).",
+    "staff.undoCallP": "[assumption] Mis-taps on Call next that are undone."
+  }
+}
