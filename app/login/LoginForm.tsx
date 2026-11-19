@@ -16,8 +16,10 @@ const DEFAULT_CREDENTIALS: Record<Role, { identifier: string; pin: string }> = {
     identifier: "doc-532373@staff.clinic.local",
     pin: "123456"
   },
-  // Lab staff: no demo credentials, ever.
-  technician: { identifier: "", pin: "" },
+  technician: {
+    identifier: "lab_1@staff.clinic.local",
+    pin: "123456"
+  },
   admin: {
     identifier: "admin@gmail.com",
     pin: "123456"
@@ -42,7 +44,7 @@ export default function LoginForm({ error: initialError, message }: { error?: st
     patient: quick ? { ...DEFAULT_CREDENTIALS.patient } : { ...blank },
     doctor: quick ? { ...DEFAULT_CREDENTIALS.doctor } : { ...blank },
     compounder: quick ? { ...DEFAULT_CREDENTIALS.compounder } : { ...blank },
-    technician: { ...blank },
+    technician: quick ? { ...DEFAULT_CREDENTIALS.technician } : { ...blank },
     admin: quick ? { ...DEFAULT_CREDENTIALS.admin } : { ...blank }
   });
 

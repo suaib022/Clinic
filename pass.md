@@ -1,6 +1,7 @@
 compounder : compounder_DOC-532373@staff.clinic.local
 doctor : doc-532373@staff.clinic.local
 admin : admin@gmail.com
+lab : lab_1@staff.clinic.local
 patient : UHID61569802
 
 ---

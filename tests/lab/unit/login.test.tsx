@@ -27,11 +27,11 @@ describe('homeFor', () => {
 });
 
 describe('login page: Lab tab', () => {
-  it('shows a Lab tab with empty fields (no demo credentials)', () => {
+  it('shows a Lab tab with default demo credentials autofilled', () => {
     render(<LoginForm />);
     fireEvent.click(screen.getByRole('button', { name: 'Lab' }));
-    expect((screen.getByPlaceholderText('Lab Staff Email Address') as HTMLInputElement).value).toBe('');
-    expect((screen.getByPlaceholderText('Password') as HTMLInputElement).value).toBe('');
+    expect((screen.getByPlaceholderText('Lab Staff Email Address') as HTMLInputElement).value).toBe('lab_1@staff.clinic.local');
+    expect((screen.getByPlaceholderText('Password') as HTMLInputElement).value).toBe('123456');
     expect(screen.getByRole('button', { name: 'Login as Lab Staff' })).toBeTruthy();
   });
 
