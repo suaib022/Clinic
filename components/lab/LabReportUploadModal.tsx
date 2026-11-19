@@ -131,7 +131,10 @@ export default function LabReportUploadModal({ report, onClose, onSuccess, onDir
     }
   };
 
-  const formatFlagBadge = (flag: AnalyteResult['flag']) => {
+  const formatFlagBadge = (flag: AnalyteResult['flag'] | null | undefined, testName?: string | null) => {
+    if (!flag || testName?.toLowerCase().includes('prescription')) {
+      return <span className="badge bg-light text-muted border px-2 py-1">Recorded</span>;
+    }
     switch (flag) {
       case 'high':
         return <span className="badge bg-danger-subtle text-danger fw-bold px-2 py-1">▲ High</span>;
@@ -141,8 +144,9 @@ export default function LabReportUploadModal({ report, onClose, onSuccess, onDir
       case 'abnormal':
         return <span className="badge bg-danger text-white fw-bold px-2 py-1">⚠ Critical</span>;
       case 'normal':
-      default:
         return <span className="badge bg-success-subtle text-success fw-bold px-2 py-1">✓ Normal</span>;
+      default:
+        return <span className="badge bg-light text-muted border px-2 py-1">Recorded</span>;
     }
   };
 
@@ -442,8 +446,11 @@ export default function LabReportUploadModal({ report, onClose, onSuccess, onDir
                         </thead>
                         <tbody>
                           {analysis.results.map((r, idx) => (
-                            <tr key={idx} className={r.flag !== 'normal' ? 'table-warning-subtle' : ''}>
-                              <td className="fw-semibold text-dark">{r.analyte}</td>
+                            <tr key={idx} className={r.flag && r.flag !== 'normal' ? 'table-warning-subtle' : ''}>
+                              <td className="fw-semibold text-dark">
+                                {r.analyte}
+                                {r.test_name && <div className="small text-muted fw-normal">{r.test_name}</div>}
+                              </td>
                               <td className="text-center fw-bold fs-6">
                                 <span className={r.flag === 'high' || r.flag === 'critical' ? 'text-danger' : r.flag === 'low' ? 'text-warning-emphasis' : 'text-dark'}>
                                   {r.value_text}
@@ -451,7 +458,7 @@ export default function LabReportUploadModal({ report, onClose, onSuccess, onDir
                               </td>
                               <td className="small text-muted">{r.unit || '—'}</td>
                               <td className="small text-muted">{r.ref_text || (r.ref_low != null && r.ref_high != null ? `${r.ref_low} – ${r.ref_high}` : '—')}</td>
-                              <td className="text-center">{formatFlagBadge(r.flag)}</td>
+                              <td className="text-center">{formatFlagBadge(r.flag, r.test_name || analysis.test_name)}</td>
                             </tr>
                           ))}
                         </tbody>

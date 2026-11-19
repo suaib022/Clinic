@@ -32,13 +32,14 @@ export interface LabOrderContext {
 
 export interface AnalyteResult {
   analyte: string;
+  test_name?: string | null;
   value_num: number | null;
   value_text: string;
   unit: string | null;
   ref_low: number | null;
   ref_high: number | null;
   ref_text: string | null;
-  flag: 'normal' | 'high' | 'low' | 'critical' | 'abnormal';
+  flag: 'normal' | 'high' | 'low' | 'critical' | 'abnormal' | null;
   confidence?: number;
 }
 
@@ -167,34 +168,50 @@ export async function analyzeLabReportWithVision(
     const images = await toImageDataUrls(buffer, fileType);
     if (!images.length) return { ok: false, error: 'Could not render pages from document.' };
 
-    const systemPrompt = `You are a clinical diagnostics AI specialized in medical laboratory reports and hospital pathology test sheets.
-Carefully inspect this diagnostic test report (${images.length} page(s)).
-Context:
-- Expected Investigation / Test: "${ctx.test_name}"
-- Prescribing Doctor: "${ctx.doctor_name}" (${ctx.doctor_speciality})
+    const systemPrompt = `You are an expert clinical vision AI for medical diagnostics, laboratory reports, clinical investigations, and medical documents (including pathology reports, blood tests, biochemistry, imaging reports, and medical prescriptions).
+
+Carefully examine this medical document (${images.length} page(s)).
+
+Context from clinic order:
+- Expected Investigation / Order: "${ctx.test_name}"
+- Ordering / Consulting Doctor: "${ctx.doctor_name}" (${ctx.doctor_speciality})
 - Patient Name: "${ctx.patient_name}" (UHID: "${ctx.patient_uhid}")
 
-Extract every test parameter, numerical/textual reading, units, reference intervals, and status flags into pure valid JSON with this exact schema:
+Your task is to extract all medical, diagnostic, and clinical data from the document into valid JSON.
+CRITICAL EXTRACTION RULES:
+1. Extract EVERY test result, measured parameter, clinical observation, or prescribed item/medication into the "results" array:
+   - For laboratory tests: extract each analyte (e.g. "Hemoglobin", "Serum Creatinine", "WBC", "Platelets", "SGPT", "Urine Routine").
+   - For prescriptions / medication orders: extract each medicine/item (e.g. "Amphogel", "M & FT Solution", "Tr. Belladonna") as an analyte, with test_name as "Prescription", value_text as its dose/volume/frequency (e.g. "120 ml", "5ml tid a.c.", "15 ml"), unit if applicable (e.g. "ml", "mg", "tablets"), and ref_text or instructions if printed.
+   - For diagnostic imaging / radiology / ECG: extract each examined parameter or organ finding into results.
+2. NEVER return an empty results array if there are items, tests, medications, or readings on the document! Extract every item completely.
+3. Extract the document title/header (e.g., "DD FORM 1289 DOD PRESCRIPTION", "Biochemistry Report", "Lipid Profile"), document date, prescribing doctor/facility info if printed, and patient info if printed.
+4. "summary": Provide a clear, comprehensive clinical summary (2-4 sentences) explaining:
+   - Exactly what this document is (e.g., "This is a prescription for ... issued on ... for ... by ...", or "This is a laboratory report for ... showing ...").
+   - Mention every key result, medication, dosage, doctor, and patient detail visible on the document.
+5. "abnormal_findings": List any out-of-range, high, low, or noteworthy findings (empty array if none).
+
+JSON schema to return:
 {
-  "test_name": "string (the exact panel or test name printed, e.g. 'Complete Blood Count (CBC)', 'Serum Creatinine', etc.)",
-  "report_title": "string (laboratory or header title, e.g. 'Department of Biochemistry - Test Report')",
-  "report_date": "YYYY-MM-DD or string (date of report or specimen, null if unreadable)",
+  "test_name": "string (the primary test, panel, or document type, e.g. 'Serum Creatinine', 'CBC', 'Prescription', 'DOD PRESCRIPTION')",
+  "report_title": "string (the document header/facility title printed, e.g. 'DD FORM 1289 DOD PRESCRIPTION')",
+  "report_date": "YYYY-MM-DD or string (date on document, or null)",
   "results": [
     {
-      "analyte": "string (name of the parameter/measured item)",
-      "value_num": number or null,
-      "value_text": "string (the exact value as printed, e.g. '1.1', '13.5', 'Negative', 'Present')",
-      "unit": "string or null (e.g. 'mg/dL', 'g/dL', 'mmol/L', '%')",
-      "ref_low": number or null,
-      "ref_high": number or null,
-      "ref_text": "string or null (e.g. '0.6 - 1.2')",
-      "flag": "'normal' | 'high' | 'low' | 'critical' | 'abnormal'"
+      "analyte": "string (parameter name or medication name, e.g. 'Tr. Belladonna', 'Amphogel', 'Serum Creatinine')",
+      "test_name": "string (e.g. 'Prescription', 'Biochemistry', 'CBC', or null)",
+      "value_num": null,
+      "value_text": "string (exact measured value or dosage string, e.g. '15 ml', '120 ml', '5ml tid a.c.', '1.1')",
+      "unit": "string or null (e.g. 'ml', 'mg/dL', or null)",
+      "ref_low": null,
+      "ref_high": null,
+      "ref_text": "string or null (reference range or instructions)",
+      "flag": "'normal' | 'high' | 'low' | 'critical' | 'abnormal' | null"
     }
   ],
-  "summary": "string (clear 2-3 sentence clinical summary explaining what this report indicates for the patient)",
-  "abnormal_findings": ["string (list any abnormal/out-of-range results with values, or empty array if all normal)"]
+  "summary": "string (comprehensive clinical summary mentioning document type, items/medications, dates, doctor, and patient)",
+  "abnormal_findings": ["string"]
 }
-Do not hallucinate measurements. Return only valid JSON.`;
+Return only valid JSON.`;
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -209,7 +226,7 @@ Do not hallucinate measurements. Return only valid JSON.`;
             content: [
               {
                 type: 'text',
-                text: `Extract all findings, test results, doctor, and patient details from this ${ctx.test_name} report image.`,
+                text: `Extract all findings, test results, medications, doctor, and patient details from this document.`,
               },
               ...images.map((url) => ({ type: 'image_url', image_url: { url } })),
             ],
@@ -235,7 +252,7 @@ Do not hallucinate measurements. Return only valid JSON.`;
     // Normalize and assemble full clinical details
     const results: AnalyteResult[] = Array.isArray(parsed.results)
       ? parsed.results.map((r: any) => {
-          let flag: AnalyteResult['flag'] = 'normal';
+          let flag: AnalyteResult['flag'] = null;
           const rawFlag = String(r.flag || '').toLowerCase();
           if (['high', 'low', 'critical', 'abnormal', 'normal'].includes(rawFlag)) {
             flag = rawFlag as any;
@@ -247,6 +264,7 @@ Do not hallucinate measurements. Return only valid JSON.`;
 
           return {
             analyte: String(r.analyte || 'Unknown Parameter'),
+            test_name: r.test_name ? String(r.test_name) : null,
             value_num: typeof r.value_num === 'number' ? r.value_num : Number(String(r.value_text || '').replace(/,/g, '')) || null,
             value_text: String(r.value_text ?? r.value_num ?? '—'),
             unit: r.unit ? String(r.unit) : null,
@@ -262,12 +280,12 @@ Do not hallucinate measurements. Return only valid JSON.`;
       test_name: parsed.test_name || ctx.test_name,
       report_title: parsed.report_title || `${ctx.test_name} Diagnostic Report`,
       doctor_info: {
-        name: ctx.doctor_name,
+        name: parsed.doctor_name || ctx.doctor_name,
         speciality: ctx.doctor_speciality,
         email: ctx.doctor_email,
       },
       patient_info: {
-        name: ctx.patient_name,
+        name: parsed.patient_name || ctx.patient_name,
         uhid: ctx.patient_uhid,
         gender: ctx.patient_gender,
         mobile: ctx.patient_mobile,
@@ -280,7 +298,7 @@ Do not hallucinate measurements. Return only valid JSON.`;
         analyzed_at: new Date().toISOString(),
       },
       results,
-      summary: parsed.summary || 'Laboratory test results processed and verified by image vision.',
+      summary: parsed.summary || 'Clinical document processed and verified by image vision.',
       abnormal_findings: Array.isArray(parsed.abnormal_findings) ? parsed.abnormal_findings : [],
     };
 
@@ -359,12 +377,12 @@ export async function publishLabReport(
 
     const recordId = record.id;
 
-    // 3. Insert into lab_results
+    // 3. Insert into lab_results (powers Test Results & Trends in Health Profile)
     if (input.analysis.results.length > 0) {
       const rows = input.analysis.results.map((r) => ({
         record_id: recordId,
         patient_id: ctx.patient_id,
-        test_name: input.analysis.test_name || ctx.test_name,
+        test_name: r.test_name || input.analysis.test_name || ctx.test_name,
         analyte: r.analyte,
         value_num: r.value_num,
         value_text: r.value_text,
@@ -378,6 +396,27 @@ export async function publishLabReport(
 
       const { error: resultsError } = await db.from('lab_results').insert(rows);
       if (resultsError) console.error('[publishLabReport] lab_results error:', resultsError);
+
+      // Also populate rx_medications if it is a prescription or has prescribed items
+      const isPrescription =
+        input.analysis.test_name?.toLowerCase().includes('prescription') ||
+        input.analysis.report_title?.toLowerCase().includes('prescription') ||
+        input.analysis.results.some((r) => r.test_name?.toLowerCase() === 'prescription');
+
+      if (isPrescription) {
+        const medRows = input.analysis.results.map((r) => ({
+          record_id: recordId,
+          patient_id: ctx.patient_id,
+          drug_name: r.analyte,
+          dose: r.value_text,
+          frequency: r.ref_text,
+          instructions: r.ref_text,
+          prescribed_on: ctx.order_date,
+          confidence: 0.95,
+        }));
+        const { error: medError } = await db.from('rx_medications').insert(medRows);
+        if (medError) console.warn('[publishLabReport] rx_medications notice:', medError.message);
+      }
     }
 
     // 4. Insert into report_insights
