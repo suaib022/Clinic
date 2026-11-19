@@ -5,6 +5,9 @@ import { requireRole } from '@/lib/auth/requireRole';
 import { todayDhaka } from '@/lib/format';
 import BookingsClient from './BookingsClient';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function BookingsPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
     const { user } = await requireRole(['compounder']);
     const supabase = await createClient();
