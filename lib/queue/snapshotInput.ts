@@ -18,7 +18,7 @@ export interface RawSnapshot {
   appointments: {
     id: string; serial_no: number; status: ApptStatus; booked_at: string; slot_minutes: number | null;
     checked_in_at: Ts; called_at: Ts; consult_started_at: Ts; consult_ended_at: Ts; priority_level: number;
-    visit_type: VisitType | null; visit_source: 'online' | 'walk_in' | null; skipped_at: Ts; rejoined_at: Ts;
+    visit_type: VisitType | null; visit_source: 'online' | 'walk_in' | null; visit_reason?: 'consult' | 'report_review' | null; skipped_at: Ts; rejoined_at: Ts;
     no_show_marked_at: Ts; patient_name?: string | null; patient_uhid?: string | null; patient_mobile?: string | null;
   }[];
   history: { new: number[] | null; follow_up: number[] | null };
@@ -53,6 +53,16 @@ export function settingsFromRow(row: RawSnapshot['settings']): DssSettings {
     defaultSlotMin: n('default_slot_min', DEFAULT_SETTINGS.defaultSlotMin),
     durationClampMin: n('duration_clamp_min', DEFAULT_SETTINGS.durationClampMin),
     durationClampMax: n('duration_clamp_max', DEFAULT_SETTINGS.durationClampMax),
+    reportReviewMin: n('report_review_min', DEFAULT_SETTINGS.reportReviewMin),
+    historyWindow: n('history_window', DEFAULT_SETTINGS.historyWindow),
+    sumWith: row.sum_with === 'mean' ? 'mean' : 'median',
+    expectArrivals: row.expect_arrivals === 'true' || row.expect_arrivals === 1,
+    showP: n('show_p', DEFAULT_SETTINGS.showP),
+    walkInPerHour: n('walk_in_per_hour', DEFAULT_SETTINGS.walkInPerHour),
+    latenessMeanMin: n('lateness_mean_min', DEFAULT_SETTINGS.latenessMeanMin),
+    latenessSdMin: n('lateness_sd_min', DEFAULT_SETTINGS.latenessSdMin),
+    rangeMethod: row.range_method === 'normal_sum' ? 'normal_sum' : 'quartile_sum',
+    rangeCoverage: n('range_coverage', DEFAULT_SETTINGS.rangeCoverage),
   };
 }
 
@@ -89,6 +99,7 @@ export function toEngineInput(raw: RawSnapshot, now = Date.parse(raw.server_now)
     priorityLevel: Math.min(2, Math.max(0, a.priority_level ?? 0)) as PriorityLevel,
     visitType: a.visit_type === 'follow_up' ? 'follow_up' : 'new',
     visitSource: a.visit_source === 'walk_in' ? 'walk_in' : 'online',
+    visitReason: a.visit_reason === 'report_review' ? 'report_review' : 'consult',
     skippedAt: ms(a.skipped_at),
     rejoinedAt: ms(a.rejoined_at),
     patientName: a.patient_name ?? null,

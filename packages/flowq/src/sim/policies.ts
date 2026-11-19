@@ -1,0 +1,48 @@
+import { suggestRoute, suggestRouteLookahead } from '../lab/routing';
+import type { Rng } from './rng';
+
+/**
+ * What each patient is told: the engine, or a simpler baseline.
+ * booked: the booked slot time (doctor only; meaningless in a walk-in lab line).
+ * position_slot: people ahead (+1 if someone is being served) x configured time (doctor slot / lab typical).
+ * running_mean: same count x mean of today's finished visits (falls back to the configured time).
+ * history_mean: same count x mean of the same history the engine sees, per person's visit type. Same information
+ *   as the engine with a simpler rule, so a difference comes from the method, not from more data.
+ */
+export type EtaPolicy = 'engine' | 'booked' | 'position_slot' | 'running_mean' | 'history_mean';
+export const ETA_POLICIES: readonly EtaPolicy[] = ['engine', 'booked', 'position_slot', 'running_mean', 'history_mean'];
+
+/**
+ * Same-day report review. advice: return only when the app's return advice says there is time (and the patient agrees).
+ * always: return whenever the ordering doctor's session is not over. never: always book a later visit.
+ */
+export type ReturnPolicy = 'advice' | 'always' | 'never';
+export const RETURN_POLICIES: readonly ReturnPolicy[] = ['advice', 'always', 'never'];
+
+/** How a patient with tests in several lab lines picks the next line. */
+export type RoutePolicy = 'engine' | 'lookahead' | 'fixed' | 'random' | 'shortest_line';
+export const ROUTE_POLICIES: readonly RoutePolicy[] = ['engine', 'lookahead', 'fixed', 'random', 'shortest_line'];
+
+/**
+ * engine: suggestRoute on expected waits. lookahead: suggestRouteLookahead (projects each line's wait forward). fixed: must-go-first, then the hospital's line order.
+ * random: any remaining line. shortest_line: fewest people standing in line (what a patient sees).
+ */
+export function chooseNextLine(
+  policy: RoutePolicy, pending: { lineId: string; mustFirst: boolean }[], waits: Record<string, number>,
+  queuedNow: Record<string, number>, lineOrder: readonly string[], rng: Rng,
+  ahead?: { serviceMin: Record<string, number>; driftPerMin: Record<string, number> },
+): string {
+  const ids = [...new Set(pending.map((x) => x.lineId))].sort((a, b) => lineOrder.indexOf(a) - lineOrder.indexOf(b));
+  const first = new Set(pending.filter((x) => x.mustFirst).map((x) => x.lineId));
+  switch (policy) {
+    case 'engine': return suggestRoute(pending, waits)[0];
+    case 'lookahead':
+      return suggestRouteLookahead(pending.map((x) => ({
+        lineId: x.lineId, mustFirst: x.mustFirst, waitMin: waits[x.lineId] ?? Infinity,
+        serviceMin: ahead?.serviceMin[x.lineId] ?? 0, driftPerMin: ahead?.driftPerMin[x.lineId] ?? 0,
+      })))[0];
+    case 'fixed': return [...ids].sort((a, b) => Number(first.has(b)) - Number(first.has(a)))[0];
+    case 'random': return rng.pick(ids);
+    case 'shortest_line': return [...ids].sort((a, b) => (queuedNow[a] ?? 0) - (queuedNow[b] ?? 0))[0];
+  }
+}

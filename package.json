@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:dss": "vitest run tests/dss",
     "dss:seed": "tsx scripts/dss/seed-dev.ts",
-    "dss:simulate": "tsx scripts/dss-simulate.ts"
+    "dss:simulate": "tsx scripts/dss-simulate.ts",
+    "flowq:bench": "tsx packages/flowq/cli/bench.ts",
+    "flowq:sweep": "tsx packages/flowq/cli/sweep.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

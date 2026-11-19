@@ -62,7 +62,8 @@ export async function POST(request: Request) {
         .eq('id', authData.user.id)
         .single();
 
-    if (!userRecord || !['admin', 'doctor', 'compounder'].includes(userRecord.role)) {
+    // Staff roles that may sign in here. 'technician' is the lab staff role (they work under /lab).
+    if (!userRecord || !['admin', 'doctor', 'compounder', 'technician'].includes(userRecord.role)) {
         await supabase.auth.signOut();
         return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }

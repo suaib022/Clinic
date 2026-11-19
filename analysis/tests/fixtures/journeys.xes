@@ -1,0 +1,3498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log xes.version="1849-2016" xes.features="nested-attributes" xmlns="http://www.xes-standard.org/">
+  <extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+  <extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+  <extension name="Organizational" prefix="org" uri="http://www.xes-standard.org/org.xesext"/>
+  <extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
+  <trace>
+    <string key="concept:name" value="p1"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:00.270Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:00:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:00:00.000Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:31.451Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p23"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T11:48:49.916Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:55.245Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:55.245Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:05:39.918Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T12:05:39.918Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:05:39.918Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T12:05:39.918Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:09:49.994Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:29:43.052Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="return_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:39:43.052Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:55.248Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="undo"/>
+      <date key="time:timestamp" value="2026-11-17T12:41:15.248Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T12:48:21.140Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T15:29:30.253Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p45"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T11:45:26.953Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:08:58.359Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:08:58.359Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:21:40.453Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p2"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:03:46.163Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:31.451Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:31.451Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:08:08.777Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T12:08:08.777Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p24"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T12:20:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p46"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T12:20:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p3"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:12:55.726Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:51.678Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:51.678Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:26:10.179Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p25"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:12.542Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:05:39.918Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:05:39.918Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:15.670Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:15.670Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:15.670Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:15.670Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:18:31.856Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:18:31.856Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T12:18:31.856Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:19:42.958Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:19:42.958Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T12:19:42.958Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:23:50.821Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:35:07.914Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:56.989Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:46:10.587Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="return_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:56:10.587Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:10:37.133Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p47"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T12:30:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T12:50:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p4"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:12:00.342Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:26:10.179Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:26:10.179Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:34:09.656Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p26"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T13:00:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p48"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:23:11.582Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T12:23:11.582Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:23:11.582Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:23:11.582Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:36:02.945Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p5"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:40:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:49:04.510Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T12:49:04.510Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:49:59.960Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:49:59.960Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:54:54.403Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T12:54:54.403Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:54:54.403Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:00:37.771Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:04:34.271Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:04:34.271Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:04:34.271Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:06:31.785Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:25:06.085Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:27:39.646Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="return_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:39.646Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:27:08.702Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:27:08.702Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:35:01.884Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p27"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:40:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T13:10:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p49"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:40:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:32:58.922Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:23.574Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:40:23.574Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:46:09.328Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p6"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:50:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:45:30.787Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:54:54.403Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:54:54.403Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:01.189Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p28"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:50:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:50:31.852Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:50:31.852Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:50:31.852Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:12:57.851Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:24:02.600Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="return_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:02.600Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:54:47.015Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:54:47.015Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:59.750Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p50"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T06:50:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T13:00:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T13:20:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p7"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:05:08.609Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:16:38.301Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:16:38.301Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:24:17.562Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T13:24:17.562Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:24:17.562Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:30:23.010Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:14.264Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:14.264Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:14.264Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:35:30.465Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:49:56.514Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:55:38.838Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p29"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:34.310Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:14.207Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:14.207Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:45:09.783Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T13:45:09.783Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:45:09.783Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:45:09.783Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:47:55.907Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T14:03:47.677Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="return_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:13:47.677Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:48:50.158Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:48:50.158Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:54:07.921Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p51"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:46:46.259Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:46:46.259Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:46:46.259Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:50:01.870Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p8"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:03:14.021Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T13:03:14.021Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:01.189Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:01.189Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:16:38.301Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p30"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:02.558Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:45:09.783Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:45:09.783Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:50:17.325Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T13:50:17.325Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:50:17.325Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:50:17.325Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:58:29.667Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:58:29.667Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="return_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:08:29.667Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:24:16.223Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:24:16.223Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:28:50.333Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p52"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T13:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p9"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:19:29.292Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:51:55.131Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:51:55.131Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:11:16.199Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p31"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:52.192Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T13:09:52.192Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:10:37.133Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:10:37.133Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:23:17.411Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p53"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:12:27.391Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T13:12:27.391Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="rejoin"/>
+      <date key="time:timestamp" value="2026-11-17T13:23:58.114Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:23:58.114Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:23:58.114Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:33:07.731Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T13:33:07.731Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:33:07.731Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:14.264Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:31.323Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:31.323Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:40:46.653Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:46:01.115Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:46:01.115Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T14:43:19.218Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p10"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:27:07.006Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:11:16.199Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:11:16.199Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:21:39.527Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T14:21:39.527Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p32"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:05:25.440Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T13:05:25.440Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:27.405Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="rejoin"/>
+      <date key="time:timestamp" value="2026-11-17T13:14:19.936Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:23:17.411Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:23:17.411Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:14.207Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p54"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T13:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T14:00:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p11"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:40:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:33:25.016Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T13:33:25.016Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:17.562Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:17.562Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:51:55.131Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T13:51:55.131Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T13:51:55.131Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T13:51:55.131Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T13:54:38.604Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T14:11:36.108Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p33"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:40:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:34:22.787Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:59.750Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="rejoin"/>
+      <date key="time:timestamp" value="2026-11-17T14:08:41.930Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:28:50.333Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:28:50.333Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:17.623Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:17.623Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:17.623Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:17.623Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:43:16.438Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:43:16.438Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:43:16.438Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:44:32.355Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:44:32.355Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:44:32.355Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:46:05.657Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T15:05:04.715Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T15:13:40.472Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T15:17:43.519Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p55"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:40:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T14:10:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p12"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:50:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:37:16.125Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T15:03:20.248Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T15:03:20.248Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T15:14:14.096Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T15:14:14.096Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T15:14:14.096Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T15:14:14.096Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T15:16:25.847Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T15:16:25.847Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T15:16:25.847Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T15:18:16.545Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T15:29:33.812Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T15:41:00.994Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p34"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:50:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:52:56.564Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:59.750Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:59.750Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:10:16.533Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p56"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T07:50:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T14:00:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T14:20:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p13"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T14:00:18.244Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T15:20:15.899Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T15:20:15.899Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T15:34:19.070Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p35"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:38:00.751Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:14:47.390Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:14:47.390Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:24:16.223Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T14:24:16.223Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:24:16.223Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:24:16.223Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:26:10.889Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:26:10.889Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:26:10.889Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:30:43.566Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T14:32:59.407Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T14:42:06.763Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p57"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:00:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:41:55.378Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:41:55.378Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:41:55.378Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:28.365Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p14"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T14:20:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p36"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T14:16:22.667Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:17.623Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:17.623Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:48:50.158Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p58"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:10:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T14:20:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="no_show"/>
+      <date key="time:timestamp" value="2026-11-17T14:40:00.000Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p15"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T14:01:09.419Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T15:19:55.899Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="undo"/>
+      <date key="time:timestamp" value="2026-11-17T15:20:15.899Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T15:34:19.070Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="rejoin"/>
+      <date key="time:timestamp" value="2026-11-17T15:40:47.808Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T15:47:53.533Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T15:47:53.533Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T15:58:31.356Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T15:58:31.356Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p37"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:53:32.130Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:54:27.921Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:54:27.921Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T15:04:39.528Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p59"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:20:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T13:57:09.902Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:28.365Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T13:59:28.365Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:10:39.775Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p16"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T14:16:58.425Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T15:34:19.070Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T15:34:19.070Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T15:47:53.533Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p38"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T14:25:40.954Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T15:14:21.526Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T15:14:21.526Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T15:29:30.253Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T15:29:30.253Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-b"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T15:29:30.253Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T15:29:30.253Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T15:31:55.648Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T15:31:55.648Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T15:31:55.648Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T15:36:38.121Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T16:02:28.099Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T16:08:59.838Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p60"/>
+    <event>
+      <string key="concept:name" value="book"/>
+      <date key="time:timestamp" value="2026-11-17T08:30:00.000Z"/>
+      <string key="org:resource" value="patient"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="check_in"/>
+      <date key="time:timestamp" value="2026-11-17T14:18:54.280Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T14:18:54.280Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T14:18:54.280Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T14:32:10.725Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T14:32:10.725Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-c"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:32:10.725Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:32:10.725Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:35:37.550Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T14:35:37.550Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T14:35:37.550Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T14:35:37.550Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T14:36:52.121Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T15:02:09.633Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p65"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:03:12.746Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:03:12.746Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:03:12.746Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:05:49.848Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:05:49.848Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:05:49.848Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:11:12.499Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:11:12.499Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:43:39.686Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p66"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:22:08.521Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:22:08.521Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:22:08.521Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:27:18.773Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:27:18.773Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:27:18.773Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:32:42.438Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:32:42.438Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:38:37.927Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p67"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:25:11.102Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:25:11.102Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:27:18.773Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:30:39.577Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:30:39.577Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:30:39.577Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:47.688Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:47.688Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:47.688Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:41:18.901Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:41:18.901Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:56:46.012Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:07:36.077Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p68"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:25:14.714Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:25:14.714Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:30:39.577Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:29.309Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:29.309Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:29.309Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:35:22.144Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:50:26.985Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:32:04.873Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p69"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:25:34.664Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:25:34.664Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:33:29.309Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:37:00.378Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:42.389Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p70"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:31:50.201Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:31:50.201Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:37:00.378Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:40:06.670Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:40:06.670Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:40:06.670Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:42:28.413Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:42:28.413Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:42:28.413Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:24.583Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:24.583Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:58:14.666Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:33.181Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p71"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:35:42.778Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:35:42.778Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:40:06.670Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:42:35.249Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:12:53.722Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p72"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:37:46.747Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:37:46.747Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:42:35.249Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:10.431Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:10.431Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:10.431Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:47:45.203Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:00:29.237Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:11:02.334Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p73"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:43:42.981Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:43:42.981Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:43:42.981Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:01.444Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:01.444Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:46:24.583Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T11:57:39.988Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T11:57:39.988Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="ecg"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:21:23.555Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="urine"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p74"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T11:57:38.515Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T11:57:38.515Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T11:57:38.515Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:32.116Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:32.116Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:32.116Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:40.736Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:17.355Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T13:08:53.962Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="xray"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p17"/>
+    <event>
+      <string key="concept:name" value="walk_in"/>
+      <date key="time:timestamp" value="2026-11-17T12:00:40.881Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="priority_set"/>
+      <date key="time:timestamp" value="2026-11-17T12:00:40.881Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="skip"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:31.451Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="rejoin"/>
+      <date key="time:timestamp" value="2026-11-17T12:09:51.344Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="call"/>
+      <date key="time:timestamp" value="2026-11-17T12:09:51.344Z"/>
+      <string key="org:resource" value="compounder"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_start"/>
+      <date key="time:timestamp" value="2026-11-17T12:09:51.344Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="consult_end"/>
+      <date key="time:timestamp" value="2026-11-17T12:14:51.678Z"/>
+      <string key="org:resource" value="doctor"/>
+      <string key="server" value="dr-a"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="p75"/>
+    <event>
+      <string key="concept:name" value="lab_order"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:06.395Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value=""/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_queue"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:06.395Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="lab_call"/>
+      <date key="time:timestamp" value="2026-11-17T12:01:32.116Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="sample_collected"/>
+      <date key="time:timestamp" value="2026-11-17T12:04:05.752Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+    <event>
+      <string key="concept:name" value="report_ready"/>
+      <date key="time:timestamp" value="2026-11-17T12:17:49.497Z"/>
+      <string key="org:resource" value="lab_staff"/>
+      <string key="server" value="blood"/>
+      <string key="lifecycle:transition" value="complete"/>
+    </event>
+  </trace>
+</log>

@@ -10,6 +10,14 @@ import { at, appt, arrived, activeSession, input } from '../engine/fixtures';
 
 const queueAction = vi.fn();
 vi.mock('@/lib/queue/actions', () => ({ queueAction: (...a: unknown[]) => queueAction(...a) }));
+const labAction = vi.fn();
+vi.mock('@/lib/lab/actions', () => ({
+  labAction: (...a: unknown[]) => labAction(...a),
+  listTestTypes: vi.fn(async () => [
+    { id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', code: 'cbc', name: 'Complete blood count (CBC)', line_id: 'L1', must_first: false, turnaround_min: 150 },
+    { id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', code: 'fbs', name: 'Fasting blood sugar', line_id: 'L1', must_first: true, turnaround_min: 60 },
+  ]),
+}));
 vi.mock('@/app/compounder/actions', () => ({ lookupPatient: vi.fn(async () => ({ success: true, patients: [] })) }));
 vi.mock('@/lib/realtime', () => ({ subscribeLive: (_s: unknown, _n: unknown, _t: unknown, _c: unknown, o: { onStatus?: (b: boolean) => void }) => { o.onStatus?.(true); return () => {}; } }));
 vi.mock('@/lib/supabase/client', () => ({ createClient: () => ({}) }));
@@ -24,7 +32,7 @@ function snapshot(appts: QueueAppointment[], session: SessionInfo = activeSessio
   return {
     doctor: { id: DOC, name: 'Dr. Test', speciality: null }, date: '2026-11-10', serverNow: now,
     session: { ...result.session, startedAt: session.startedAt ?? null, scheduledStartAt: session.scheduledStartAt ?? null, scheduledEndAt: session.scheduledEndAt ?? null, delayReason: null },
-    result, suggestions, appointments: inp.appointments, myUndo: null, lastBroadcast: null, settings: inp.settings,
+    result, suggestions, appointments: inp.appointments, myUndo: null, lastBroadcast: null, settings: inp.settings, lab: [],
   };
 }
 const view = (snap: StaffSnapshot | null) =>
@@ -36,6 +44,7 @@ const w5 = arrived(5, at(18, 40), at(18, 36));
 
 beforeEach(() => {
   queueAction.mockReset();
+  labAction.mockReset();
   vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {}))); // background reloads never resolve unless a test says so
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
@@ -123,6 +132,69 @@ describe('QueueConsole', () => {
     expect(screen.getByRole('dialog').textContent).toContain('Mark serial 2 as no-show?');
     fireEvent.click(screen.getByRole('button', { name: 'Mark no-show' }));
     await waitFor(() => expect(queueAction).toHaveBeenCalledWith(expect.objectContaining({ kind: 'no_show', appointmentId: late.id })));
+  });
+});
+
+const labVisit = (over: Partial<import('@/lib/lab/doctorLab').DoctorLabVisit> = {}): import('@/lib/lab/doctorLab').DoctorLabVisit => ({
+  appointmentId: '22222222-2222-4222-8222-222222222222', serialNo: 3, patientName: 'Patient 3', patientUhid: 'UH-3',
+  tests: [{ orderId: 'o1', name: 'CBC', status: 'ordered' }], undecidedOrderIds: ['o1'], showLabChoice: true, showReviewOffer: false,
+  advice: null, reviewAppointmentId: null, ...over,
+});
+
+describe('lab panels in the queue screen', () => {
+  it('Lab now sends the undecided orders to the lab; Later hides the choice for the day', async () => {
+    labAction.mockResolvedValue({ ok: true, code: 'ok', message: 'Sent to the lab.' });
+    queueAction.mockResolvedValue({ ok: true, code: 'ok', message: 'Dismissed.' });
+    view({ ...snapshot([inRoom, w4]), lab: [labVisit()] });
+    fireEvent.click(screen.getByRole('button', { name: 'Lab now' }));
+    await waitFor(() => expect(labAction).toHaveBeenCalledWith(expect.objectContaining({ kind: 'enqueue', orderIds: ['o1'] })));
+    fireEvent.click(screen.getByRole('button', { name: 'Later' }));
+    await waitFor(() => expect(queueAction).toHaveBeenCalledWith(expect.objectContaining({ kind: 'dismiss', suggestionKey: 'lab_later:22222222-2222-4222-8222-222222222222' })));
+  });
+
+  it('a ready report shows the engine advice and the report-review button', () => {
+    const expectedStartAt = at(18, 55);
+    view({ ...snapshot([inRoom, w4]), lab: [labVisit({ showLabChoice: false, showReviewOffer: true, tests: [{ orderId: 'o1', name: 'CBC', status: 'report_ready' }], advice: { kind: 'same_day', expectedStartAt } })] });
+    expect(screen.getByTestId('advice-22222222-2222-4222-8222-222222222222').textContent).toMatch(/Can show the report today/);
+    expect(screen.getByRole('button', { name: 'Add report review' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Book later' })).toBeTruthy();
+  });
+
+  it('when there is no time left the advice says book later and offers no same-day button', () => {
+    view({ ...snapshot([inRoom, w4]), lab: [labVisit({ showLabChoice: false, showReviewOffer: true, advice: { kind: 'book_later', reason: 'not_enough_time' } })] });
+    expect(screen.getByText(/Not enough time left in today/)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Add report review' })).toBeNull();
+  });
+
+  it('Add report review asks first, then adds the patient to the doctor line', async () => {
+    queueAction.mockResolvedValue({ ok: true, code: 'ok', message: 'Report review added as serial 9.' });
+    view({ ...snapshot([inRoom, w4]), lab: [labVisit({ showLabChoice: false, showReviewOffer: true, advice: { kind: 'same_day', expectedStartAt: at(18, 55) } })] });
+    fireEvent.click(screen.getByRole('button', { name: 'Add report review' }));
+    expect(queueAction).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole('button', { name: 'Add to line' }));
+    await waitFor(() => expect(queueAction).toHaveBeenCalledWith(expect.objectContaining({ kind: 'return_review', appointmentId: '22222222-2222-4222-8222-222222222222' })));
+  });
+
+  it('the doctor can order tests for the patient in the room; the order goes to the server', async () => {
+    labAction.mockResolvedValue({ ok: true, code: 'ok', message: '2 test(s) ordered.' });
+    render(<QueueConsole mode="doctor" doctors={[{ id: DOC, full_name: 'Dr. Test' }]} doctorId={DOC} initial={snapshot([inRoom, w4])} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Order tests' }));
+    fireEvent.click(await screen.findByLabelText('Complete blood count (CBC)'));
+    fireEvent.click(screen.getByLabelText(/Fasting blood sugar/));
+    fireEvent.click(screen.getByRole('button', { name: 'Order 2 tests' }));
+    await waitFor(() => expect(labAction).toHaveBeenCalledWith(expect.objectContaining({
+      kind: 'order_tests', testTypeIds: ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'],
+    })));
+  });
+
+  it('a report-review patient is marked in the waiting list', () => {
+    view(snapshot([inRoom, { ...w4, visitReason: 'report_review' }]));
+    expect(screen.getAllByText('Report review').length).toBeGreaterThan(0);
+  });
+
+  it('no lab panels when there are no lab orders', () => {
+    view(snapshot([inRoom, w4]));
+    expect(screen.queryByTestId('lab-follow-up')).toBeNull();
   });
 });
 

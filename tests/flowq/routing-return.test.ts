@@ -1,0 +1,73 @@
+// Which lab line next, and whether a patient can show the report to the doctor today.
+import { describe, it, expect } from 'vitest';
+import { suggestRoute, adviseReturn, MIN, type SessionInfo } from '../../packages/flowq/src';
+
+describe('suggestRoute', () => {
+  it('must-go-first test comes before a shorter line', () => {
+    expect(suggestRoute([{ lineId: 'xray', mustFirst: false }, { lineId: 'blood', mustFirst: true }], { blood: 20, xray: 5 }))
+      .toEqual(['blood', 'xray']);
+  });
+  it('shortest wait first', () => {
+    expect(suggestRoute([{ lineId: 'urine', mustFirst: false }, { lineId: 'ecg', mustFirst: false }], { urine: 10, ecg: 3 }))
+      .toEqual(['ecg', 'urine']);
+  });
+  it('two tests in one line count once', () => {
+    expect(suggestRoute([{ lineId: 'blood', mustFirst: false }, { lineId: 'blood', mustFirst: false }], { blood: 4 }))
+      .toEqual(['blood']);
+  });
+  it('closed line goes last, never dropped', () => {
+    expect(suggestRoute([{ lineId: 'xray', mustFirst: false }, { lineId: 'urine', mustFirst: false }], { xray: Infinity, urine: 30 }))
+      .toEqual(['urine', 'xray']);
+  });
+  it('ties by line id', () => {
+    expect(suggestRoute([{ lineId: 'b', mustFirst: false }, { lineId: 'a', mustFirst: false }], { a: 5, b: 5 })).toEqual(['a', 'b']);
+  });
+});
+
+describe('adviseReturn', () => {
+  const day = Date.UTC(2026, 10, 17, 0, 0);
+  const at = (h: number, m = 0) => day + (h - 6) * 60 * MIN + m * MIN; // Dhaka clock
+  const session = (state: SessionInfo['state']): SessionInfo => ({ state, scheduledStartAt: at(18), scheduledEndAt: at(21), startedAt: at(18), pauses: [] });
+
+  it('same day when there is time: ready 19:00, wait 30, travel 10 -> 19:40', () => {
+    expect(adviseReturn({ reportReadyAt: at(19), doctorSession: session('active'), queueWaitMin: 30 }))
+      .toEqual({ kind: 'same_day', expectedStartAt: at(19, 40) });
+  });
+  it('book later when the session is nearly over', () => {
+    expect(adviseReturn({ reportReadyAt: at(20, 30), doctorSession: session('active'), queueWaitMin: 15 }))
+      .toEqual({ kind: 'book_later', reason: 'not_enough_time' });
+  });
+  it('book later when the session ended', () => {
+    expect(adviseReturn({ reportReadyAt: at(19), doctorSession: session('ended'), queueWaitMin: 0 }))
+      .toEqual({ kind: 'book_later', reason: 'session_ended' });
+  });
+  it('book later when the doctor has no session today', () => {
+    expect(adviseReturn({ reportReadyAt: at(19), doctorSession: null, queueWaitMin: 0 }))
+      .toEqual({ kind: 'book_later', reason: 'no_session' });
+  });
+  it('report ready before the session starts can still be same day', () => {
+    expect(adviseReturn({ reportReadyAt: at(16), doctorSession: { ...session('not_started'), startedAt: null }, queueWaitMin: 20 }))
+      .toEqual({ kind: 'same_day', expectedStartAt: at(18, 20) });
+  });
+});
+
+describe('suggestRouteLookahead', () => {
+  const L = (lineId: string, waitMin: number, driftPerMin: number, mustFirst = false, serviceMin = 5) => ({ lineId, waitMin, driftPerMin, mustFirst, serviceMin });
+  it('visits a line whose queue is growing first, even if its wait is longer now', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    // A then B: 15 + (12 + 15) + 5 = 47 min; B then A: 17 + 10 + 5 = 32 min.
+    expect(suggestRouteLookahead([L('A', 10, 0), L('B', 12, 1)])).toEqual(['B', 'A']);
+  });
+  it('leaves a shrinking queue for later', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    expect(suggestRouteLookahead([L('A', 10, -0.5), L('B', 8, 0)])).toEqual(['B', 'A']);
+  });
+  it('with no drift it is shortest wait first', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    expect(suggestRouteLookahead([L('A', 10, 0), L('B', 3, 0), L('C', 6, 0)])).toEqual(['B', 'C', 'A']);
+  });
+  it('must-go-first still leads, closed lines still go last, duplicates count once', async () => {
+    const { suggestRouteLookahead } = await import('../../packages/flowq/src');
+    expect(suggestRouteLookahead([L('X', Infinity, 0), L('B', 1, 0), L('A', 30, 0, true), L('B', 1, 0)])).toEqual(['A', 'B', 'X']);
+  });
+});

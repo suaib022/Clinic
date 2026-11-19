@@ -23,6 +23,7 @@ const Action = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('resolve_remaining'), doctorId: id, requestKey: key }),
   z.object({ kind: z.literal('broadcast_delay'), doctorId: id, minutes: z.number().int().min(1).max(600), requestKey: key }),
   z.object({ kind: z.literal('undo'), doctorId: id, requestKey: key }),
+  z.object({ kind: z.literal('return_review'), appointmentId: id, requestKey: key }),
   z.object({ kind: z.literal('dismiss'), doctorId: id, suggestionKey: z.string().min(3).max(200) }),
   z.object({
     kind: z.literal('walk_in'), doctorId: id, patientId: id, visitType: z.enum(['new', 'follow_up']),
@@ -54,6 +55,7 @@ function rpcFor(a: QueueActionInput): [string, Record<string, unknown>] {
     case 'resolve_remaining': return ['dss_resolve_remaining', { p_doctor_id: a.doctorId, p_request_key: a.requestKey }];
     case 'broadcast_delay': return ['dss_broadcast_delay', { p_doctor_id: a.doctorId, p_minutes: a.minutes, p_request_key: a.requestKey }];
     case 'undo': return ['dss_undo', { p_doctor_id: a.doctorId, p_request_key: a.requestKey }];
+    case 'return_review': return ['dss_return_for_review', { p_appointment_id: a.appointmentId, p_request_key: a.requestKey }];
     case 'dismiss': return ['dss_dismiss_suggestion', { p_doctor_id: a.doctorId, p_key: a.suggestionKey }];
     case 'walk_in': return ['dss_walk_in', {
       p_doctor_id: a.doctorId, p_patient_id: a.patientId, p_visit_type: a.visitType, p_level: a.level,
