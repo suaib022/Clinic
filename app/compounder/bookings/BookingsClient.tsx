@@ -20,7 +20,8 @@ import {
     pauseChamberSession,
     resumeChamberSession,
     endChamberSession,
-    getDocumentSignedUrl
+    getDocumentSignedUrl,
+    enterFollowUpWithReport
 } from '../actions';
 
 interface Appointment {
@@ -31,6 +32,7 @@ interface Appointment {
     end_time: string;
     status: string;
     visit_type: string;
+    visit_reason?: string | null;
     visit_source: string;
     is_priority: boolean;
     priority_reason: string;
@@ -48,6 +50,11 @@ interface Appointment {
         file_type?: string | null;
         created_at?: string;
         record_type?: string;
+    }> | null;
+    lab_orders?: Array<{
+        id: string;
+        status: string;
+        test?: { name: string } | null;
     }> | null;
     created_by_user_id: string | null;
     status_changed_by: string | null;
@@ -272,7 +279,15 @@ export default function BookingsClient({
         const isRxPending = a.status === 'prescription_pending';
         const isCompleted = a.status === 'completed';
         const isConsultationDone = isRxPending || isCompleted || Boolean(a.consult_ended_at && a.status !== 'in_consultation');
-        const apptDocs = (a.medical_records && a.medical_records.length > 0) ? a.medical_records : [];
+        // Compounders can only view prescriptions, not lab test reports (doctor-only restriction)
+        const apptDocs = (a.medical_records && a.medical_records.length > 0)
+            ? a.medical_records.filter(m => m.record_type !== 'test_report')
+            : [];
+        const labReports = (a.medical_records && a.medical_records.length > 0)
+            ? a.medical_records.filter(m => m.record_type === 'test_report')
+            : [];
+        const readyLabOrders = (a.lab_orders || []).filter(o => o.status === 'report_ready');
+        const hasReadyLabReport = readyLabOrders.length > 0;
         const hasDocs = apptDocs.length > 0 || Boolean(a.prescription_record_id);
 
         const cardBorderLeft = isCurrentlyInside
@@ -437,6 +452,18 @@ export default function BookingsClient({
                                     <span>{apptDocs.length || 1} Document{apptDocs.length > 1 ? 's' : ''} Attached</span>
                                 </span>
                             )}
+                            {hasReadyLabReport && (
+                                <span className="d-inline-flex align-items-center gap-1 text-success fw-semibold bg-success bg-opacity-10 px-2.5 py-0.5 rounded-pill border border-success-subtle">
+                                    <i className="bi bi-file-earmark-check-fill text-success" />
+                                    <span>Lab Report Ready ({readyLabOrders.map(o => o.test?.name).filter(Boolean).join(', ') || 'Ready'})</span>
+                                </span>
+                            )}
+                            {labReports.length > 0 && (
+                                <span className="d-inline-flex align-items-center gap-1 text-muted small bg-light px-2 py-0.5 rounded-pill border" title="Clinical laboratory reports are viewable by doctors and patients only">
+                                    <i className="bi bi-lock-fill text-secondary" />
+                                    <span>Lab Report Attached (Doctor View Only)</span>
+                                </span>
+                            )}
                         </div>
                     )}
 
@@ -444,6 +471,23 @@ export default function BookingsClient({
                     {showActions && actions && (
                         <div className="mt-2.5 pt-2 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div className="d-flex gap-2 flex-wrap align-items-center">
+                                {/* Enter Follow-up with Report Button */}
+                                {hasReadyLabReport && a.visit_reason !== 'report_review' && a.status !== 'in_consultation' && (
+                                    <button
+                                        className="btn btn-sm text-white fw-bold px-3 shadow-sm d-inline-flex align-items-center gap-1"
+                                        style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}
+                                        disabled={isPending}
+                                        onClick={() => doAction(async () => {
+                                            const res = await enterFollowUpWithReport(a.id);
+                                            return res.ok ? { success: true } : { success: false, error: res.error };
+                                        })}
+                                        title="Patient has ready lab report: add to queue for follow-up review with doctor"
+                                    >
+                                        <i className="bi bi-clipboard2-check-fill me-1" />
+                                        Enter Follow-up with Report
+                                    </button>
+                                )}
+
                                 {/* Check In / Mark Present */}
                                 {actions.check_in.allowed && (
                                     <button className="btn btn-sm btn-success fw-semibold px-3 shadow-xs" disabled={isPending} onClick={() => doAction(() => checkInAppointment(a.id))}>

@@ -201,7 +201,7 @@ export async function uploadVisitPrescription(formData: FormData) {
 }
 
 export async function getAppointmentDocuments(appointmentId: string) {
-    await requireRole(['compounder', 'doctor', 'admin']);
+    const { role } = await requireRole(['compounder', 'doctor', 'admin']);
     if (!appointmentId) return { success: false, error: 'Appointment ID required', documents: [] };
 
     try {
@@ -237,6 +237,12 @@ export async function getAppointmentDocuments(appointmentId: string) {
             }
         }
 
+        // CLINICAL PRIVACY RESTRICTION: Doctors and admins can see all documents (including lab reports).
+        // Compounders must NOT be able to see laboratory test reports.
+        if (role === 'compounder') {
+            docs = docs.filter(d => d.record_type !== 'test_report');
+        }
+
         return { success: true, documents: docs };
     } catch (err: any) {
         return { success: false, error: err.message || 'Failed to fetch documents', documents: [] };
@@ -244,8 +250,23 @@ export async function getAppointmentDocuments(appointmentId: string) {
 }
 
 export async function getDocumentSignedUrl(filePath: string) {
-    await requireRole(['compounder', 'doctor', 'admin']);
+    const { role } = await requireRole(['compounder', 'doctor', 'admin']);
     if (!filePath) return { success: false, error: 'File path required' };
+
+    // Compounders cannot view laboratory test reports (doctors and patients only)
+    if (role === 'compounder') {
+        const { data: rec } = await supabaseAdmin
+            .from('medical_records')
+            .select('record_type')
+            .eq('file_path', filePath)
+            .single();
+        if (rec?.record_type === 'test_report') {
+            return {
+                success: false,
+                error: 'Compounders are not permitted to view clinical laboratory reports. Only doctors and patients may view lab test reports.',
+            };
+        }
+    }
 
     try {
         const { data, error } = await supabaseAdmin.storage
@@ -263,8 +284,22 @@ export async function getDocumentSignedUrl(filePath: string) {
 }
 
 export async function getDocumentDownloadUrl(filePath: string, fileName?: string) {
-    await requireRole(['compounder', 'doctor', 'admin']);
+    const { role } = await requireRole(['compounder', 'doctor', 'admin']);
     if (!filePath) return { success: false, error: 'File path required' };
+
+    if (role === 'compounder') {
+        const { data: rec } = await supabaseAdmin
+            .from('medical_records')
+            .select('record_type')
+            .eq('file_path', filePath)
+            .single();
+        if (rec?.record_type === 'test_report') {
+            return {
+                success: false,
+                error: 'Compounders are not permitted to download clinical laboratory reports.',
+            };
+        }
+    }
 
     try {
         const cleanName = fileName ? fileName.replace(/[^a-zA-Z0-9._-]/g, '_') : undefined;
@@ -280,6 +315,12 @@ export async function getDocumentDownloadUrl(filePath: string, fileName?: string
     } catch (err: any) {
         return { success: false, error: err.message || 'Failed to generate download URL' };
     }
+}
+
+import { compounderEnterFollowUp } from '@/lib/lab/followUpActions';
+
+export async function enterFollowUpWithReport(appointmentId: string) {
+    return compounderEnterFollowUp(appointmentId);
 }
 
 // ──── CHAMBER SESSION ACTIONS ────

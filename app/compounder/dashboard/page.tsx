@@ -84,6 +84,13 @@ export default async function CompounderDashboard() {
     // Next 3 expected patients (scheduled, ordered by serial)
     const nextPatients = appts.filter(a => a.status === 'scheduled').slice(0, 3);
 
+    // Lab orders ready for this doctor today
+    const { data: readyLabOrders } = await supabase
+        .from('lab_orders')
+        .select('id, appointment_id, status, test:lab_test_types(name), patient:patients!inner(full_name, uhid)')
+        .eq('ordering_doctor_id', doctorId)
+        .eq('status', 'report_ready');
+
     const sessionLabels: Record<string, { label: string; color: string }> = {
         not_started: { label: 'Not Started', color: 'text-muted' },
         open: { label: 'Active', color: 'text-success' },
@@ -169,6 +176,35 @@ export default async function CompounderDashboard() {
                                 </div>
                             ))}
                         </div>
+
+                        {/* Lab Reports Ready for Follow-up Section */}
+                        {readyLabOrders && readyLabOrders.length > 0 && (
+                            <div className="card border-0 shadow-sm rounded-3 mb-4" style={{ borderLeft: '4px solid #0D7D72' }}>
+                                <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                                    <h5 className="m-0 fw-bold" style={{ color: '#0D7D72' }}>
+                                        <i className="bi bi-file-earmark-check-fill me-2"></i>Lab Reports Ready for Follow-up ({readyLabOrders.length})
+                                    </h5>
+                                    <Link href="/compounder/bookings" className="btn btn-sm btn-outline-success">
+                                        View in Appointments &rarr;
+                                    </Link>
+                                </div>
+                                <div className="card-body px-4">
+                                    <div className="list-group list-group-flush">
+                                        {readyLabOrders.map((o: any) => (
+                                            <div key={o.id} className="list-group-item d-flex align-items-center justify-content-between px-0 py-3 flex-wrap gap-2">
+                                                <div>
+                                                    <div className="fw-semibold text-dark">{o.patient?.full_name} <span className="small text-muted">({o.patient?.uhid})</span></div>
+                                                    <small className="text-muted">Test: <strong>{o.test?.name}</strong> • Report Ready</small>
+                                                </div>
+                                                <Link href="/compounder/bookings" className="btn btn-sm text-white fw-semibold px-3" style={{ backgroundColor: '#0D7D72', borderColor: '#0D7D72' }}>
+                                                    <i className="bi bi-clipboard2-check me-1"></i>Enter Follow-up with Report
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Next Expected + Quick Actions */}
                         <div className="row g-4">

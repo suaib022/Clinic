@@ -179,21 +179,25 @@ export default function QueueConsole({ mode, doctors, doctorId, initial }: Queue
         onDone={() => current && void run({ kind: 'end_consult', appointmentId: current })} />
       <OrderTestsPanel snap={snap} say={(k, t) => { say(k, t); void reload(); }} />
       <UndoBar snap={snap} receivedAt={lastUpdated} busy={busy} onUndo={() => void run({ kind: 'undo', doctorId })} />
-      {mode === 'compounder' && (
-        <LabFollowUpPanel snap={snap} busy={busy}
-          onLabNow={async (v) => {
-            const r = await labAction({ kind: 'enqueue', orderIds: v.undecidedOrderIds, requestKey: newKey() });
-            say(r.ok ? 'ok' : 'warn', r.message);
-            void reload();
-          }}
-          onLater={(v) => void run({ kind: 'dismiss', doctorId, suggestionKey: labLaterKey(v.appointmentId) })}
-          onReview={async (v) => {
-            const ok = await ask({ title: `Report review for serial ${v.serialNo}?`, confirmLabel: 'Add to line',
-              body: v.advice?.kind === 'same_day' ? `Expected about ${fmtTime(v.advice.expectedStartAt)}. Did the patient agree?` : undefined });
-            if (ok != null) await run({ kind: 'return_review', appointmentId: v.appointmentId });
-          }}
-          onBookLater={(v) => void run({ kind: 'dismiss', doctorId, suggestionKey: reviewLaterKey(v.appointmentId) })} />
-      )}
+      <LabFollowUpPanel snap={snap} busy={busy}
+        onLabNow={async (v) => {
+          const r = await labAction({ kind: 'enqueue', orderIds: v.undecidedOrderIds, requestKey: newKey() });
+          say(r.ok ? 'ok' : 'warn', r.message);
+          void reload();
+        }}
+        onLater={(v) => void run({ kind: 'dismiss', doctorId, suggestionKey: labLaterKey(v.appointmentId) })}
+        onReview={async (v) => {
+          const ok = await ask({ title: `Report review for serial ${v.serialNo}?`, confirmLabel: 'Add to line',
+            body: v.advice?.kind === 'same_day' ? `Expected about ${fmtTime(v.advice.expectedStartAt)}. Did the patient agree?` : undefined });
+          if (ok != null) await run({ kind: 'return_review', appointmentId: v.appointmentId });
+        }}
+        onBookLater={(v) => void run({ kind: 'dismiss', doctorId, suggestionKey: reviewLaterKey(v.appointmentId) })}
+        onViewReport={(appointmentId) => {
+          const appt = snap.appointments.find((a) => a.id === appointmentId);
+          if (appt) setDetailAppt(appt);
+          else setDetailAppt({ id: appointmentId, serialNo: 0, patientName: null, patientUhid: null, patientMobile: null, scheduledStartAt: null, visitType: null, visitSource: null, priorityLevel: 0, checkedInAt: null, calledAt: null, consultStartedAt: null, consultEndedAt: null } as any);
+        }}
+      />
       <NextUp snap={snap} busy={busy} canCall={canCall} onCall={() => void callNext()} onSelectAppt={setDetailAppt} />
       {mode === 'compounder' && (
         <SuggestionsPanel suggestions={snap.suggestions} busy={busy} onConfirm={(s) => void onSuggestion(s)}
