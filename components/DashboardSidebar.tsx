@@ -22,6 +22,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
     ],
     doctor: [
         { href: '/doctor/dashboard', label: 'Dashboard', icon: 'bi-grid' },
+        { href: '/doctor/chamber', label: 'Chamber Desk', icon: 'bi-door-open-fill' },
         { href: '/doctor/queue', label: 'Live Queue', icon: 'bi-broadcast' },
         { href: '/dashboard/triage', label: 'Aura Triage Desk', icon: 'bi-robot' },
         { href: '/doctor/appointments', label: 'Today\'s Appointments', icon: 'bi-calendar-check' },
