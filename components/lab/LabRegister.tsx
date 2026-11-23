@@ -60,7 +60,10 @@ export default function LabRegister({ tests, lines }: { tests: TestType[]; lines
           </div>
           {found && found.length === 0 && <div className="small text-muted mt-2">No patient found. New patients are registered at the reception desk.</div>}
           {found?.map((p) => (
-            <button key={p.id} type="button" className={`btn w-100 text-start mt-2 ${picked?.id === p.id ? 'btn-outline-success' : 'btn-outline-secondary'}`} onClick={() => void pick(p)}>
+            // Plain row, not a .btn: the site theme recolours every .btn navy, which hid the grey UHID / mobile line.
+            <button key={p.id} type="button" className="w-100 text-start mt-2 rounded p-2" aria-pressed={picked?.id === p.id}
+              style={{ background: picked?.id === p.id ? '#e8f5ee' : '#fff', border: `1px solid ${picked?.id === p.id ? '#198754' : '#ced4da'}`, color: '#212529' }}
+              onClick={() => void pick(p)}>
               <div className="fw-semibold">{p.full_name}</div><div className="small text-muted">{p.uhid}{p.mobile_tail ? ` · mobile …${p.mobile_tail}` : ''}</div>
             </button>
           ))}
