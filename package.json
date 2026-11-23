@@ -9,6 +9,7 @@
     "lint": "eslint",
     "verify": "npx tsx scripts/verify-m4.ts && npx tsx scripts/verify-dss.ts",
     "test": "vitest run",
+    "test:unit": "vitest run tests/flowq tests/flowlab tests/dss/engine tests/dss/ui tests/lab/unit",
     "test:dss": "vitest run tests/dss",
     "dss:seed": "tsx scripts/dss/seed-dev.ts",
     "dss:simulate": "tsx scripts/dss-simulate.ts",
