@@ -9,18 +9,23 @@ import { compareModes, type Comparison } from '@/lib/flowlab/compare';
 import type { RawSnapshot } from '@/lib/queue/snapshotInput';
 import LiveCompare from './LiveCompare';
 import Simulator from './Simulator';
+import LogView from './LogView';
+import { addDays, checkRange } from '@/lib/flowlab/dateRange';
+import { loadFlowEvents } from '@/lib/flowlab/logSource';
+import { buildProcessMap, type ProcessMap } from '@/lib/flowlab/processMap';
 
 export const metadata = { title: 'Flow Lab' };
 
 const TABS = [
   { key: 'live', label: 'Live: DSS vs full engine', icon: 'bi-broadcast' },
   { key: 'sim', label: 'Simulator', icon: 'bi-cpu' },
+  { key: 'log', label: 'Event log & process map', icon: 'bi-diagram-2' },
 ] as const;
 type Tab = (typeof TABS)[number]['key'];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Flow Lab: the flowq wait-time engine and its research tools inside the clinic app. Admin only, read-only. */
-export default async function FlowLabPage({ searchParams }: { searchParams: Promise<{ tab?: string; doctor?: string }> }) {
+export default async function FlowLabPage({ searchParams }: { searchParams: Promise<{ tab?: string; doctor?: string; from?: string; to?: string }> }) {
   const { user } = await requireRole(['admin']);
   const sp = await searchParams;
   const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : 'live';
@@ -41,6 +46,21 @@ export default async function FlowLabPage({ searchParams }: { searchParams: Prom
       const { data, error: e } = await supabase.rpc('dss_snapshot_input', { p_doctor_id: doctorId, p_date: null });
       if (e || !data) error = 'Could not read this doctor’s queue.';
       else comparison = compareModes(data as RawSnapshot);
+    }
+  }
+  const today = todayDhaka();
+  const from = sp.from ?? addDays(today, -6), to = sp.to ?? today;
+  let map: ProcessMap | null = null;
+  let logRows = 0;
+  let rangeError: string | null = null;
+  if (tab === 'log') {
+    rangeError = checkRange(from, to);
+    if (!rangeError) {
+      try {
+        const { events, rows } = await loadFlowEvents(supabase, from, to);
+        map = buildProcessMap(events);
+        logRows = rows;
+      } catch { error = 'Could not read the queue log.'; }
     }
   }
   const doctorName = doctors.find((d) => d.id === doctorId)?.full_name ?? null;
@@ -66,6 +86,19 @@ export default async function FlowLabPage({ searchParams }: { searchParams: Prom
               ))}
             </ul>
             {tab === 'sim' && <Simulator />}
+            {tab === 'log' && (
+              <>
+                <form method="get" className="d-flex align-items-end gap-2 mb-3 flex-wrap">
+                  <input type="hidden" name="tab" value="log" />
+                  <div><label className="form-label small mb-1" htmlFor="from">From</label><input id="from" name="from" type="date" className="form-control" defaultValue={from} required /></div>
+                  <div><label className="form-label small mb-1" htmlFor="to">To</label><input id="to" name="to" type="date" className="form-control" defaultValue={to} required /></div>
+                  <button type="submit" className="btn btn-outline-primary">Show</button>
+                </form>
+                {rangeError && <div className="alert alert-warning">{rangeError}</div>}
+                {error && <div className="alert alert-warning">{error}</div>}
+                {map && <LogView map={map} from={from} to={to} rows={logRows} />}
+              </>
+            )}
             {tab === 'live' && (
               <>
                 <form method="get" className="d-flex align-items-end gap-2 mb-3 flex-wrap">
