@@ -2,7 +2,7 @@ import DashboardSidebar from '@/components/DashboardSidebar';
 import { requireRole } from '@/lib/auth/requireRole';
 import { createClient } from '@/lib/supabase/server';
 import SettingsForm from './SettingsForm';
-import type { SettingsValues } from '@/lib/queue/adminActions';
+import type { SettingsValues } from '@/lib/queue/settingsSchema';
 
 export const metadata = { title: 'Queue Settings' };
 const fmt = (s: string) => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Dhaka', dateStyle: 'medium', timeStyle: 'short' }).format(new Date(s));
