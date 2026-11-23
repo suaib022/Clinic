@@ -16,3 +16,15 @@ value found; covered by the sensitivity sweep). `busy-lab.json` is the same scen
 | Walk-ins, emergencies, doctor late start, pauses, ECG/urine times, test-order share, lab "now" share, same-day return willingness, line shares | see `default.json` | assumption | No published value for Bangladesh private chambers; swept in the sensitivity analysis. |
 
 Note on the author list for Lockhat et al. 2021: verify the full author list against the article before citing.
+
+## `hospitalopd.json`: calibrated from a real outpatient event log
+
+Same scenario as `default.json`, with these values replaced from the HospitalOPD event log (Batool, Mehmood, Zafar; Mendeley Data 2026, doi:10.17632/j2hd2239dr.1, CC BY 4.0; 49,912 appointments, 98 doctors, April 2024 to April 2026, a Pakistan-related hospital OPD). Each changed value is tagged `[derived]` in its `sources` block.
+
+| Parameter | default | hospitalopd | How it was derived |
+|---|---|---|---|
+| `lab.orderP` | 0.35 | 0.20 | Share of appointments with a lab or imaging step (lab 12.8%, imaging 10.7%) |
+| `lab.lines.blood.turnaroundMin` / `Cv` | 150 / 0.5 | 73 / 0.55 | Complete Blood Count, lab start to lab end (n = 3,750, p90 152 min) |
+| `visits.newMedianMin` / `cv` | 8.2 / 0.49 | 9 / 0.85 | Gaps between one doctor's consecutive prescription start times on one day (n = 41,470) |
+
+Limits: the log holds completed visits only, so no-show rate and arrival lateness cannot be checked. The visit values are a proxy, not a measured consultation time: the gaps include idle time, which inflates the spread. Urine turnaround was not changed (the log shows a very wide spread, probably result-entry time). The data comes from another country, not a Bangladesh chamber.
