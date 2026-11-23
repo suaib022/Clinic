@@ -8,10 +8,14 @@ import { listManagedDoctors } from '@/lib/queue/server';
 import { compareModes, type Comparison } from '@/lib/flowlab/compare';
 import type { RawSnapshot } from '@/lib/queue/snapshotInput';
 import LiveCompare from './LiveCompare';
+import Simulator from './Simulator';
 
 export const metadata = { title: 'Flow Lab' };
 
-const TABS = [{ key: 'live', label: 'Live: DSS vs full engine', icon: 'bi-broadcast' }] as const;
+const TABS = [
+  { key: 'live', label: 'Live: DSS vs full engine', icon: 'bi-broadcast' },
+  { key: 'sim', label: 'Simulator', icon: 'bi-cpu' },
+] as const;
 type Tab = (typeof TABS)[number]['key'];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -61,6 +65,7 @@ export default async function FlowLabPage({ searchParams }: { searchParams: Prom
                 </li>
               ))}
             </ul>
+            {tab === 'sim' && <Simulator />}
             {tab === 'live' && (
               <>
                 <form method="get" className="d-flex align-items-end gap-2 mb-3 flex-wrap">
