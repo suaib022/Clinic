@@ -116,6 +116,8 @@ export interface MyQueueStatus {
   waitMinHigh: number | null;
   label: StatusLabel | null;
   confidence: Confidence | null;
+  /** 'calibrated' when the wait range is built from the visit-length spread (full engine), so most patients start inside it. */
+  rangeNote: 'calibrated' | null;
   reason: string;
   sessionState: QueueResult['session']['state'] | null;
   lastUpdated: number;
@@ -138,7 +140,7 @@ export async function getMyStatus(supabase: SupabaseClient, userId: string, appo
   };
   const blank = {
     nowServingSerial: null, patientsAhead: null, expectedStartAt: null, waitMinLow: null, waitMinHigh: null,
-    label: null, confidence: null, sessionState: null,
+    label: null, confidence: null, sessionState: null, rangeNote: null,
   };
   if (appt.status === 'cancelled' || appt.status === 'hold') {
     return { ...base, ...blank, stage: 'cancelled', reason: 'This appointment is not active.' };
@@ -164,6 +166,7 @@ export async function getMyStatus(supabase: SupabaseClient, userId: string, appo
     waitMinHigh: e?.waitMinHigh ?? null,
     label: e?.label ?? null,
     confidence: e?.confidence ?? null,
+    rangeNote: input.settings.rangeMethod === 'normal_sum' ? 'calibrated' : null,
     reason: e?.reason ?? '',
     sessionState: result.session.state,
     lastUpdated: input.now,
