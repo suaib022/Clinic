@@ -45,6 +45,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/admin/reports', label: 'Health Insights', icon: 'bi-bar-chart' },
         { href: '/admin/queue-reports', label: 'Queue Reports', icon: 'bi-graph-up' },
         { href: '/admin/queue-settings', label: 'Queue Settings', icon: 'bi-sliders' },
+        { href: '/admin/flow-lab', label: 'Flow Lab', icon: 'bi-diagram-3' },
         { href: '/admin/lab-settings', label: 'Lab Settings', icon: 'bi-droplet' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
         { href: '/admin/settings', label: 'Settings', icon: 'bi-gear' },
