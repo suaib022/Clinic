@@ -28,6 +28,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/doctor/appointments', label: 'Today\'s Appointments', icon: 'bi-calendar-check' },
         { href: '/doctor/all-appointments', label: 'All Appointments', icon: 'bi-list-ul' },
         { href: '/doctor/patients', label: 'Patient Records', icon: 'bi-file-medical' },
+        { href: '/doctor/feedback', label: 'Patient Feedback', icon: 'bi-chat-square-text' },
         { href: '/doctor/schedule', label: 'My Schedule', icon: 'bi-clock' },
         { href: '/doctor/leave', label: 'Leave Requests', icon: 'bi-calendar-x' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
@@ -43,6 +44,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/admin/compounders', label: 'Compounders', icon: 'bi-person-badge-fill' },
         { href: '/admin/specialities', label: 'Specialities', icon: 'bi-tags' },
         { href: '/admin/reports', label: 'Health Insights', icon: 'bi-bar-chart' },
+        { href: '/admin/feedback', label: 'Feedback', icon: 'bi-chat-square-text' },
         { href: '/admin/queue-reports', label: 'Queue Reports', icon: 'bi-graph-up' },
         { href: '/admin/queue-settings', label: 'Queue Settings', icon: 'bi-sliders' },
         { href: '/admin/flow-lab', label: 'Flow Lab', icon: 'bi-diagram-3' },
@@ -61,6 +63,7 @@ const LINKS: Record<Role, Array<{ href: string; label: string; icon: string }>> 
         { href: '/lab/queue', label: 'Lab Queue', icon: 'bi-droplet' },
         { href: '/lab/register', label: 'Register / Queue Patient', icon: 'bi-person-plus' },
         { href: '/lab/reports', label: 'Reports', icon: 'bi-file-earmark-check' },
+        { href: '/lab/feedback', label: 'Test Feedback', icon: 'bi-chat-square-text' },
         { href: '/notifications', label: 'Notifications', icon: 'bi-bell' },
     ],
 };

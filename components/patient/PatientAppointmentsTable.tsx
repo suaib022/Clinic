@@ -14,6 +14,8 @@ import {
     rebookCancelledAppointment 
 } from '@/app/patient/actions';
 import PrescriptionSlip from '@/components/slips/PrescriptionSlip';
+import StarRating from '@/components/feedback/StarRating';
+import VoiceInput from '@/components/feedback/VoiceInput';
 import BookingSlip from '@/components/slips/BookingSlip';
 import { 
     FileText, 
@@ -80,51 +82,6 @@ interface Props {
 
 type TimeTab = 'all' | 'upcoming' | 'today' | 'prev';
 
-const RATING_DESCRIPTIONS: Record<number, string> = {
-    1: 'Poor (1/5)',
-    2: 'Fair (2/5)',
-    3: 'Average (3/5)',
-    4: 'Very Good (4/5)',
-    5: 'Excellent (5/5)'
-};
-
-function StarRating({ 
-    value, 
-    onChange, 
-    disabled = false 
-}: { 
-    value: number; 
-    onChange?: (val: number) => void; 
-    disabled?: boolean;
-}) {
-    const [hover, setHover] = useState(0);
-
-    return (
-        <div className="d-flex align-items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => {
-                const isFilled = hover ? star <= hover : star <= value;
-                return (
-                    <button
-                        key={star}
-                        type="button"
-                        className="btn p-0 border-0 bg-transparent text-warning"
-                        style={{ cursor: disabled ? 'default' : 'pointer', fontSize: '1.4rem', lineHeight: 1 }}
-                        disabled={disabled}
-                        onMouseEnter={() => !disabled && setHover(star)}
-                        onMouseLeave={() => !disabled && setHover(0)}
-                        onClick={() => !disabled && onChange && onChange(star)}
-                    >
-                        <i className={`bi ${isFilled ? 'bi-star-fill text-warning' : 'bi-star text-secondary text-opacity-50'}`}></i>
-                    </button>
-                );
-            })}
-            <span className="ms-2 small text-muted fw-semibold">
-                {RATING_DESCRIPTIONS[hover || value] || 'Select rating'}
-            </span>
-        </div>
-    );
-}
-
 export default function PatientAppointmentsTable({ 
     initialAppointments, 
     patients, 
@@ -156,6 +113,7 @@ export default function PatientAppointmentsTable({
     const [doctorRating, setDoctorRating] = useState<number>(5);
     const [serviceRating, setServiceRating] = useState<number>(5);
     const [comment, setComment] = useState<string>('');
+    const [inputMethod, setInputMethod] = useState<'typed' | 'voice'>('typed');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -372,6 +330,7 @@ export default function PatientAppointmentsTable({
         setDoctorRating(5);
         setServiceRating(5);
         setComment('');
+        setInputMethod('typed');
         setSubmitError(null);
     };
 
@@ -396,6 +355,7 @@ export default function PatientAppointmentsTable({
                 doctorRating,
                 serviceRating,
                 comment,
+                inputMethod,
             });
 
             if (!res.success) {
@@ -1293,8 +1253,17 @@ export default function PatientAppointmentsTable({
                                             placeholder="Write any thoughts about your visit, doctor advice, or how we can serve you better..."
                                             value={comment}
                                             disabled={isSubmitting}
-                                            onChange={(e) => setComment(e.target.value)}
+                                            onChange={(e) => { setComment(e.target.value); setInputMethod('typed'); }}
                                         />
+                                        <div className="mt-2">
+                                            <VoiceInput
+                                                disabled={isSubmitting}
+                                                onText={(text) => {
+                                                    setComment((prev) => (prev ? `${prev} ${text}` : text).slice(0, 500));
+                                                    setInputMethod('voice');
+                                                }}
+                                            />
+                                        </div>
                                         <div className="text-muted small mt-1 text-end">
                                             {comment.length}/500 characters
                                         </div>

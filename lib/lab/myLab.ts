@@ -25,6 +25,8 @@ export interface MyLabReport {
   status: 'collected' | 'report_ready';
   appointmentId?: string | null;
   doctorName?: string | null;
+  /** True once the patient has rated this test (lab_feedbacks row exists). */
+  feedbackSubmitted: boolean;
 }
 
 export async function getMyLab(supabase: SupabaseClient, userId: string): Promise<{ places: MyLabPlace[]; reports: MyLabReport[] }> {
@@ -69,7 +71,14 @@ export async function getMyLab(supabase: SupabaseClient, userId: string): Promis
       counterOpen: ['active', 'paused'].includes(results[i.line_id as string]?.session.state ?? ''),
     };
   });
+  const readyIds = myOrders.filter((o) => o.status === 'report_ready').map((o) => o.id as string);
+  const rated = new Set<string>();
+  if (readyIds.length) {
+    const { data: fb } = await supabase.from('lab_feedbacks').select('lab_order_id').in('lab_order_id', readyIds);
+    (fb ?? []).forEach((f) => rated.add(f.lab_order_id as string));
+  }
   const reports: MyLabReport[] = myOrders.filter((o) => o.status !== 'queued').map((o) => ({
+    feedbackSubmitted: rated.has(o.id as string),
     orderId: o.id as string,
     patientName: (o.patient as unknown as { full_name: string }).full_name,
     test: (o.test as unknown as { name: string }).name,

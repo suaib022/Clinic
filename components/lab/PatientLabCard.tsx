@@ -3,6 +3,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import type { MyLabPlace, MyLabReport } from '@/lib/lab/myLab';
 import { patientEnterFollowUp } from '@/lib/lab/followUpActions';
+import LabFeedbackModal from '@/components/feedback/LabFeedbackModal';
 
 /** Patient dashboard: where I am in the lab lines and which reports are ready. Refreshes every 30 s. */
 export default function PatientLabCard({ initial }: { initial: { places: MyLabPlace[]; reports: MyLabReport[] } }) {
@@ -10,6 +11,7 @@ export default function PatientLabCard({ initial }: { initial: { places: MyLabPl
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const router = useRouter();
+  const [rating, setRating] = useState<{ orderId: string; test: string } | null>(null);
 
   useEffect(() => {
     const t = setInterval(async () => {
@@ -71,6 +73,16 @@ export default function PatientLabCard({ initial }: { initial: { places: MyLabPl
               Your test report has been verified by the lab{r.doctorName ? ` for Dr. ${r.doctorName}` : ''}. You can now enter the chamber queue for a follow-up consultation with your report.
             </div>
           </div>
+          {!r.feedbackSubmitted && (
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-primary fw-bold px-3 py-1.5 text-nowrap align-self-start align-self-md-center"
+              onClick={() => setRating({ orderId: r.orderId, test: r.test })}
+            >
+              <i className="bi bi-star me-1" />
+              Rate this test
+            </button>
+          )}
           {r.appointmentId && (
             <button
               type="button"
@@ -108,6 +120,22 @@ export default function PatientLabCard({ initial }: { initial: { places: MyLabPl
           </div>
         </div>
       ))}
+
+      {rating && (
+        <LabFeedbackModal
+          orderId={rating.orderId}
+          testName={rating.test}
+          onClose={() => setRating(null)}
+          onDone={() => {
+            setData((d) => ({
+              ...d,
+              reports: d.reports.map((x) => (x.orderId === rating.orderId ? { ...x, feedbackSubmitted: true } : x)),
+            }));
+            setRating(null);
+            setMessage({ type: 'success', text: 'Thank you! Your feedback has been recorded.' });
+          }}
+        />
+      )}
 
       {pending.length > 0 && (
         <div className="border-top py-2 small text-muted">
