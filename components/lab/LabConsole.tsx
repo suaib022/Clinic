@@ -199,7 +199,13 @@ export default function LabConsole({ lines, lineId, initial }: { lines: LabLine[
 
           {done.length > 0 && (
             <div className="card border-0 shadow-sm p-3 mt-3">
-              <h6 className="text-muted text-uppercase small">Collected today ({done.length})</h6>
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <h6 className="text-muted text-uppercase small mb-0">Collected today ({done.length})</h6>
+                <a href="/lab/reports" className="btn btn-sm btn-outline-primary py-0 px-2 rounded-pill small" style={{ fontSize: '0.75rem', borderColor: '#1B2978', color: '#1B2978' }}>
+                  <i className="bi bi-file-earmark-arrow-up me-1" />
+                  Reports desk
+                </a>
+              </div>
               {done.slice(0, 8).map((i) => (
                 <div key={i.id} className="border-top py-2">
                   <span className="fw-semibold">{i.patientName ?? 'Patient'}</span> <span className="small text-muted">{fmtTime(i.collectedAt)} · {i.tests.map((t) => t.name).join(', ')}</span>

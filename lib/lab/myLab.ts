@@ -18,7 +18,16 @@ export interface MyLabPlace {
   /** False until the lab counter opens today (then no wait is shown). */
   counterOpen: boolean;
 }
-export interface MyLabReport { orderId: string; patientName: string; test: string; status: 'collected' | 'report_ready' }
+export interface MyLabReport {
+  orderId: string;
+  patientName: string;
+  test: string;
+  status: 'collected' | 'report_ready';
+  appointmentId?: string | null;
+  doctorName?: string | null;
+  /** True once the patient has rated this test (lab_feedbacks row exists). */
+  feedbackSubmitted: boolean;
+}
 
 export async function getMyLab(supabase: SupabaseClient, userId: string): Promise<{ places: MyLabPlace[]; reports: MyLabReport[] }> {
   // Ownership through the patient's own session (RLS) and an explicit account check (family members share auth_user_id).
@@ -30,7 +39,15 @@ export async function getMyLab(supabase: SupabaseClient, userId: string): Promis
   const mine = (items ?? []).filter((i) => (i.patient as unknown as { auth_user_id: string }).auth_user_id === userId);
   const { data: orders } = await supabase
     .from('lab_orders')
-    .select('id, status, queue_item_id, test:lab_test_types(name), patient:patients!inner(full_name, auth_user_id)')
+    .select(`
+      id,
+      status,
+      appointment_id,
+      queue_item_id,
+      test:lab_test_types(name),
+      patient:patients!inner(full_name, auth_user_id),
+      appointment:appointments(doctor:users!appointments_doctor_id_fkey(full_name))
+    `)
     .in('status', ['queued', 'collected', 'report_ready'])
     .gte('created_at', new Date(Date.now() - 3 * 86_400_000).toISOString());
   const myOrders = (orders ?? []).filter((o) => (o.patient as unknown as { auth_user_id: string }).auth_user_id === userId);
@@ -54,9 +71,20 @@ export async function getMyLab(supabase: SupabaseClient, userId: string): Promis
       counterOpen: ['active', 'paused'].includes(results[i.line_id as string]?.session.state ?? ''),
     };
   });
+  const readyIds = myOrders.filter((o) => o.status === 'report_ready').map((o) => o.id as string);
+  const rated = new Set<string>();
+  if (readyIds.length) {
+    const { data: fb } = await supabase.from('lab_feedbacks').select('lab_order_id').in('lab_order_id', readyIds);
+    (fb ?? []).forEach((f) => rated.add(f.lab_order_id as string));
+  }
   const reports: MyLabReport[] = myOrders.filter((o) => o.status !== 'queued').map((o) => ({
-    orderId: o.id as string, patientName: (o.patient as unknown as { full_name: string }).full_name,
-    test: (o.test as unknown as { name: string }).name, status: o.status as MyLabReport['status'],
+    feedbackSubmitted: rated.has(o.id as string),
+    orderId: o.id as string,
+    patientName: (o.patient as unknown as { full_name: string }).full_name,
+    test: (o.test as unknown as { name: string }).name,
+    status: o.status as MyLabReport['status'],
+    appointmentId: (o as any).appointment_id ?? null,
+    doctorName: (o as any).appointment?.doctor?.full_name ?? null,
   }));
   return { places, reports };
 }

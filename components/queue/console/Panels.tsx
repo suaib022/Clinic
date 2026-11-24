@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import type { StaffSnapshot } from '@/lib/queue/server';
 import type { QueueAppointment } from '@/lib/queue/engine';
 import { fmtTime, fmtMin, SESSION_TEXT, SESSION_CLASS } from '@/lib/queue/display';
@@ -101,6 +102,11 @@ export function NowServing({ snap, receivedAt, busy, onCallNext, onDone, canCall
                 <div className={`mt-2 fw-semibold ${over ? 'text-danger' : ''}`} aria-live="off">
                   <i className="bi bi-stopwatch me-1" />{mm}:{String(ss).padStart(2, '0')} / ~{fmtMin(ns.expectedMin)}
                   {over && <span className="ms-2 badge bg-danger">Running over</span>}
+                </div>
+                <div className="mt-2">
+                  <Link href="/doctor/chamber" className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 shadow-sm rounded-pill px-3">
+                    <i className="bi bi-door-open-fill me-1" />Open Chamber Desk
+                  </Link>
                 </div>
               </>
             ) : (

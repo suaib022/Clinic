@@ -1,5 +1,5 @@
 // Maps the JSON from the lab_snapshot_input RPC to flowq engine input. Pure (no Supabase / Next), unit-tested.
-import { computeLineEstimates, expectedWaitMin, type DssSettings, type LabItem, type LineInput, type QueueResult, type SessionInfo } from '@/packages/flowq/src';
+import { computeLineEstimates, expectedWaitMin, DEFAULT_SETTINGS, type DssSettings, type LabItem, type LineInput, type QueueResult, type SessionInfo } from '@/packages/flowq/src';
 import { settingsFromRow } from '@/lib/queue/snapshotInput';
 
 type Ts = string | null | undefined;
@@ -8,7 +8,7 @@ const ms = (t: Ts) => (t ? Date.parse(t) : null);
 export interface RawLabSnapshot {
   server_now: string;
   date: string;
-  settings: Record<string, number | string> | null;
+  settings: Record<string, number | string | boolean> | null;
   line: { id: string; code: string; name: string; typical_min: number };
   session: null | {
     id: string; status: 'open' | 'paused' | 'closed'; opened_at: string; closed_at: Ts;
@@ -27,7 +27,12 @@ export interface RawLabSnapshot {
 
 /** Long lines add up many visits: lab lines use a longer history and averages (see flowq robustness study). */
 export function labSettings(row: RawLabSnapshot['settings']): DssSettings {
-  return { ...settingsFromRow(row), historyWindow: 200, sumWith: 'mean', rangeMethod: 'normal_sum', rangeCoverage: 0.8 };
+  // The doctor-queue arrival model (expected arrivals, show rate, walk-ins, lateness) does not apply to lab lines: keep it off.
+  return {
+    ...settingsFromRow(row), historyWindow: 200, sumWith: 'mean', rangeMethod: 'normal_sum', rangeCoverage: 0.8,
+    expectArrivals: DEFAULT_SETTINGS.expectArrivals, showP: DEFAULT_SETTINGS.showP, walkInPerHour: DEFAULT_SETTINGS.walkInPerHour,
+    latenessMeanMin: DEFAULT_SETTINGS.latenessMeanMin, latenessSdMin: DEFAULT_SETTINGS.latenessSdMin,
+  };
 }
 
 export interface LabItemView {

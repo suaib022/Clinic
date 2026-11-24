@@ -111,6 +111,9 @@ export default function PatientLiveQueueCard({ appointmentId, userId }: { appoin
             </div>
           ))}
         </dl>
+        {s.rangeNote === 'calibrated' && s.waitMinLow != null && (
+          <p className="small text-muted text-center mb-2" data-testid="range-note">The wait range comes from how long this doctor&apos;s recent visits took; most patients start inside it.</p>
+        )}
         <div className="small">
           Booked {fmtTime(s.bookedAt)} · Expected {fmtTime(s.expectedStartAt)}
           {s.confidence === 'low' && <span className="text-muted"> (rough estimate)</span>}

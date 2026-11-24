@@ -65,10 +65,11 @@ export function OrderTestsPanel({ snap, say }: { snap: StaffSnapshot; say: (kind
  * Compounder: after a visit with tests, "Lab now" or "Later"; when a report is ready, the engine's return advice:
  * a same-day report review (expected time) or a later visit. Nothing happens without a tap.
  */
-export function LabFollowUpPanel({ snap, busy, onLabNow, onLater, onReview, onBookLater }: {
+export function LabFollowUpPanel({ snap, busy, onLabNow, onLater, onReview, onBookLater, onViewReport }: {
   snap: StaffSnapshot; busy: boolean;
   onLabNow: (v: DoctorLabVisit) => void; onLater: (v: DoctorLabVisit) => void;
   onReview: (v: DoctorLabVisit) => void; onBookLater: (v: DoctorLabVisit) => void;
+  onViewReport?: (appointmentId: string) => void;
 }) {
   const choice = snap.lab.filter((v) => v.showLabChoice);
   const review = snap.lab.filter((v) => v.showReviewOffer);
@@ -94,6 +95,17 @@ export function LabFollowUpPanel({ snap, busy, onLabNow, onLater, onReview, onBo
             <span className="fw-semibold">{who(v)}</span>
             <span className="badge bg-success">Report ready</span>
             <div className="ms-auto d-flex gap-2">
+              {onViewReport && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-primary fw-semibold"
+                  disabled={busy}
+                  onClick={() => onViewReport(v.appointmentId)}
+                >
+                  <i className="bi bi-file-earmark-medical me-1" />
+                  View Report
+                </button>
+              )}
               {v.advice?.kind === 'same_day' && (
                 <button type="button" className="btn btn-sm" style={tealBtn} disabled={busy} onClick={() => onReview(v)}>Add report review</button>
               )}

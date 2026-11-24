@@ -8,7 +8,7 @@ type Ts = string | null | undefined;
 export interface RawSnapshot {
   server_now: string;
   date: string;
-  settings: Record<string, number | string> | null;
+  settings: Record<string, number | string | boolean> | null;
   doctor: { id: string; name: string | null; speciality: string | null; schedules: { start: string; end: string; slot_min: number | null }[] };
   session: null | {
     id: string; status: 'open' | 'paused' | 'ended'; started_at: Ts; ended_at: Ts; scheduled_start: string | null;
@@ -38,10 +38,15 @@ export function dhakaToEpoch(date: string, time: string): number {
   return Date.UTC(y, m - 1, d, hh - 6, mm, ss);
 }
 
+/**
+ * Settings row → engine settings. `engine_mode` is the admin switch: 'dss' (default) runs the DSS rules, so the full-engine
+ * columns are ignored; 'full' makes the doctor queue use them (flowq engine: expected arrivals, mean sums, normal-sum range).
+ */
 export function settingsFromRow(row: RawSnapshot['settings']): DssSettings {
   if (!row) return DEFAULT_SETTINGS;
   const n = (k: string, fallback: number) => (row[k] == null ? fallback : Number(row[k]));
-  return {
+  const base: DssSettings = {
+    ...DEFAULT_SETTINGS,
     onTimeBandMin: n('on_time_band_min', DEFAULT_SETTINGS.onTimeBandMin),
     lateBandMin: n('late_band_min', DEFAULT_SETTINGS.lateBandMin),
     graceMin: n('grace_min', DEFAULT_SETTINGS.graceMin),
@@ -54,9 +59,13 @@ export function settingsFromRow(row: RawSnapshot['settings']): DssSettings {
     durationClampMin: n('duration_clamp_min', DEFAULT_SETTINGS.durationClampMin),
     durationClampMax: n('duration_clamp_max', DEFAULT_SETTINGS.durationClampMax),
     reportReviewMin: n('report_review_min', DEFAULT_SETTINGS.reportReviewMin),
+  };
+  if (row.engine_mode !== 'full') return base;
+  return {
+    ...base,
     historyWindow: n('history_window', DEFAULT_SETTINGS.historyWindow),
     sumWith: row.sum_with === 'mean' ? 'mean' : 'median',
-    expectArrivals: row.expect_arrivals === 'true' || row.expect_arrivals === 1,
+    expectArrivals: row.expect_arrivals === true || row.expect_arrivals === 'true' || row.expect_arrivals === 1,
     showP: n('show_p', DEFAULT_SETTINGS.showP),
     walkInPerHour: n('walk_in_per_hour', DEFAULT_SETTINGS.walkInPerHour),
     latenessMeanMin: n('lateness_mean_min', DEFAULT_SETTINGS.latenessMeanMin),

@@ -2,10 +2,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroCarousel from "@/components/HeroCarousel";
 import { createClient } from "@/lib/supabase/server";
+import { formatRating } from "@/lib/feedback/stats";
 
 export default async function IndexPage() {
   const supabase = await createClient();
   const { data: doctors } = await supabase.from('legacy_doctors').select('*').limit(6);
+  // Real, aggregate-only ratings from the public RPC. Doctors with no reviews show no rating block.
+  const { data: ratingRows } = await supabase.rpc('public_doctor_ratings');
+  const ratingByDoctor = new Map((ratingRows ?? []).map((r: any) => [r.doctor_user_id, r]));
   return (
     <div className="index-page">
       <Header />
@@ -423,17 +427,24 @@ export default async function IndexPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="rating-section">
-                    <div className="stars">
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-half"></i>
-                    </div>
-                    <span className="rating-score">4.8</span>
-                    <span className="review-count">(120+ reviews)</span>
-                  </div>
+                  {(() => {
+                    const rr: any = ratingByDoctor.get(doc.user_id);
+                    const label = rr ? formatRating(Number(rr.avg_rating), Number(rr.review_count)) : null;
+                    if (!rr || !label) return null;
+                    const avg = Number(rr.avg_rating);
+                    const full = Math.round(avg);
+                    return (
+                      <div className="rating-section" aria-label={label}>
+                        <div className="stars">
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <i key={n} className={n <= full ? "bi bi-star-fill" : "bi bi-star"}></i>
+                          ))}
+                        </div>
+                        <span className="rating-score">{avg.toFixed(1)}</span>
+                        <span className="review-count">({rr.review_count} {Number(rr.review_count) === 1 ? "review" : "reviews"})</span>
+                      </div>
+                    );
+                  })()}
                   <div className="action-buttons">
                     <a href={`/doctors/${doc.id}`} className="btn-secondary">View Details</a>
                     <a href={`/doctors/${doc.id}`} className="btn-primary">Book Now</a>

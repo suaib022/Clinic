@@ -4,33 +4,25 @@ import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/auth/requireRole';
 import { headers } from 'next/headers';
+import { submitFeedbackCore } from '@/lib/feedback/submit';
+import { classifyComment } from '@/lib/feedback/classify';
+import { writeClassification } from '@/lib/feedback/store';
 
 export interface SubmitFeedbackInput {
     appointmentId: string;
     doctorRating: number;
     serviceRating: number;
     comment?: string;
+    inputMethod?: 'typed' | 'voice';
 }
 
 export async function submitAppointmentFeedback(input: SubmitFeedbackInput) {
     try {
-        const { user } = await requireRole(['patient']);
+        await requireRole(['patient']);
         const supabase = await createClient();
-
-        const doctorRating = Number(input.doctorRating);
-        const serviceRating = Number(input.serviceRating);
-        const comment = input.comment?.trim() || '';
 
         if (!input.appointmentId) {
             return { success: false, error: 'Appointment ID is required' };
-        }
-
-        if (isNaN(doctorRating) || doctorRating < 1 || doctorRating > 5) {
-            return { success: false, error: 'Doctor rating must be between 1 and 5 stars' };
-        }
-
-        if (isNaN(serviceRating) || serviceRating < 1 || serviceRating > 5) {
-            return { success: false, error: 'Service quality rating must be between 1 and 5 stars' };
         }
 
         // Gather request metadata (user-agent, ip, timestamp)
@@ -45,27 +37,41 @@ export async function submitAppointmentFeedback(input: SubmitFeedbackInput) {
             submitted_at: new Date().toISOString()
         };
 
-        // Call RPC submit_appointment_feedback
-        const { data: feedbackId, error } = await supabase.rpc('submit_appointment_feedback', {
-            p_appointment_id: input.appointmentId,
-            p_doctor_rating: doctorRating,
-            p_service_rating: serviceRating,
-            p_comment: comment || null,
-            p_metadata: metadata
+        const result = await submitFeedbackCore({
+            kind: 'appointment',
+            input: {
+                ratingA: Number(input.doctorRating),
+                ratingB: Number(input.serviceRating),
+                comment: input.comment ?? '',
+                inputMethod: input.inputMethod ?? 'typed',
+            },
+            rpc: async () => {
+                const { data, error } = await supabase.rpc('submit_appointment_feedback', {
+                    p_appointment_id: input.appointmentId,
+                    p_doctor_rating: Number(input.doctorRating),
+                    p_service_rating: Number(input.serviceRating),
+                    p_comment: input.comment?.trim() || null,
+                    p_metadata: metadata,
+                    p_input_method: input.inputMethod ?? 'typed',
+                });
+                return { data: data as string | null, error };
+            },
+            classify: (text) => classifyComment(text),
+            setClassification: writeClassification,
         });
 
-        if (error) {
-            console.error('Error submitting feedback:', error);
-            return { success: false, error: error.message };
+        if (!result.ok) {
+            console.error('Error submitting feedback:', result.error);
+            return { success: false, error: result.error };
         }
 
         revalidatePath('/patient/appointments');
         revalidatePath('/patient/dashboard');
 
-        return { 
-            success: true, 
-            feedbackId,
-            message: 'Thank you! Your feedback has been recorded successfully.' 
+        return {
+            success: true,
+            feedbackId: result.id,
+            message: 'Thank you! Your feedback has been recorded successfully.'
         };
     } catch (err: any) {
         console.error('submitAppointmentFeedback error:', err);
